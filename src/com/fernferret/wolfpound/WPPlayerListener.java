@@ -7,6 +7,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Sign;
 
+import com.earth2me.essentials.Essentials;
+import com.earth2me.essentials.User;
 import com.nijiko.coelho.iConomy.iConomy;
 
 public class WPPlayerListener extends PlayerListener {
@@ -22,37 +24,40 @@ public class WPPlayerListener extends PlayerListener {
 		
 		if (event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Sign s = (Sign) event.getClickedBlock().getState();
-			if (s.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-				// There is no cost!
-				if (s.getLine(1) == null || s.getLine(1).equals("")) {
+			Pound pound = WolfPound.pounds.get(s.getBlock().getLocation()); 
+			if(pound != null && plugin.hasPermission(p, "wolfpound.use")) {
+				// We have a valid pound!
+				if(pound.getPrice() == 0) {
 					plugin.spawnWolf(p);
-					p.sendMessage("There was a problem reading the price. Please remove the sign and try again.");
-				} else if (s.getLine(1) != null && !s.getLine(1).equals("")) {
-					double price = 0;
-					try {
-						price = Double.parseDouble(s.getLine(1));
-					} catch (NumberFormatException e) {
-						p.sendMessage("There was a problem reading the price. Please remove the sign and try again.");
+				} else if(WolfPound.useiConomy) {
+					if (iConomy.getBank().getAccount(p.getName()).hasEnough(pound.getPrice())) {
+						iConomy.getBank().getAccount(p.getName()).subtract(pound.getPrice());
+						p.sendMessage(ChatColor.RED + "[WolfPound]"
+								+ " You have been charged " + pound.getPrice() + " "
+								+ iConomy.getBank().getCurrency());
+						plugin.spawnWolf(p);
+					} else {
+							userIsTooPoor(p);
 						return;
 					}
-					if (WolfPound.useiConomy) {
-						
-						if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {
-							iConomy.getBank().getAccount(p.getName()).subtract(price);
-							p.sendMessage(ChatColor.RED + "[WolfPound]"
-									+ " You have been charged " + price + " "
-									+ iConomy.getBank().getCurrency());
-							plugin.spawnWolf(p);
-						} else {
-								p.sendMessage("Sorry but you do not have the required funds for a wolf");
-							return;
-						}
-					} else if (WolfPound.useEssentials) {
-						
+				} else if(WolfPound.useEssentials) {
+					User user = User.get(event.getPlayer());
+					if (user.getMoney() >= pound.getPrice()) {
+						user.takeMoney(pound.getPrice());
+						p.sendMessage(ChatColor.RED + "[WolfPound]"
+								+ " You have been charged $" + pound.getPrice());
+					} else {
+						userIsTooPoor(p);
+						return;
 					}
 				}
-				
+			} else {
+				p.sendMessage("You don't have permission(wolfpound.use) to do this!");
 			}
 		}
+	}
+
+	private void userIsTooPoor(Player p) {
+		p.sendMessage("Sorry but you do not have the required funds for a wolf");
 	}
 }

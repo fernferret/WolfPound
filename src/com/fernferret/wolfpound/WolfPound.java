@@ -1,9 +1,11 @@
 package com.fernferret.wolfpound;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
+import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -31,7 +33,7 @@ public class WolfPound extends JavaPlugin{
 	public static boolean useiConomy = false;
 	public static boolean useEssentials = false;
 	public static boolean usePermissions = false;
-	public static HashSet<Pound> pounds;
+	public static HashMap<Location, Pound> pounds;
 
 	@Override
 	public void onEnable() {
@@ -41,7 +43,7 @@ public class WolfPound extends JavaPlugin{
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
 		
-		pounds = new HashSet<Pound>();
+		pounds = new HashMap<Location, Pound>();
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 
@@ -103,6 +105,13 @@ public class WolfPound extends JavaPlugin{
 			Permissions = ((Permissions) test).getHandler();
 			usePermissions = true;
 		}
+	}
+	
+	public boolean hasPermission(Player p, String permission) {
+		if(!usePermissions) {
+			return true;
+		}
+		return WolfPound.Permissions.has(p,"wolfpound.create");
 	}
 	
 }

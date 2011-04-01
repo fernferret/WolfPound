@@ -2,6 +2,7 @@ package com.fernferret.wolfpound;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Sign;
@@ -18,14 +19,15 @@ public class WPPlayerListener extends PlayerListener {
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
-		if (event.getClickedBlock().getState() instanceof Sign) {
+		
+		if (event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Sign s = (Sign) event.getClickedBlock().getState();
 			if (s.getLine(0).equalsIgnoreCase("[WolfPound]")) {
 				// There is no cost!
 				if (s.getLine(1) == null || s.getLine(1).equals("")) {
 					plugin.spawnWolf(p);
 					p.sendMessage("There was a problem reading the price. Please remove the sign and try again.");
-				} else if (s.getLine(1) != null && s.getLine(1).equals("")) {
+				} else if (s.getLine(1) != null && !s.getLine(1).equals("")) {
 					double price = 0;
 					try {
 						price = Double.parseDouble(s.getLine(1));

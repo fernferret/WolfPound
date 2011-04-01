@@ -24,20 +24,24 @@ public class WolfPound extends JavaPlugin{
 	public final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WolfPound]";
 	
+	
 	public static PermissionHandler Permissions = null;
 	public static boolean useiConomy = false;
+	public static boolean useEssentials = false;
 
 	@Override
 	public void onEnable() {
 		getDataFolder().mkdirs();
 		configWP = new Configuration(new File(this.getDataFolder(), "WolfPound.yml"));
+		configWP.load();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 
-		if (checkiConomy()) {
+		if (getEconType()) {
 			useiConomy = configWP.getString("econ", "").equals("iconomy");
+			useEssentials = configWP.getString("econ", "").equals("iconomy");
 			if(useiConomy) {
 				log.info(logPrefix + " using iConomy!");
 			}
@@ -60,7 +64,7 @@ public class WolfPound extends JavaPlugin{
 		
 	}
 	
-	public boolean checkiConomy() {
+	public boolean getEconType() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
 		return (test != null);
 	}

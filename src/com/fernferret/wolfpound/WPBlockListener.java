@@ -15,10 +15,14 @@ public class WPBlockListener extends BlockListener {
 	@Override
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
-		if (plugin.hasPermission(p, "wolfpound.create") && event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			addToPoundList(event);
-		} else if(!plugin.hasPermission(p, "wolfpound.create")) {
-			event.setCancelled(true);
+		boolean createPermissions = plugin.hasPermission(p, "wolfpound.create");
+		
+		if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
+			if (createPermissions) {
+				addToPoundList(event);
+			} else {
+				event.setCancelled(true);
+			}
 		}
 		// TODO: Make wolves assigned to people
 		// TODO: Color Signs
@@ -26,10 +30,13 @@ public class WPBlockListener extends BlockListener {
 	
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		if(!plugin.hasPermission(event.getPlayer(), "wolfpound.create")){
-			event.setCancelled(true);
-		} else {
-			if(WolfPound.pounds.remove(event.getBlock().getLocation()) != null) {
+		// If the block we're breaking is in our hash
+		if (WolfPound.pounds.get(event.getBlock().getLocation()) != null) {
+			if (!plugin.hasPermission(event.getPlayer(), "wolfpound.create")) {
+				event.setCancelled(true);
+			} else {
+				if (WolfPound.pounds.remove(event.getBlock().getLocation()) != null) {
+				}
 			}
 		}
 	}
@@ -46,7 +53,7 @@ public class WPBlockListener extends BlockListener {
 			WolfPound.pounds.put(event.getBlock().getLocation(), new Pound(event.getBlock().getLocation(), event.getPlayer()));
 			
 		}
-		event.getPlayer().sendMessage("Number of Pounds: " + WolfPound.pounds.size());
+		event.getPlayer().sendMessage("Number of Pounds: " + WolfPound.pounds.size() + ", Current: (" + event.getBlock().getLocation() +  ")");
 		
 	}
 }

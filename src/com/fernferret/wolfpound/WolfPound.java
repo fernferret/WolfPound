@@ -34,7 +34,7 @@ public class WolfPound extends JavaPlugin{
 	public static boolean useiConomy = false;
 	public static boolean useEssentials = false;
 	public static boolean usePermissions = false;
-	public static HashMap<Location, Pound> pounds;
+	public static HashMap<Location, Pound> pounds = new HashMap<Location, Pound>();;
 
 	@Override
 	public void onEnable() {
@@ -46,7 +46,6 @@ public class WolfPound extends JavaPlugin{
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
 		
-		pounds = new HashMap<Location, Pound>();
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 
@@ -62,6 +61,7 @@ public class WolfPound extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal,this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
 	}
 	
 	public void spawnWolf(Player p){

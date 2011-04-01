@@ -23,7 +23,8 @@ public class WPPlayerListener extends PlayerListener {
 		
 		if (event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			Sign s = (Sign) event.getClickedBlock().getState();
-			Pound pound = WolfPound.pounds.get(s.getBlock().getLocation()); 
+			Pound pound = WolfPound.pounds.get(s.getBlock().getLocation());
+			plugin.log.info("Number of pounds: " + WolfPound.pounds.size());
 			if(pound != null && plugin.hasPermission(p, "wolfpound.use")) {
 				// We have a valid pound!
 				if(pound.getPrice() == 0) {

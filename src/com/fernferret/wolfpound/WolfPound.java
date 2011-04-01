@@ -4,6 +4,8 @@ import java.util.logging.Logger;
 
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -52,6 +54,19 @@ public class WolfPound extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
+	}
+	
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		String commandName = command.getName().toLowerCase();
+		if (commandName.equalsIgnoreCase("adopt")) {
+			Player player = (Player) sender;
+			if (hasPermission(player, "wolfpound.adopt")) {
+				spawnWolf(player);
+			}
+			return true;
+		}
+		return false;
 	}
 	
 	public void spawnWolf(Player p) {

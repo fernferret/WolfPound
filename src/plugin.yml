@@ -1,4 +1,8 @@
 name: WolfPound
 main: com.fernferret.wolfpound.WolfPound
 author: FernFerret
-version: 0.1
+version: 0.2
+commands:
+  adopt:
+    description: Gives you a wolf! (You'll need to befriend it though...)
+    usage: /<command>

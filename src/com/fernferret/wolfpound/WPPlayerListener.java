@@ -7,7 +7,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Sign;
 
-import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.User;
 import com.nijiko.coelho.iConomy.iConomy;
 
@@ -51,8 +50,6 @@ public class WPPlayerListener extends PlayerListener {
 						return;
 					}
 				}
-			} else {
-				p.sendMessage("You don't have permission(wolfpound.use) to do this!");
 			}
 		}
 	}

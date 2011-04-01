@@ -24,6 +24,7 @@ public class WolfPound extends JavaPlugin{
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
 	public Configuration configWP;
+	public Configuration configPounds;
 	
 	public final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WolfPound]";
@@ -39,7 +40,9 @@ public class WolfPound extends JavaPlugin{
 	public void onEnable() {
 		getDataFolder().mkdirs();
 		configWP = new Configuration(new File(this.getDataFolder(), "WolfPound.yml"));
+		configPounds = new Configuration(new File(this.getDataFolder(), "Pounds.yml"));
 		configWP.load();
+		configPounds.load();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
 		
@@ -47,17 +50,10 @@ public class WolfPound extends JavaPlugin{
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 
-		if (getiConomy()) {
-			useiConomy = configWP.getString("econ", "").equals("iconomy");
-			
+		if (getEconPlugin()) {
 			if(useiConomy) {
 				log.info(logPrefix + " using iConomy Economy!");
-			}
-		}
-		
-		if(getEssentials()) {
-			useEssentials = configWP.getString("econ", "").equals("essentials");
-			if(useEssentials) {
+			} else if(useEssentials) {
 				log.info(logPrefix + " using Essentials Economy!");
 			}
 		}
@@ -82,16 +78,12 @@ public class WolfPound extends JavaPlugin{
 	/**
 	 * Grab the iConomy plugin from the Plugin Manager.
 	 */
-	public boolean getiConomy() {
-		Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
-		return (test != null);
-	}
-	/**
-	 * Grab the Essentials plugin from the Plugin Manager.
-	 */
-	public boolean getEssentials() {
-		Plugin test = this.getServer().getPluginManager().getPlugin("Essentials");
-		return (test != null);
+	public boolean getEconPlugin() {
+		Plugin testiConomy = this.getServer().getPluginManager().getPlugin("iConomy");
+		useiConomy = (testiConomy != null);
+		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
+		useEssentials = (testEssentials != null);
+		return (useiConomy || useEssentials);
 	}
 	/**
 	 * Grab the Permissions plugin from the Plugin Manager.
@@ -111,7 +103,12 @@ public class WolfPound extends JavaPlugin{
 		if(!usePermissions) {
 			return true;
 		}
-		return WolfPound.Permissions.has(p,"wolfpound.create");
+		if(!WolfPound.Permissions.has(p,permission)) {
+			p.sendMessage("You don't have permission(" + permission + ") to do this!");
+			return false;
+		}
+		
+		return true;
 	}
 	
 }

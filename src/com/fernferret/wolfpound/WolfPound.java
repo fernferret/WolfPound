@@ -2,6 +2,9 @@ package com.fernferret.wolfpound;
 
 import java.util.logging.Logger;
 
+import org.bukkit.event.Event;
+import org.bukkit.event.Event.Priority;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class WolfPound extends JavaPlugin{
@@ -20,6 +23,9 @@ public class WolfPound extends JavaPlugin{
 		entityListener = new WPEntityListener();
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
+		
+		PluginManager pm = getServer().getPluginManager();
+		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Low,this); // Low so it acts above any other.
 	}
 	
 	@Override

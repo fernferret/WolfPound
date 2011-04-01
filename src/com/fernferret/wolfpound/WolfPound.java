@@ -13,19 +13,20 @@ public class WolfPound extends JavaPlugin{
 	private WPBlockListener blockListener;
 	private WPEntityListener entityListener;
 	
-	private final Logger log = Logger.getLogger("Minecraft");
+	public final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WolfPound]";
 
 	@Override
 	public void onEnable() {
-		playerListener = new WPPlayerListener();
-		blockListener = new WPBlockListener();
-		entityListener = new WPEntityListener();
+		playerListener = new WPPlayerListener(this);
+		blockListener = new WPBlockListener(this);
+		entityListener = new WPEntityListener(this);
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 		
 		PluginManager pm = getServer().getPluginManager();
-		pm.registerEvent(Event.Type.PLAYER_MOVE, playerListener, Priority.Low,this); // Low so it acts above any other.
+		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Low,this);
+		pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal,this);
 	}
 	
 	@Override

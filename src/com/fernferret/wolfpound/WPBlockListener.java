@@ -14,7 +14,7 @@ public class WPBlockListener extends BlockListener {
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
 		if(WolfPound.usePermissions) {
-			if(WolfPound.Permissions.has(p,"wolfpound.create")) {
+			if(WolfPound.Permissions.has(p,"wolfpound.create") && event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
 				addToPoundList(event);
 			}
 			else {
@@ -29,6 +29,12 @@ public class WPBlockListener extends BlockListener {
 	
 	private void addToPoundList(SignChangeEvent event) {
 		event.getPlayer().sendMessage("Setting up your Wolf Pound!");
-		WolfPound.pounds.add(new Pound(event.getBlock().getWorld(), event.getBlock().getLocation()));
+		Double price;
+		try {
+			price = Double.parseDouble(event.getLine(1).replaceAll("\\D", ""));
+		} catch (NumberFormatException e) {
+			price = 0.0;
+		}
+		WolfPound.pounds.add(new Pound(event.getBlock().getWorld(), event.getBlock().getLocation(), event.getPlayer(), price));
 	}
 }

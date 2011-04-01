@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
-import org.bukkit.Location;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -46,13 +45,21 @@ public class WolfPound extends JavaPlugin{
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 
-		if (getEconType()) {
+		if (getiConomy()) {
 			useiConomy = configWP.getString("econ", "").equals("iconomy");
-			useEssentials = configWP.getString("econ", "").equals("iconomy");
+			
 			if(useiConomy) {
-				log.info(logPrefix + " using iConomy!");
+				log.info(logPrefix + " using iConomy Economy!");
 			}
 		}
+		
+		if(getEssentials()) {
+			useEssentials = configWP.getString("econ", "").equals("essentials");
+			if(useEssentials) {
+				log.info(logPrefix + " using Essentials Economy!");
+			}
+		}
+		checkPermissions();
 		
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal,this);
@@ -70,23 +77,29 @@ public class WolfPound extends JavaPlugin{
 		// TODO Auto-generated method stub
 		
 	}
-	
-	public boolean getEconType() {
+	/**
+	 * Grab the iConomy plugin from the Plugin Manager.
+	 */
+	public boolean getiConomy() {
 		Plugin test = this.getServer().getPluginManager().getPlugin("iConomy");
 		return (test != null);
 	}
-	public void checkPermissions() {
-		/**
-		 * Grab the Permissions plugin from the Plugin Manager.
-		 */
-		Plugin test = this.getServer().getPluginManager()
-				.getPlugin("Permissions");
-		/**
-		 * If the 'test' variable comes back as NOT NULL then it means
-		 * Permissions is enabled. Otherwise it is NULL and therefore no
-		 * Permissions plugin is enabled.
-		 */
+	/**
+	 * Grab the Essentials plugin from the Plugin Manager.
+	 */
+	public boolean getEssentials() {
+		Plugin test = this.getServer().getPluginManager().getPlugin("Essentials");
+		return (test != null);
+	}
+	/**
+	 * Grab the Permissions plugin from the Plugin Manager.
+	 */
+	private void checkPermissions() {
+
+		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 		if (test != null) {
+			log.info(logPrefix + " using Permissions");
+			
 			Permissions = ((Permissions) test).getHandler();
 			usePermissions = true;
 		}

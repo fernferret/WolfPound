@@ -13,13 +13,22 @@ public class WPBlockListener extends BlockListener {
 	@Override
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
-		if(event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			p.sendMessage("Setting up your Wolf Pound!");
-			plugin.spawnWolf(p);
-			
+		if(WolfPound.usePermissions) {
+			if(WolfPound.Permissions.has(p,"wolfpound.create")) {
+				addToPoundList(event);
+			}
+			else {
+				p.sendMessage("You don't have permission(wolfpound.create) to do this!");
+			}
+		} else {
+			addToPoundList(event);
+		}
 			//TODO: Make wolves assigned to people
 			//TODO: Color Signs
-		}
-		
+	}
+	
+	private void addToPoundList(SignChangeEvent event) {
+		event.getPlayer().sendMessage("Setting up your Wolf Pound!");
+		WolfPound.pounds.add(new Pound(event.getBlock().getWorld(), event.getBlock().getLocation()));
 	}
 }

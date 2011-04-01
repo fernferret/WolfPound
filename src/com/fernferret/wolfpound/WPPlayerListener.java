@@ -47,6 +47,8 @@ public class WPPlayerListener extends PlayerListener {
 								p.sendMessage("Sorry but you do not have the required funds for a wolf");
 							return;
 						}
+					} else if (WolfPound.useEssentials) {
+						
 					}
 				}
 				

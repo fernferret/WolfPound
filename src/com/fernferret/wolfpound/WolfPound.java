@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -34,7 +35,7 @@ public class WolfPound extends JavaPlugin{
 	public static boolean useiConomy = false;
 	public static boolean useEssentials = false;
 	public static boolean usePermissions = false;
-	public static HashMap<Location, Pound> pounds = new HashMap<Location, Pound>();;
+	public static HashMap<Block, Pound> pounds = new HashMap<Block, Pound>();;
 
 	@Override
 	public void onEnable() {
@@ -62,6 +63,7 @@ public class WolfPound extends JavaPlugin{
 		pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal,this);
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
+		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
 	}
 	
 	public void spawnWolf(Player p){

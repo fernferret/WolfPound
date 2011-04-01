@@ -6,6 +6,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Sign;
+import org.bukkit.craftbukkit.block.CraftSign;
 
 import com.earth2me.essentials.User;
 import com.nijiko.coelho.iConomy.iConomy;
@@ -22,30 +23,29 @@ public class WPPlayerListener extends PlayerListener {
 		Player p = event.getPlayer();
 		
 		if (event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			Sign s = (Sign) event.getClickedBlock().getState();
-			Pound pound = WolfPound.pounds.get(s.getBlock().getLocation());
-			plugin.log.info("Number of pounds: " + WolfPound.pounds.size());
-			if(pound != null && plugin.hasPermission(p, "wolfpound.use")) {
+			Sign s = new CraftSign(event.getClickedBlock());
+			if (s.getLine(0).equals("¤1[WolfPound]") && plugin.hasPermission(p, "wolfpound.use")) {
 				// We have a valid pound!
-				if(pound.getPrice() == 0) {
+				double price = getPriceFromLine(s, 1);
+				if (price == 0) {
 					plugin.spawnWolf(p);
-				} else if(WolfPound.useiConomy) {
-					if (iConomy.getBank().getAccount(p.getName()).hasEnough(pound.getPrice())) {
-						iConomy.getBank().getAccount(p.getName()).subtract(pound.getPrice());
+				} else if (WolfPound.useiConomy) {
+					if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {
+						iConomy.getBank().getAccount(p.getName()).subtract(price);
 						p.sendMessage(ChatColor.RED + "[WolfPound]"
-								+ " You have been charged " + pound.getPrice() + " "
+								+ " You have been charged " + price + " "
 								+ iConomy.getBank().getCurrency());
 						plugin.spawnWolf(p);
 					} else {
-							userIsTooPoor(p);
+						userIsTooPoor(p);
 						return;
 					}
-				} else if(WolfPound.useEssentials) {
+				} else if (WolfPound.useEssentials) {
 					User user = User.get(event.getPlayer());
-					if (user.getMoney() >= pound.getPrice()) {
-						user.takeMoney(pound.getPrice());
+					if (user.getMoney() >= price) {
+						user.takeMoney(price);
 						p.sendMessage(ChatColor.RED + "[WolfPound]"
-								+ " You have been charged $" + pound.getPrice());
+								+ " You have been charged $" + price);
 					} else {
 						userIsTooPoor(p);
 						return;
@@ -54,7 +54,15 @@ public class WPPlayerListener extends PlayerListener {
 			}
 		}
 	}
-
+	
+	private Double getPriceFromLine(Sign s, int i) {
+		try {
+			return Double.parseDouble(s.getLine(i));
+		} catch (NumberFormatException e) {
+			return 0.0;
+		}
+	}
+	
 	private void userIsTooPoor(Player p) {
 		p.sendMessage("Sorry but you do not have the required funds for a wolf");
 	}

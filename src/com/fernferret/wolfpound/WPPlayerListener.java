@@ -27,7 +27,7 @@ public class WPPlayerListener extends PlayerListener {
 			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, "wolfpound.use")) {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
-				if (price == 0) {
+				if (price == 0 || (!WolfPound.useiConomy && !WolfPound.useEssentials)) {
 					plugin.spawnWolf(p);
 				} else if (WolfPound.useiConomy) {
 					if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {
@@ -58,7 +58,7 @@ public class WPPlayerListener extends PlayerListener {
 		
 		try {
 			Sign s = new CraftSign(b);
-			return Double.parseDouble(s.getLine(i));
+			return Double.parseDouble(s.getLine(i).replaceAll("\\D", ""));
 		} catch (NumberFormatException e) {
 			// We'll return the default
 		}

@@ -1,18 +1,13 @@
 package com.fernferret.wolfpound;
 
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
-import org.bukkit.craftbukkit.inventory.CraftInventoryPlayer;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.*;
 
 public class WPBlockListener extends BlockListener {
 	private final WolfPound plugin;

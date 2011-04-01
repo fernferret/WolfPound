@@ -40,6 +40,24 @@ public class WPPlayerListener extends PlayerListener {
 						userIsTooPoor(p);
 						return;
 					}
+				} else if(WolfPound.useBOSEconomy) {
+					if(plugin.BOSEcon.getPlayerMoney(p.getName()) >= price) {
+						int intPrice = (int)(-1*price);
+						plugin.BOSEcon.addPlayerMoney(p.getName(), intPrice, true);
+						if(price != 1) {
+							p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
+									+ " You have been charged " + price + " "
+									+ plugin.BOSEcon.getMoneyNamePlural());
+						} else {
+							p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
+									+ " You have been charged " + price + " "
+									+ plugin.BOSEcon.getMoneyName());
+						}
+						plugin.spawnWolf(p);
+					} else {
+						userIsTooPoor(p);
+						return;
+					}
 				} else if (WolfPound.useEssentials) {
 					User user = User.get(event.getPlayer());
 					if (user.getMoney() >= price) {

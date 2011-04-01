@@ -19,10 +19,10 @@ public class WPBlockListener extends BlockListener {
 	@Override
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
-		boolean createPermissions = plugin.hasPermission(p, "wolfpound.create");
+		
 		
 		if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			if (createPermissions) {
+			if (plugin.hasPermission(p, "wolfpound.create")) {
 				event.getPlayer().sendMessage("Successfully created Wolf Pound!");
 				event.setLine(0, "¤1[WolfPound]");
 			} else {

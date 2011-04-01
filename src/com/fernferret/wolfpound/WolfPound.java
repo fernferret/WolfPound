@@ -19,11 +19,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
+import cosine.boseconomy.BOSEconomy;
+
 public class WolfPound extends JavaPlugin {
 	
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
-	//public Configuration configWP;
+	// public Configuration configWP;
 	
 	public final Logger log = Logger.getLogger("Minecraft");
 	private final String logPrefix = "[WolfPound]";
@@ -32,6 +34,8 @@ public class WolfPound extends JavaPlugin {
 	public static boolean useiConomy = false;
 	public static boolean useEssentials = false;
 	public static boolean usePermissions = false;
+	public static boolean useBOSEconomy = false;
+	public BOSEconomy BOSEcon;
 	
 	@Override
 	public void onEnable() {
@@ -43,6 +47,8 @@ public class WolfPound extends JavaPlugin {
 		if (getEconPlugin()) {
 			if (useiConomy) {
 				log.info(logPrefix + " using iConomy Economy!");
+			} else if (useBOSEconomy) {
+				log.info(logPrefix + " using BOSEconomy!");
 			} else if (useEssentials) {
 				log.info(logPrefix + " using Essentials Economy!");
 			}
@@ -89,7 +95,13 @@ public class WolfPound extends JavaPlugin {
 		useiConomy = (testiConomy != null);
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		useEssentials = (testEssentials != null);
-		return (useiConomy || useEssentials);
+		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
+		if(testBOSE != null) {
+			BOSEcon = (BOSEconomy)testBOSE;
+			useBOSEconomy = true;
+		}
+		
+		return (useiConomy || useBOSEconomy || useEssentials);
 	}
 	
 	/**

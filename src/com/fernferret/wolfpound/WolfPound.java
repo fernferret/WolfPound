@@ -73,10 +73,9 @@ public class WolfPound extends JavaPlugin {
 	private void loadConfiguration() {
 		configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
 		configWP.load();
-		// If the config was empty or not specified correctly, overwrite it!s
+		// If the config was empty or not specified correctly, overwrite it!
 		if(configWP.getProperty(ADOPT_PRICE_KEY) == null) {
 			configWP.setProperty(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
-			
 			configWP.save();
 		}
 		this.adoptPrice = configWP.getDouble(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
@@ -87,46 +86,69 @@ public class WolfPound extends JavaPlugin {
 		String commandName = command.getName().toLowerCase();
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
-			int wolves = 1;
-			
-			// We have at least 2 args
-			if(args != null && args.length > 0) {
-				if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("setprice") || args[0].equalsIgnoreCase("price")) {
-					if(args.length == 1) {
-						player.sendMessage("Current Wolf Price: " + this.adoptPrice);
+			switch(args.length){
+				case 0:
+					// Adopt a wolf with no params
+					adoptWolf(player, 1);
+					return true;
+				case 1: 
+					// Display the wolf price
+					if(args[0].equals("price")) {
+						sendWolfPrice(player);
 						return true;
 					}
-					try{
-						this.adoptPrice = Math.abs(Double.parseDouble(args[1]));
-					} catch (NumberFormatException e) {
-						player.sendMessage("I didn't understand what the price you wanted to set was!");
-						return true;
-					}
-					
-				}
+					// Adopt X wolves
+					adoptWolf(player, getWolfInt(args[0], player, "I didn't understand how many wolves you wanted!"));
+					return true;
+				case 2: 
+					// change a setting!, 
+					changeSetting(args[0], args[1]);
+					return true;
+				default:
+					player.sendMessage("TODO: Explain the /adopt command, it's on the wiki right now...");
+					return false;
 			}
-
-			
-			try {
-				if (args != null && args.length > 0) {
-					wolves = Math.abs(Integer.parseInt(args[0]));
-				}
-				log.info("Args: " + args);
-			} catch (NumberFormatException e) {
-				player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
-				return true;
-			}
-			if (hasPermission(player, "wolfpound.adopt")) {
-				for (int i = 0; i < wolves; i++) {
-					spawnWolf(player);
-				}
-			}
-			return true;
 		}
 		return false;
 		
 	}
 	
+	private void sendWolfPrice(Player p) {
+		if(hasPermission(p, "wolfpound.adopt"))
+			p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
+	}
+
+	private void changeSetting(String command, String value) {
+		if(command.equals("setprice")) {
+			try {
+				double newprice = Double.parseDouble(value);
+				configWP.setProperty(ADOPT_PRICE_KEY, newprice);
+				configWP.save();
+				adoptPrice = newprice;
+			}
+			catch (NumberFormatException e) {
+				log.info("Did not set wolf price!");
+			}
+		}
+	}
+
+	private int getWolfInt(String wolves, Player p, String errorMsg) {
+		try{
+			return Math.abs(Integer.parseInt(wolves));
+		} catch (NumberFormatException e) {
+			p.sendMessage(errorMsg);
+			return 0;
+		}
+	}
+
+	private void adoptWolf(Player p, int wolves) {
+		if(hasPermission(p, "wolfpound.adopt")) {
+			for(int i = 0; i < wolves; i++) {
+				spawnWolf(p);
+			}
+		}
+	}
+
 	public void spawnWolf(Player p) {
 		p.sendMessage("BAM! You got a Wolf!");
 		Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);

@@ -28,7 +28,7 @@ public class WolfPound extends JavaPlugin {
 	// public Configuration configWP;
 	
 	public final Logger log = Logger.getLogger("Minecraft");
-	private final String logPrefix = "[WolfPound]";
+	public final String logPrefix = "[WolfPound]";
 	
 	public static PermissionHandler Permissions = null;
 	public static boolean useiConomy = false;
@@ -65,24 +65,26 @@ public class WolfPound extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String commandName = command.getName().toLowerCase();
-		String[] split = args;
+		
 		// if(split != null && split[0] != null)
 		// log.info("Derp:" + split[0]);
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
 			int wolves = 1;
 			try {
-				if (split != null && split[0] != null) {
+				if (args != null && args.length > 0) {
 					wolves = Math.abs(Integer.parseInt(args[0]));
 				}
+				log.info("Args: " + args);
 			} catch (NumberFormatException e) {
 				player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
 				return true;
 			} catch (Exception e) {
 				wolves = 1;
+				log.warning("Found an unknown exception: " + e);
 			}
-			for (int i = 0; i < wolves; i++) {
-				if (hasPermission(player, "wolfpound.adopt")) {
+			if (hasPermission(player, "wolfpound.adopt")) {
+				for (int i = 0; i < wolves; i++) {
 					spawnWolf(player);
 				}
 			}

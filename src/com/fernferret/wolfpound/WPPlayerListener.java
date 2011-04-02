@@ -22,12 +22,12 @@ public class WPPlayerListener extends PlayerListener {
 	@Override
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
-		
 		if (event.hasBlock() && event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, "wolfpound.use")) {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
-				if (price == 0 || (!WolfPound.useiConomy && !WolfPound.useEssentials)) {
+				// If the price is 0 or no econ plugin
+				if (price == 0 || !plugin.getEconPlugin()) {
 					plugin.spawnWolf(p);
 				} else if (WolfPound.useiConomy) {
 					if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {

@@ -30,7 +30,6 @@ public class WPBlockListener extends BlockListener {
 			}
 		}
 		// TODO: Make wolves assigned to people
-		// TODO: Color Signs at Runtime
 	}
 	
 	@Override

@@ -65,18 +65,23 @@ public class WolfPound extends JavaPlugin {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String commandName = command.getName().toLowerCase();
+		String[] split = args;
+		// if(split != null && split[0] != null)
+		// log.info("Derp:" + split[0]);
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
 			int wolves = 1;
-			if (args[0] != null) {
-				try {
+			try {
+				if (split != null && split[0] != null) {
 					wolves = Math.abs(Integer.parseInt(args[0]));
-				} catch (NumberFormatException e) {
-					player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
-					return true;
 				}
+			} catch (NumberFormatException e) {
+				player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
+				return true;
+			} catch (Exception e) {
+				wolves = 1;
 			}
-			for(int i = 0; i < wolves; i++) {
+			for (int i = 0; i < wolves; i++) {
 				if (hasPermission(player, "wolfpound.adopt")) {
 					spawnWolf(player);
 				}
@@ -84,6 +89,7 @@ public class WolfPound extends JavaPlugin {
 			return true;
 		}
 		return false;
+		
 	}
 	
 	public void spawnWolf(Player p) {

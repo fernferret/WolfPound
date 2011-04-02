@@ -36,6 +36,7 @@ public class WolfPound extends JavaPlugin {
 	public static boolean usePermissions = false;
 	public static boolean useBOSEconomy = false;
 	public BOSEconomy BOSEcon;
+	private double adoptPrice = 0.0;
 	
 	@Override
 	public void onEnable() {
@@ -71,6 +72,24 @@ public class WolfPound extends JavaPlugin {
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
 			int wolves = 1;
+			
+			// We have at least 2 args
+			if(args != null && args.length > 0) {
+				if(args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("setprice") || args[0].equalsIgnoreCase("price")) {
+					if(args.length == 1) {
+						player.sendMessage("Current Wolf Price: " + this.adoptPrice);
+						return true;
+					}
+					try{
+						this.adoptPrice = Math.abs(Double.parseDouble(args[1]));
+					} catch (NumberFormatException e) {
+						player.sendMessage("I didn't understand what the price you wanted to set was!");
+						return true;
+					}
+				}
+			}
+
+			
 			try {
 				if (args != null && args.length > 0) {
 					wolves = Math.abs(Integer.parseInt(args[0]));
@@ -79,9 +98,6 @@ public class WolfPound extends JavaPlugin {
 			} catch (NumberFormatException e) {
 				player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
 				return true;
-			} catch (Exception e) {
-				wolves = 1;
-				log.warning("Found an unknown exception: " + e);
 			}
 			if (hasPermission(player, "wolfpound.adopt")) {
 				for (int i = 0; i < wolves; i++) {

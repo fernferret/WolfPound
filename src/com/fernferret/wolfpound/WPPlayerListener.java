@@ -32,9 +32,7 @@ public class WPPlayerListener extends PlayerListener {
 				} else if (WolfPound.useiConomy) {
 					if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {
 						iConomy.getBank().getAccount(p.getName()).subtract(price);
-						p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
-								+ " You have been charged " + price + " "
-								+ iConomy.getBank().getCurrency());
+						sendWolfCostMessage(p, price, iConomy.getBank().getCurrency());
 						plugin.spawnWolf(p);
 					} else {
 						userIsTooPoor(p);
@@ -45,13 +43,9 @@ public class WPPlayerListener extends PlayerListener {
 						int intPrice = (int)(-1*price);
 						plugin.BOSEcon.addPlayerMoney(p.getName(), intPrice, true);
 						if(price != 1) {
-							p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
-									+ " You have been charged " + price + " "
-									+ plugin.BOSEcon.getMoneyNamePlural());
+							sendWolfCostMessage(p, price, plugin.BOSEcon.getMoneyNamePlural());
 						} else {
-							p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
-									+ " You have been charged " + price + " "
-									+ plugin.BOSEcon.getMoneyName());
+							sendWolfCostMessage(p, price, plugin.BOSEcon.getMoneyName());
 						}
 						plugin.spawnWolf(p);
 					} else {
@@ -70,6 +64,11 @@ public class WPPlayerListener extends PlayerListener {
 				}
 			}
 		}
+	}
+
+	private void sendWolfCostMessage(Player p, double price, String moneyName) {
+		p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
+				+ " You have been charged " + price + " " + moneyName);
 	}
 	
 	private Double getPriceFromBlock(Block b, int i) {

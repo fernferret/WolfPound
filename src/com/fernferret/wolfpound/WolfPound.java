@@ -67,8 +67,19 @@ public class WolfPound extends JavaPlugin {
 		String commandName = command.getName().toLowerCase();
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
-			if (hasPermission(player, "wolfpound.adopt")) {
-				spawnWolf(player);
+			int wolves = 1;
+			if (args[0] != null) {
+				try {
+					wolves = Math.abs(Integer.parseInt(args[0]));
+				} catch (NumberFormatException e) {
+					player.sendMessage("I didn't understand how many wolves you wanted to adopt!");
+					return true;
+				}
+			}
+			for(int i = 0; i < wolves; i++) {
+				if (hasPermission(player, "wolfpound.adopt")) {
+					spawnWolf(player);
+				}
 			}
 			return true;
 		}
@@ -96,8 +107,8 @@ public class WolfPound extends JavaPlugin {
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		useEssentials = (testEssentials != null);
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
-		if(testBOSE != null) {
-			BOSEcon = (BOSEconomy)testBOSE;
+		if (testBOSE != null) {
+			BOSEcon = (BOSEconomy) testBOSE;
 			useBOSEconomy = true;
 		}
 		

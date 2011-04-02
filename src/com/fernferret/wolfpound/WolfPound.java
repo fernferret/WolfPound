@@ -1,5 +1,6 @@
 package com.fernferret.wolfpound;
 
+import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.block.Block;
@@ -15,6 +16,7 @@ import org.bukkit.event.Event.Priority;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
@@ -23,9 +25,12 @@ import cosine.boseconomy.BOSEconomy;
 
 public class WolfPound extends JavaPlugin {
 	
+	private static final String WOLF_POUND_CONFIG = "WolfPound.yml";
+	private static final String ADOPT_PRICE_KEY = "adoptprice";
+	private static final double DEFAULT_ADOPT_PRICE = 0.0;
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
-	// public Configuration configWP;
+	public Configuration configWP;
 	
 	public final Logger log = Logger.getLogger("Minecraft");
 	public final String logPrefix = "[WolfPound]";
@@ -40,6 +45,8 @@ public class WolfPound extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		getDataFolder().mkdirs();
+		loadConfiguration();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
 		
@@ -63,12 +70,21 @@ public class WolfPound extends JavaPlugin {
 		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
 	}
 	
+	private void loadConfiguration() {
+		configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
+		configWP.load();
+		// If the config was empty or not specified correctly, overwrite it!s
+		if(configWP.getProperty(ADOPT_PRICE_KEY) == null) {
+			configWP.setProperty(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
+			
+			configWP.save();
+		}
+		this.adoptPrice = configWP.getDouble(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
+	}
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String commandName = command.getName().toLowerCase();
-		
-		// if(split != null && split[0] != null)
-		// log.info("Derp:" + split[0]);
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
 			int wolves = 1;
@@ -86,6 +102,7 @@ public class WolfPound extends JavaPlugin {
 						player.sendMessage("I didn't understand what the price you wanted to set was!");
 						return true;
 					}
+					
 				}
 			}
 

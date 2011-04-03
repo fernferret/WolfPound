@@ -42,6 +42,7 @@ public class WolfPound extends JavaPlugin {
 	public static PermissionHandler Permissions = null;
 	public static boolean usePermissions = false;
 	private double adoptPrice = 0.0;
+	public WPBankAdapter bank;
 	
 	@Override
 	public void onEnable() {
@@ -53,7 +54,7 @@ public class WolfPound extends JavaPlugin {
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 		
 		if (setEconPlugin()) {
-			log.info(logPrefix + WPBankAdapter.getEconUsed());
+			log.info(logPrefix + bank.getEconUsed());
 		}
 		checkPermissions();
 		
@@ -143,8 +144,8 @@ public class WolfPound extends JavaPlugin {
 	 * @param wolves How many wolves
 	 */
 	private void adoptWolf(Player p, int wolves) {
-		if (hasPermission(p, PERM_ADOPT) && WPBankAdapter.hasMoney(p, adoptPrice * wolves)) {
-			WPBankAdapter.payForWolf(p, adoptPrice * wolves);
+		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, adoptPrice * wolves)) {
+			bank.payForWolf(p, adoptPrice * wolves);
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p);
 			}
@@ -170,14 +171,13 @@ public class WolfPound extends JavaPlugin {
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		if (testiConomy != null) {
-			WPBankAdapter.setEconType(WPBankAdapter.Bank.iConomy);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy);
 			return true;
 		} else if (testBOSE != null) {
-			WPBankAdapter.BOSEcon = (BOSEconomy) testBOSE;
-			WPBankAdapter.setEconType(WPBankAdapter.Bank.BOSEconomy);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, (BOSEconomy) testBOSE);
 			return true;
 		} else if (testEssentials != null) {
-			WPBankAdapter.setEconType(WPBankAdapter.Bank.iConomy);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);
 			return true;
 		}
 		return false;
@@ -196,7 +196,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public boolean hasPermission(Player p, String permission) {
-		if (!usePermissions) {
+		if (!usePermissions || p.isOp()) {
 			return true;
 		}
 		if (!WolfPound.Permissions.has(p, permission)) {

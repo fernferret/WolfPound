@@ -13,8 +13,17 @@ public class WPBankAdapter {
 		iConomy, BOSEconomy, Essentials, None
 	}
 	
-	public static BOSEconomy BOSEcon;
-	private static Bank bankType = Bank.None;
+	public BOSEconomy BOSEcon;
+	private Bank bankType = Bank.None;
+	
+	public WPBankAdapter(Bank bank) {
+		this.bankType = bank;
+	}
+	public WPBankAdapter(Bank bank, BOSEconomy econ) {
+		this.bankType = bank;
+		BOSEcon = econ;
+	}
+
 	
 	/**
 	 * Does the user have the amount of money specified?
@@ -22,21 +31,25 @@ public class WPBankAdapter {
 	 * @param m The amount of money to check if the player has
 	 * @return true if the player has at least m money, false if not
 	 */
-	public static boolean hasMoney(Player p, double m) {
+	public boolean hasMoney(Player p, double m) {
+		boolean playerHasEnough = false;
 		if (m == 0 || isUsing(Bank.None))
-			return true;
+			playerHasEnough = true;
 		if (isUsing(Bank.iConomy)) {
-			return iConomy.getBank().getAccount(p.getName()).hasEnough(m);
+			playerHasEnough = iConomy.getBank().getAccount(p.getName()).hasEnough(m);
 		} else if (isUsing(Bank.BOSEconomy)) {
-			return BOSEcon.getPlayerMoney(p.getName()) >= m;
+			playerHasEnough = BOSEcon.getPlayerMoney(p.getName()) >= m;
 		} else if (isUsing(Bank.Essentials)) {
 			User user = User.get(p);
-			return (user.getMoney() >= m);
+			playerHasEnough = (user.getMoney() >= m);
 		}
-		return false;
+		if(!playerHasEnough){
+			userIsTooPoor(p);
+		}
+		return playerHasEnough;
 	}
 	
-	public static boolean payForWolf(Player p, double cost) {
+	public boolean payForWolf(Player p, double cost) {
 		if (cost == 0 || isUsing(Bank.None))
 			return true;
 		if (isUsing(Bank.iConomy)) {
@@ -54,11 +67,11 @@ public class WPBankAdapter {
 		return false;
 	}
 	
-	public static void userIsTooPoor(Player p) {
+	public void userIsTooPoor(Player p) {
 		p.sendMessage("Sorry but you do not have the required funds for a wolf");
 	}
 	
-	public static void showRecipt(Player p, double price) {
+	public void showRecipt(Player p, double price) {
 		// Essentials already shows a message
 		String moneyName = "dollars";
 		if (isUsing(Bank.Essentials) || isUsing(Bank.None)) {
@@ -72,15 +85,15 @@ public class WPBankAdapter {
 				+ " You have been charged " + price + " " + moneyName);
 	}
 	
-	private static boolean isUsing(Bank banktype) {
+	private boolean isUsing(Bank banktype) {
 		return bankType == banktype;
 	}
 	
-	public static void setEconType(Bank banktype) {
+	public void setEconType(Bank banktype) {
 		bankType = banktype;
 	}
 
-	public static String getEconUsed() {
+	public String getEconUsed() {
 		if (isUsing(Bank.iConomy)) {
 			return " using iConomy Economy!";
 		} else if (isUsing(Bank.BOSEconomy)) {

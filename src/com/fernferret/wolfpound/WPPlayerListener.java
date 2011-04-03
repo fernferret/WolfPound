@@ -22,11 +22,10 @@ public class WPPlayerListener extends PlayerListener {
 			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
-				if (WPBankAdapter.hasMoney(p, price)) {
-					WPBankAdapter.payForWolf(p, price);
-					WPBankAdapter.showRecipt(p, price);
-				} else {
-					WPBankAdapter.userIsTooPoor(p);
+				if (plugin.bank.hasMoney(p, price)) {
+					plugin.bank.payForWolf(p, price);
+					plugin.bank.showRecipt(p, price);
+					plugin.spawnWolf(p);
 				}
 			}
 		}

@@ -3,6 +3,7 @@ package com.fernferret.wolfpound;
 import java.io.File;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -35,6 +36,8 @@ public class WolfPound extends JavaPlugin {
 	private static final double DEFAULT_ADOPT_PRICE = 0.0;
 	private static final String ADOPT_TYPE_KEY = "adopt.type";
 	private static final int DEFAULT_ADOPT_TYPE = -1;
+	public static final ChatColor prefixValid = ChatColor.DARK_BLUE;
+	public static final ChatColor prefixInvalid = ChatColor.DARK_BLUE;
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
 	public Configuration configWP;
@@ -278,7 +281,7 @@ public class WolfPound extends JavaPlugin {
 		// TODO: Make this exception more specific
 		try {
 			Sign s = new CraftSign(block);
-			return s.getLine(0).equals("¤1[WolfPound]");
+			return s.getLine(0).equals(prefixValid + "[WolfPound]");
 		} catch (Exception e) {
 			
 		}

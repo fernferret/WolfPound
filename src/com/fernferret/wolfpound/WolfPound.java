@@ -156,8 +156,7 @@ public class WolfPound extends JavaPlugin {
 	
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
-		
+		log.info(logPrefix + "- Disabled");
 	}
 	
 	/**

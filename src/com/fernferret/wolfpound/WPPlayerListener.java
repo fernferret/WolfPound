@@ -9,9 +9,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
 
-import com.earth2me.essentials.User;
-import com.nijiko.coelho.iConomy.iConomy;
-
 public class WPPlayerListener extends PlayerListener {
 	private final WolfPound plugin;
 	
@@ -27,50 +24,15 @@ public class WPPlayerListener extends PlayerListener {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
 				// If the price is 0 or no econ plugin
-				if (price == 0 || !plugin.getEconPlugin()) {
-					plugin.spawnWolf(p);
-				} else if (WolfPound.useiConomy) {
-					if (iConomy.getBank().getAccount(p.getName()).hasEnough(price)) {
-						iConomy.getBank().getAccount(p.getName()).subtract(price);
-						sendWolfCostMessage(p, price, iConomy.getBank().getCurrency());
-						plugin.spawnWolf(p);
-					} else {
-						userIsTooPoor(p);
-						return;
-					}
-				} else if(WolfPound.useBOSEconomy) {
-					if(plugin.BOSEcon.getPlayerMoney(p.getName()) >= price) {
-						int intPrice = (int)(-1*price);
-						plugin.BOSEcon.addPlayerMoney(p.getName(), intPrice, true);
-						if(price != 1) {
-							sendWolfCostMessage(p, price, plugin.BOSEcon.getMoneyNamePlural());
-						} else {
-							sendWolfCostMessage(p, price, plugin.BOSEcon.getMoneyName());
-						}
-						plugin.spawnWolf(p);
-					} else {
-						userIsTooPoor(p);
-						return;
-					}
-				} else if (WolfPound.useEssentials) {
-					User user = User.get(event.getPlayer());
-					if (user.getMoney() >= price) {
-						user.takeMoney(price);
-						plugin.spawnWolf(p);
-					} else {
-						userIsTooPoor(p);
-						return;
-					}
+				if(WPBankAdapter.hasMoney(p, price)) {
+					WPBankAdapter.payForWolf(p, price);
+					WPBankAdapter.showRecipt(p, price);
+				} else {
+					WPBankAdapter.userIsTooPoor(p);
 				}
 			}
 		}
 	}
-
-	private void sendWolfCostMessage(Player p, double price, String moneyName) {
-		p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
-				+ " You have been charged " + price + " " + moneyName);
-	}
-	
 	private Double getPriceFromBlock(Block b, int i) {
 		
 		try {
@@ -81,9 +43,5 @@ public class WPPlayerListener extends PlayerListener {
 		}
 		return 0.0;
 		
-	}
-	
-	private void userIsTooPoor(Player p) {
-		p.sendMessage("Sorry but you do not have the required funds for a wolf");
 	}
 }

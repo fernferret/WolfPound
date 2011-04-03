@@ -1,6 +1,5 @@
 package com.fernferret.wolfpound;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -20,11 +19,10 @@ public class WPPlayerListener extends PlayerListener {
 	public void onPlayerInteract(PlayerInteractEvent event) {
 		Player p = event.getPlayer();
 		if (event.hasBlock() && event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, "wolfpound.use")) {
+			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
-				// If the price is 0 or no econ plugin
-				if(WPBankAdapter.hasMoney(p, price)) {
+				if (WPBankAdapter.hasMoney(p, price)) {
 					WPBankAdapter.payForWolf(p, price);
 					WPBankAdapter.showRecipt(p, price);
 				} else {
@@ -33,11 +31,20 @@ public class WPPlayerListener extends PlayerListener {
 			}
 		}
 	}
-	private Double getPriceFromBlock(Block b, int i) {
-		
+	
+	/**
+	 * Returns a price from a sign
+	 * 
+	 * @param b The block to parse
+	 * @param line The line of the sign to parse
+	 * @return The price or 0 if the price was invalid
+	 */
+	private Double getPriceFromBlock(Block b, int line) {
 		try {
-			Sign s = new CraftSign(b);
-			return Double.parseDouble(s.getLine(i).replaceAll("\\D", ""));
+			if (b.getState() instanceof Sign) {
+				Sign s = new CraftSign(b);
+				return Double.parseDouble(s.getLine(line).replaceAll("\\D", ""));
+			}
 		} catch (NumberFormatException e) {
 			// We'll return the default
 		}

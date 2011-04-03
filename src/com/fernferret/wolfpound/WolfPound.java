@@ -25,6 +25,10 @@ import cosine.boseconomy.BOSEconomy;
 
 public class WolfPound extends JavaPlugin {
 	
+	public static final String PERM_CREATE = "wolfpound.create";
+	public static final String PERM_USE = "wolfpound.use";
+	public static final String PERM_ADOPT = "wolfpound.adopt";
+	
 	private static final String WOLF_POUND_CONFIG = "WolfPound.yml";
 	private static final String ADOPT_PRICE_KEY = "adoptprice";
 	private static final double DEFAULT_ADOPT_PRICE = 0.0;
@@ -32,15 +36,12 @@ public class WolfPound extends JavaPlugin {
 	private WPBlockListener blockListener;
 	public Configuration configWP;
 	
+	
 	public final Logger log = Logger.getLogger("Minecraft");
 	public final String logPrefix = "[WolfPound]";
 	
 	public static PermissionHandler Permissions = null;
-	public static boolean useiConomy = false;
-	public static boolean useEssentials = false;
 	public static boolean usePermissions = false;
-	public static boolean useBOSEconomy = false;
-	public BOSEconomy BOSEcon;
 	private double adoptPrice = 0.0;
 	
 	@Override
@@ -52,14 +53,8 @@ public class WolfPound extends JavaPlugin {
 		
 		log.info(logPrefix + "- Version " + this.getDescription().getVersion() + " Enabled");
 		
-		if (getEconPlugin()) {
-			if (useiConomy) {
-				log.info(logPrefix + " using iConomy Economy!");
-			} else if (useBOSEconomy) {
-				log.info(logPrefix + " using BOSEconomy!");
-			} else if (useEssentials) {
-				log.info(logPrefix + " using Essentials Economy!");
-			}
+		if (setEconPlugin()) {
+			log.info(logPrefix + WPBankAdapter.getEconUsed());
 		}
 		checkPermissions();
 		
@@ -114,7 +109,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	private void sendWolfPrice(Player p) {
-		if (hasPermission(p, "wolfpound.adopt"))
+		if (hasPermission(p, PERM_ADOPT))
 			p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
 	}
 	
@@ -141,7 +136,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	private void adoptWolf(Player p, int wolves) {
-		if (hasPermission(p, "wolfpound.adopt") && WPBankAdapter.hasMoney(p, adoptPrice)) {
+		if (hasPermission(p, PERM_ADOPT) && WPBankAdapter.hasMoney(p, adoptPrice)) {
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p);
 			}
@@ -162,32 +157,31 @@ public class WolfPound extends JavaPlugin {
 	/**
 	 * Grab the iConomy plugin from the Plugin Manager.
 	 */
-	public boolean getEconPlugin() {
+	public boolean setEconPlugin() {
 		Plugin testiConomy = this.getServer().getPluginManager().getPlugin("iConomy");
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		if (testiConomy != null) {
 			WPBankAdapter.setEconType(WPBankAdapter.Bank.iConomy);
+			return true;
 		} else if (testBOSE != null) {
 			WPBankAdapter.BOSEcon = (BOSEconomy) testBOSE;
-			useBOSEconomy = true;
 			WPBankAdapter.setEconType(WPBankAdapter.Bank.BOSEconomy);
+			return true;
 		} else if (testEssentials != null) {
 			WPBankAdapter.setEconType(WPBankAdapter.Bank.iConomy);
+			return true;
 		}
-		
-		return (useiConomy || useBOSEconomy || useEssentials);
+		return false;
 	}
 	
 	/**
 	 * Grab the Permissions plugin from the Plugin Manager.
 	 */
 	private void checkPermissions() {
-		
 		Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
 		if (test != null) {
 			log.info(logPrefix + " using Permissions");
-			
 			Permissions = ((Permissions) test).getHandler();
 			usePermissions = true;
 		}
@@ -206,6 +200,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public boolean blockIsValidWolfSign(Block block) {
+		//TODO: Make this exception more specific
 		try {
 			Sign s = new CraftSign(block);
 			return s.getLine(0).equals("¤1[WolfPound]");

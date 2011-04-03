@@ -79,4 +79,16 @@ public class WPBankAdapter {
 	public static void setEconType(Bank banktype) {
 		bankType = banktype;
 	}
+
+	public static String getEconUsed() {
+		if (isUsing(Bank.iConomy)) {
+			return " using iConomy Economy!";
+		} else if (isUsing(Bank.BOSEconomy)) {
+			return " using BOSEconomy!";
+		} else if (isUsing(Bank.Essentials)) {
+			return " using Essentials Economy!";
+		} else {
+			return " is not using an Economy Plugin!";
+		}
+	}
 }

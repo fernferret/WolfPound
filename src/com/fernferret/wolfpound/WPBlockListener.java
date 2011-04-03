@@ -22,7 +22,7 @@ public class WPBlockListener extends BlockListener {
 		
 		
 		if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			if (plugin.hasPermission(p, "wolfpound.create")) {
+			if (plugin.hasPermission(p, WolfPound.PERM_CREATE)) {
 				event.getPlayer().sendMessage("Successfully created Wolf Pound!");
 				event.setLine(0, "¤1[WolfPound]");
 			} else {
@@ -47,7 +47,7 @@ public class WPBlockListener extends BlockListener {
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
 		if (plugin.blockIsValidWolfSign(event.getBlock())) {
-			if (!plugin.hasPermission(event.getPlayer(), "wolfpound.create")) {
+			if (!plugin.hasPermission(event.getPlayer(), WolfPound.PERM_CREATE)) {
 				event.setCancelled(true);
 			} else {
 				event.getPlayer().sendMessage("Destroying Wolf Pound");

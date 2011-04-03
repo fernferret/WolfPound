@@ -36,7 +36,6 @@ public class WolfPound extends JavaPlugin {
 	private WPBlockListener blockListener;
 	public Configuration configWP;
 	
-	
 	public final Logger log = Logger.getLogger("Minecraft");
 	public final String logPrefix = "[WolfPound]";
 	
@@ -100,7 +99,9 @@ public class WolfPound extends JavaPlugin {
 					changeSetting(args[0], args[1]);
 					return true;
 				default:
-					player.sendMessage("TODO: Explain the /adopt command, it's on the wiki right now...");
+					player.sendMessage("Usage: /adopt [x]");
+					player.sendMessage("       /adopt price");
+					player.sendMessage("       /adopt setprice [x]");
 					return false;
 			}
 		}
@@ -135,8 +136,15 @@ public class WolfPound extends JavaPlugin {
 		}
 	}
 	
+	/**
+	 * Allows the user to adopt a wolf
+	 * 
+	 * @param p The player
+	 * @param wolves How many wolves
+	 */
 	private void adoptWolf(Player p, int wolves) {
-		if (hasPermission(p, PERM_ADOPT) && WPBankAdapter.hasMoney(p, adoptPrice)) {
+		if (hasPermission(p, PERM_ADOPT) && WPBankAdapter.hasMoney(p, adoptPrice * wolves)) {
+			WPBankAdapter.payForWolf(p, adoptPrice * wolves);
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p);
 			}
@@ -200,7 +208,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public boolean blockIsValidWolfSign(Block block) {
-		//TODO: Make this exception more specific
+		// TODO: Make this exception more specific
 		try {
 			Sign s = new CraftSign(block);
 			return s.getLine(0).equals("¤1[WolfPound]");

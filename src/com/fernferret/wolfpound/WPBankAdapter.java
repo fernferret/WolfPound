@@ -40,9 +40,10 @@ public class WPBankAdapter {
 	public boolean hasMoney(Player p, double m, int type) {
 		boolean playerHasEnough = false;
 		
-		if (m == 0 || isUsing(Bank.None))
+		if (m == 0 || (isUsing(Bank.None) && type == -1)) {
 			playerHasEnough = true;
-		if (type != -1) {
+		}
+		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			playerHasEnough = (item.getTypeId() == type && item.getAmount() >= m);
 		} else if (isUsing(Bank.iConomy)) {
@@ -62,9 +63,9 @@ public class WPBankAdapter {
 	
 	public boolean payForWolf(Player p, double cost, int type) {
 		
-		if (cost == 0 || isUsing(Bank.None))
+		if (cost == 0 || (isUsing(Bank.None) && type == -1))
 			return true;
-		if (type != -1) {
+		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			int finalamount = item.getAmount() - (int)cost;
 			p.getItemInHand().setAmount(finalamount);
@@ -108,6 +109,13 @@ public class WPBankAdapter {
 	
 	private boolean isUsing(Bank banktype) {
 		return bankType == banktype;
+	}
+	
+	public boolean isUsingEcon(int item) {
+		if(item == -1) {
+			return bankType != Bank.None;
+		}
+		return true;
 	}
 	
 	public void setEconType(Bank banktype) {

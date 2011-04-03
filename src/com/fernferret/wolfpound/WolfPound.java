@@ -3,6 +3,7 @@ package com.fernferret.wolfpound;
 import java.io.File;
 import java.util.logging.Logger;
 
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -83,12 +84,13 @@ public class WolfPound extends JavaPlugin {
 			configWP.save();
 		}
 		this.adoptPrice = configWP.getDouble(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
-		this.adoptType  = configWP.getInt(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
+		this.adoptType = configWP.getInt(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		String commandName = command.getName().toLowerCase();
+		
 		if (commandName.equalsIgnoreCase("adopt")) {
 			Player player = (Player) sender;
 			switch (args.length) {
@@ -107,10 +109,13 @@ public class WolfPound extends JavaPlugin {
 					return true;
 				case 2:
 					// change a setting!,
-					if(changeSetting(args[0], args[1])) {
+					if(!hasPermission(player, PERM_CREATE)) {
+						return false;
+					}
+					if (changeSetting(args[0], args[1])) {
 						player.sendMessage("Setting changed successfully!");
 					} else {
-						player.sendMessage("Setting chang failed.");
+						player.sendMessage("Setting change failed.");
 					}
 					return true;
 				default:
@@ -125,11 +130,24 @@ public class WolfPound extends JavaPlugin {
 	
 	private void sendWolfPrice(Player p) {
 		if (hasPermission(p, PERM_ADOPT))
-			p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
+			if (this.adoptPrice == 0) {
+				p.sendMessage("Adopting a wolf is FREE!");
+			} else if(this.adoptType == -1) {
+				p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
+			} else {
+				Material m = Material.getMaterial(adoptType);
+				if (m != null) {
+					p.sendMessage("It costs " + adoptPrice + " " + m.toString() + " to adopt a wolf!");
+				} else {
+					p.sendMessage("It costs " + adoptPrice + " items to adopt a wolf!");
+				}
+				
+			}
+		
 	}
 	
 	private boolean changeSetting(String command, String value) {
-		if (command.equals("setprice")) {
+		if (command.equals("setprice") || command.equals("price")) {
 			try {
 				double newprice = Double.parseDouble(value);
 				configWP.setProperty(ADOPT_PRICE_KEY, newprice);
@@ -139,8 +157,31 @@ public class WolfPound extends JavaPlugin {
 			} catch (NumberFormatException e) {
 				
 			}
+		} else if (command.equals("settype") || command.equals("type")) {
+			int type = getItemInt(value);
+			if (value.equalsIgnoreCase("money")) {
+				type = -1;
+			} else if (type == -2) {
+				return false;
+			}
+			configWP.setProperty(ADOPT_TYPE_KEY, type);
+			configWP.save();
+			this.adoptType = type;
+			return true;
 		}
 		return false;
+	}
+	
+	private int getItemInt(String value) {
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			if (Material.matchMaterial(value) != null) {
+				return Material.matchMaterial(value).getId();
+			}
+			return -2;
+			
+		}
 	}
 	
 	private int getWolfInt(String wolves, Player p, String errorMsg) {
@@ -161,7 +202,7 @@ public class WolfPound extends JavaPlugin {
 	private void adoptWolf(Player p, int wolves) {
 		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, adoptPrice * wolves, this.adoptType)) {
 			bank.payForWolf(p, adoptPrice * wolves, this.adoptType);
-			if(adoptPrice > 0) {
+			if (adoptPrice > 0) {
 				bank.showRecipt(p, adoptPrice * wolves, this.adoptType);
 			}
 			for (int i = 0; i < wolves; i++) {
@@ -197,8 +238,10 @@ public class WolfPound extends JavaPlugin {
 		} else if (testEssentials != null) {
 			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);
 			return true;
+		} else {
+			bank = new WPBankAdapter(WPBankAdapter.Bank.None);
+			return false;
 		}
-		return false;
 	}
 	
 	/**
@@ -212,9 +255,10 @@ public class WolfPound extends JavaPlugin {
 			usePermissions = true;
 		}
 	}
+	
 	/**
-	 * Determines if the specified player has the permission. If no 
-	 * permissions plugin is used or player is an op, always true
+	 * Determines if the specified player has the permission. If no permissions plugin is used or player is an op, always true
+	 * 
 	 * @param p Player
 	 * @param permission String permission
 	 * @return True if they do, false if not, also displays you dont have permission

@@ -6,7 +6,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.craftbukkit.block.CraftSign;
 
@@ -32,9 +31,13 @@ public class WPPlayerListener extends PlayerListener {
 					item = getItemFromBlock(event.getClickedBlock(), 1);
 				}
 				
-				if (plugin.bank.hasMoney(p, price, item)) {
+				if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
 					plugin.bank.payForWolf(p, price, item);
-					plugin.bank.showRecipt(p, price, item);
+					if(price > 0){
+						plugin.bank.showRecipt(p, price, item);
+					}
+					plugin.spawnWolf(p);
+				} else if(!plugin.bank.isUsingEcon(item)) {
 					plugin.spawnWolf(p);
 				}
 			}

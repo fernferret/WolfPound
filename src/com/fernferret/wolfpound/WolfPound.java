@@ -30,8 +30,10 @@ public class WolfPound extends JavaPlugin {
 	public static final String PERM_ADOPT = "wolfpound.adopt";
 	
 	private static final String WOLF_POUND_CONFIG = "WolfPound.yml";
-	private static final String ADOPT_PRICE_KEY = "adoptprice";
+	private static final String ADOPT_PRICE_KEY = "adopt.price";
 	private static final double DEFAULT_ADOPT_PRICE = 0.0;
+	private static final String ADOPT_TYPE_KEY = "adopt.type";
+	private static final int DEFAULT_ADOPT_TYPE = -1;
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
 	public Configuration configWP;
@@ -43,6 +45,8 @@ public class WolfPound extends JavaPlugin {
 	public static boolean usePermissions = false;
 	private double adoptPrice = 0.0;
 	public WPBankAdapter bank;
+	// Used as an item id for transactions with the /adopt command
+	private int adoptType = -1;
 	
 	@Override
 	public void onEnable() {
@@ -73,7 +77,13 @@ public class WolfPound extends JavaPlugin {
 			configWP.setProperty(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
 			configWP.save();
 		}
+		
+		if (configWP.getProperty(ADOPT_TYPE_KEY) == null) {
+			configWP.setProperty(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
+			configWP.save();
+		}
 		this.adoptPrice = configWP.getDouble(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
+		this.adoptType  = configWP.getInt(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
 	}
 	
 	@Override
@@ -97,7 +107,11 @@ public class WolfPound extends JavaPlugin {
 					return true;
 				case 2:
 					// change a setting!,
-					changeSetting(args[0], args[1]);
+					if(changeSetting(args[0], args[1])) {
+						player.sendMessage("Setting changed successfully!");
+					} else {
+						player.sendMessage("Setting chang failed.");
+					}
 					return true;
 				default:
 					player.sendMessage("Usage: /adopt [x]");
@@ -107,7 +121,6 @@ public class WolfPound extends JavaPlugin {
 			}
 		}
 		return false;
-		
 	}
 	
 	private void sendWolfPrice(Player p) {
@@ -115,17 +128,19 @@ public class WolfPound extends JavaPlugin {
 			p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
 	}
 	
-	private void changeSetting(String command, String value) {
+	private boolean changeSetting(String command, String value) {
 		if (command.equals("setprice")) {
 			try {
 				double newprice = Double.parseDouble(value);
 				configWP.setProperty(ADOPT_PRICE_KEY, newprice);
 				configWP.save();
 				adoptPrice = newprice;
+				return true;
 			} catch (NumberFormatException e) {
-				log.info("Did not set wolf price!");
+				
 			}
 		}
+		return false;
 	}
 	
 	private int getWolfInt(String wolves, Player p, String errorMsg) {
@@ -144,10 +159,10 @@ public class WolfPound extends JavaPlugin {
 	 * @param wolves How many wolves
 	 */
 	private void adoptWolf(Player p, int wolves) {
-		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, adoptPrice * wolves)) {
-			bank.payForWolf(p, adoptPrice * wolves);
+		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, adoptPrice * wolves, this.adoptType)) {
+			bank.payForWolf(p, adoptPrice * wolves, this.adoptType);
 			if(adoptPrice > 0) {
-				bank.showRecipt(p, adoptPrice * wolves);
+				bank.showRecipt(p, adoptPrice * wolves, this.adoptType);
 			}
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p);
@@ -197,7 +212,13 @@ public class WolfPound extends JavaPlugin {
 			usePermissions = true;
 		}
 	}
-	
+	/**
+	 * Determines if the specified player has the permission. If no 
+	 * permissions plugin is used or player is an op, always true
+	 * @param p Player
+	 * @param permission String permission
+	 * @return True if they do, false if not, also displays you dont have permission
+	 */
 	public boolean hasPermission(Player p, String permission) {
 		if (!usePermissions || p.isOp()) {
 			return true;

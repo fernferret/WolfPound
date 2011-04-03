@@ -22,32 +22,52 @@ public class WPPlayerListener extends PlayerListener {
 			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
 				// We have a valid pound!
 				double price = getPriceFromBlock(event.getClickedBlock(), 1);
-				if (plugin.bank.hasMoney(p, price)) {
-					plugin.bank.payForWolf(p, price);
-					plugin.bank.showRecipt(p, price);
+				int item = getItemFromBlock(event.getClickedBlock(), 1);
+				if (plugin.bank.hasMoney(p, price, item)) {
+					plugin.bank.payForWolf(p, price, item);
+					plugin.bank.showRecipt(p, price, item);
 					plugin.spawnWolf(p);
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Returns a price from a sign
 	 * 
 	 * @param b The block to parse
-	 * @param line The line of the sign to parse
+	 * @param l The line of the sign to parse
 	 * @return The price or 0 if the price was invalid
 	 */
-	private Double getPriceFromBlock(Block b, int line) {
+	private Double getPriceFromBlock(Block b, int l) {
 		try {
 			if (b.getState() instanceof Sign) {
 				Sign s = new CraftSign(b);
-				return Double.parseDouble(s.getLine(line).replaceAll("\\D", ""));
+				String line = s.getLine(l);
+				String[] items = line.split("(.*):(.*)");
+				if(items.length > 0) {
+					return Double.parseDouble(items[0].replaceAll("\\D", ""));
+				}
 			}
 		} catch (NumberFormatException e) {
 			// We'll return the default
 		}
 		return 0.0;
-		
+	}
+	
+	private int getItemFromBlock(Block b, int l) {
+		try {
+			if (b.getState() instanceof Sign) {
+				Sign s = new CraftSign(b);
+				String line = s.getLine(l);
+				String[] items = line.split(":");
+				if(items.length > 0) {
+					return Integer.parseInt(items[1].replaceAll("\\D", ""));
+				}
+			}
+		} catch (NumberFormatException e) {
+			// We'll return the default
+		}
+		return -1;
 	}
 }

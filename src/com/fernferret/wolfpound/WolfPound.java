@@ -146,6 +146,9 @@ public class WolfPound extends JavaPlugin {
 	private void adoptWolf(Player p, int wolves) {
 		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, adoptPrice * wolves)) {
 			bank.payForWolf(p, adoptPrice * wolves);
+			if(adoptPrice > 0) {
+				bank.showRecipt(p, adoptPrice * wolves);
+			}
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p);
 			}
@@ -203,7 +206,6 @@ public class WolfPound extends JavaPlugin {
 			p.sendMessage("You don't have permission(" + permission + ") to do this!");
 			return false;
 		}
-		
 		return true;
 	}
 	

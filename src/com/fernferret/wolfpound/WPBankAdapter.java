@@ -74,11 +74,16 @@ public class WPBankAdapter {
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			int finalamount = item.getAmount() - (int)cost;
+			
 			plugin.log.info("Checking Items...");
 			plugin.log.info("Amount player has: " + item.getAmount());
 			plugin.log.info("Final amount: " + finalamount);
-			//p.getItemInHand()
-			p.getItemInHand().setAmount(0);
+			if(finalamount > 0) {
+				p.getItemInHand().setAmount(finalamount);
+			} else {
+				p.getInventory().remove(item);
+			}
+			//p.getItemInHand().setAmount(0);
 		} else if (isUsing(Bank.iConomy)) {
 			iConomy.getBank().getAccount(p.getName()).subtract(cost);
 			return true;

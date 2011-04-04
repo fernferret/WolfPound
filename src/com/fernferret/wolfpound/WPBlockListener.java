@@ -63,6 +63,16 @@ public class WPBlockListener extends BlockListener {
 		}
 		return true;
 	}
+	
+	public static boolean checkItem(String item) {
+		int result = getRightSide(item);
+		if(result == WolfPound.MULTIPLE_ITEMS_FOUND) {
+			return false;
+		} else if(result == WolfPound.NO_ITEM_FOUND) {
+			return false;
+		}
+		return true;
+	}
 	public static boolean checkLeftSide(Player p, String item) {
 		double leftSide = getLeftSide(item);
 		if(leftSide == WolfPound.INVALID_PRICE) {
@@ -73,10 +83,19 @@ public class WPBlockListener extends BlockListener {
 	}
 	
 	public static int getRightSide(String item) {
-		Material m = Material.matchMaterial(item);
-		if (m != null) {
+		try {
+			Material m = Material.getMaterial(Integer.parseInt(item));
 			return m.getId();
+		} catch (NullPointerException e) {
+			return WolfPound.NO_ITEM_FOUND;
+		} catch (NumberFormatException e) {
+			Material m = Material.matchMaterial(item);
+			if (m != null) {
+				return m.getId();
+			}
 		}
+		
+		
 		return parseMaterialFromString(item);
 	}
 	

@@ -1,5 +1,6 @@
 package com.fernferret.wolfpound;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -95,25 +96,7 @@ public class WPBankAdapter {
 	}
 	
 	public void showRecipt(Player p, double price, int item) {
-		// Essentials already shows a message
-		String moneyName = "dollars";
-		if (item != -1) {
-			ItemStack is = new ItemStack(item);
-			moneyName = is.getType().toString();
-		}else if (isUsing(Bank.Essentials) || isUsing(Bank.None)) {
-			return;
-		} else if (isUsing(Bank.iConomy)) {
-			moneyName = iConomy.getBank().getCurrency();
-		} else if (isUsing(Bank.BOSEconomy)) {
-			if(price == 1) {
-				moneyName = BOSEcon.getMoneyName();
-			} else {
-				moneyName = BOSEcon.getMoneyNamePlural();
-			}
-			
-		}
-		p.sendMessage(WolfPound.chatPrefix
-				+ " You have been charged " + price + " " + moneyName);
+		p.sendMessage(WolfPound.chatPrefix + " You have been charged " + item + " " + getBankCurrency(price, item));
 	}
 	
 	private boolean isUsing(Bank banktype) {
@@ -125,6 +108,33 @@ public class WPBankAdapter {
 			return bankType != Bank.None;
 		}
 		return true;
+	}
+	
+	public String getBankCurrency(double amount, int type) {
+		if (type != -1) {
+			Material m = Material.getMaterial(type);
+			if(m != null) {
+				return m.toString();
+			} else {
+				return "NO ITEM FOUND";
+			}
+		}
+		if(bankType == Bank.BOSEconomy) {
+			if(amount == 1) {
+				return BOSEcon.getMoneyName();
+			}
+			return BOSEcon.getMoneyNamePlural();
+		}
+		if(bankType == Bank.Essentials) {
+			if(amount == 1) {
+				return "dollar";
+			}
+			return "dollars";
+		}
+		if(bankType == Bank.iConomy) {
+			return iConomy.getBank().getCurrency();
+		}
+		return "";
 	}
 	
 	public void setEconType(Bank banktype) {

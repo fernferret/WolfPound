@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -93,8 +92,13 @@ public class WolfPound extends JavaPlugin {
 			configWP.setProperty(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
 			configWP.save();
 		}
+		if(!WPBlockListener.checkItem(this.adoptType + "")) {
+			configWP.setProperty(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
+			configWP.save();
+		}
 		this.adoptPrice = configWP.getDouble(ADOPT_PRICE_KEY, DEFAULT_ADOPT_PRICE);
 		this.adoptType = configWP.getInt(ADOPT_TYPE_KEY, DEFAULT_ADOPT_TYPE);
+		
 	}
 	
 	@Override
@@ -136,21 +140,13 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	private void sendWolfPrice(Player p) {
-		if (hasPermission(p, PERM_ADOPT))
+		if (hasPermission(p, PERM_ADOPT)) {
 			if (this.adoptPrice == 0) {
 				p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE!");
-			} else if(this.adoptType == -1) {
-				p.sendMessage(chatPrefix + "It costs " + adoptPrice + " to adopt a wolf!");
 			} else {
-				Material m = Material.getMaterial(adoptType);
-				if (m != null) {
-					p.sendMessage(chatPrefix + "It costs " + adoptPrice + " " + m.toString() + " to adopt a wolf!");
-				} else {
-					p.sendMessage(chatPrefix + "It costs " + adoptPrice + " items to adopt a wolf!");
-				}
-				
+				p.sendMessage(chatPrefix + "It costs " + adoptPrice + " " + bank.getBankCurrency(adoptPrice, adoptType) + " to adopt a wolf!");
 			}
-		
+		}
 	}
 	
 	private boolean changeSetting(String command, String value) {
@@ -165,10 +161,10 @@ public class WolfPound extends JavaPlugin {
 				
 			}
 		} else if (command.equals("settype") || command.equals("type")) {
-			int type = getItemInt(value);
+			int type = WPBlockListener.getRightSide(value);
 			if (value.equalsIgnoreCase("money")) {
-				type = -1;
-			} else if (type == -2) {
+				type = DEFAULT_ADOPT_TYPE;
+			} else if (type == NO_ITEM_FOUND || type == MULTIPLE_ITEMS_FOUND) {
 				return false;
 			}
 			configWP.setProperty(ADOPT_TYPE_KEY, type);
@@ -177,18 +173,6 @@ public class WolfPound extends JavaPlugin {
 			return true;
 		}
 		return false;
-	}
-	
-	private int getItemInt(String value) {
-		try {
-			return Integer.parseInt(value);
-		} catch (NumberFormatException e) {
-			if (Material.matchMaterial(value) != null) {
-				return Material.matchMaterial(value).getId();
-			}
-			return -2;
-			
-		}
 	}
 	
 	private int getWolfInt(String wolves, Player p, String errorMsg) {

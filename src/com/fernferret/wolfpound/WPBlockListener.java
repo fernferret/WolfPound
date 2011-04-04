@@ -121,7 +121,6 @@ public class WPBlockListener extends BlockListener {
 			materialString = materialString.toUpperCase();
 			String materialRegex = "(.*" + materialString +  ".*)";
 			if (mat.toString().matches(materialRegex)) {
-				WolfPound.log.info("YEP!");
 				materials.add(mat);
 			}
 		}

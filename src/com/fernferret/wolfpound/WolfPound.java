@@ -233,16 +233,16 @@ public class WolfPound extends JavaPlugin {
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		if (testiConomy != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy, this);
 			return true;
 		} else if (testBOSE != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, (BOSEconomy) testBOSE);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, this, (BOSEconomy) testBOSE);
 			return true;
 		} else if (testEssentials != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials, this);
 			return true;
 		} else {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.None);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.None, this);
 			return false;
 		}
 	}

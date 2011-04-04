@@ -20,14 +20,17 @@ public class WPBankAdapter {
 	
 	public BOSEconomy BOSEcon;
 	private Bank bankType = Bank.None;
+	private WolfPound plugin;
 	
-	public WPBankAdapter(Bank bank) {
+	public WPBankAdapter(Bank bank, final WolfPound plugin) {
 		this.bankType = bank;
+		this.plugin = plugin;
 	}
 	
-	public WPBankAdapter(Bank bank, BOSEconomy econ) {
+	public WPBankAdapter(Bank bank, final WolfPound plugin, BOSEconomy econ) {
 		this.bankType = bank;
-		BOSEcon = econ;
+		this.BOSEcon = econ;
+		this.plugin = plugin;
 	}
 	
 	/**
@@ -46,6 +49,9 @@ public class WPBankAdapter {
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			playerHasEnough = (item.getTypeId() == type && item.getAmount() >= m);
+			plugin.log.info("Checking Items...");
+			plugin.log.info("Amount player has: " + item.getAmount());
+			plugin.log.info("Amount required: " + m);
 		} else if (isUsing(Bank.iConomy)) {
 			playerHasEnough = iConomy.getBank().getAccount(p.getName()).hasEnough(m);
 		} else if (isUsing(Bank.BOSEconomy)) {
@@ -68,7 +74,11 @@ public class WPBankAdapter {
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			int finalamount = item.getAmount() - (int)cost;
-			p.getItemInHand().setAmount(finalamount);
+			plugin.log.info("Checking Items...");
+			plugin.log.info("Amount player has: " + item.getAmount());
+			plugin.log.info("Final amount: " + finalamount);
+			//p.getItemInHand()
+			p.getItemInHand().setAmount(0);
 		} else if (isUsing(Bank.iConomy)) {
 			iConomy.getBank().getAccount(p.getName()).subtract(cost);
 			return true;
@@ -95,15 +105,19 @@ public class WPBankAdapter {
 		if (item != -1) {
 			ItemStack is = new ItemStack(item);
 			moneyName = is.getType().toString();
-		}
-		if (isUsing(Bank.Essentials) || isUsing(Bank.None)) {
+		}else if (isUsing(Bank.Essentials) || isUsing(Bank.None)) {
 			return;
 		} else if (isUsing(Bank.iConomy)) {
 			moneyName = iConomy.getBank().getCurrency();
 		} else if (isUsing(Bank.BOSEconomy)) {
+			if(price == 1) {
+				moneyName = BOSEcon.getMoneyName();
+			} else {
+				moneyName = BOSEcon.getMoneyNamePlural();
+			}
 			
 		}
-		p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.RED
+		p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.DARK_RED
 				+ " You have been charged " + price + " " + moneyName);
 	}
 	

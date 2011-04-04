@@ -1,5 +1,7 @@
 package com.fernferret.wolfpound;
 
+import java.util.ArrayList;
+
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -12,7 +14,6 @@ import org.bukkit.craftbukkit.block.CraftSign;
 public class WPBlockListener extends BlockListener {
 	private final WolfPound plugin;
 	
-	
 	public WPBlockListener(final WolfPound plugin) {
 		this.plugin = plugin;
 	}
@@ -21,9 +22,8 @@ public class WPBlockListener extends BlockListener {
 	public void onSignChange(SignChangeEvent event) {
 		Player p = event.getPlayer();
 		
-		
 		if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			if (plugin.hasPermission(p, WolfPound.PERM_CREATE)) {
+			if (plugin.hasPermission(p, WolfPound.PERM_CREATE) && validateItemLine(event.getLine(1), p)) {
 				event.getPlayer().sendMessage("Successfully created Wolf Pound!");
 				event.setLine(0, WolfPound.prefixValid + "[WolfPound]");
 			} else {
@@ -31,6 +31,80 @@ public class WPBlockListener extends BlockListener {
 			}
 		}
 		// TODO: Make wolves assigned to people
+	}
+	
+	private boolean validateItemLine(String line, Player p) {
+		String[] items = line.split(":");
+		if (items == null || items.length == 0) {
+			return true;
+		} else if (items.length == 1) {
+			return checkLeftSide(p, items[0]);
+		} else if (items.length == 2) {
+			return checkLeftSide(p, items[0]) && checkRightSide(p, items[1]);
+		}
+		return false;
+	}
+	
+	public static boolean checkRightSide(Player p, String item) {
+		int result = getRightSide(item);
+		if(result == WolfPound.MULTIPLE_ITEMS_FOUND) {
+			p.sendMessage(WolfPound.chatPrefix + "Found multiple items that match: " + item);
+			return false;
+		} else if(result == WolfPound.NO_ITEM_FOUND) {
+			p.sendMessage(WolfPound.chatPrefix + "Could not find item: " + item);
+			return false;
+		}
+		return true;
+	}
+	public static boolean checkLeftSide(Player p, String item) {
+		double leftSide = getLeftSide(item);
+		if(leftSide == WolfPound.INVALID_PRICE) {
+			p.sendMessage(WolfPound.chatPrefix + "Please enter a valid price on Line 2");
+			return false;
+		}
+		return true;
+	}
+	
+	public static int getRightSide(String item) {
+		Material m = Material.matchMaterial(item);
+		if (m != null) {
+			return m.getId();
+		}
+		return parseMaterialFromString(item);
+	}
+	
+	public static double getLeftSide(String item) {
+		if(item.equalsIgnoreCase("free") || item.length() == 0) {
+			return WolfPound.MONEY_ITEM_FOUND;
+		}
+			try {
+				return Double.parseDouble(item.replaceAll("\\D", ""));
+			
+		} catch (NumberFormatException e) {
+			
+		}
+		return WolfPound.INVALID_PRICE;
+	}
+	
+
+	
+	public static int parseMaterialFromString(String materialString) {
+		ArrayList<Material> materials = new ArrayList<Material>();
+		for (Material mat : Material.values()) {
+			materialString = materialString.replace(" ", "_");
+			materialString = materialString.toUpperCase();
+			String materialRegex = "(.*" + materialString +  ".*)";
+			if (mat.toString().matches(materialRegex)) {
+				WolfPound.log.info("YEP!");
+				materials.add(mat);
+			}
+		}
+		if (materials.size() == 1) {
+			return materials.get(0).getId();
+		} else if (materials.size() > 1) {
+			return WolfPound.MULTIPLE_ITEMS_FOUND;
+		}
+		return WolfPound.NO_ITEM_FOUND;
 	}
 	
 	@Override

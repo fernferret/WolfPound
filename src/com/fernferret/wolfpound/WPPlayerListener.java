@@ -1,6 +1,5 @@
 package com.fernferret.wolfpound;
 
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -22,84 +21,61 @@ public class WPPlayerListener extends PlayerListener {
 		if (event.hasBlock() && event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 			if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
 				// We have a valid pound!
-				double price = 0;
-				int item = -1;
-				if(checkSignParms(event.getClickedBlock(), 1) > 0) {
-					price = getPriceFromBlock(event.getClickedBlock(), 1);
-				} 
-				if(checkSignParms(event.getClickedBlock(), 1) > 1){
-					item = getItemFromBlock(event.getClickedBlock(), 1);
-				}
-				
-				if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
-					plugin.bank.payForWolf(p, price, item);
-					if(price > 0){
-						plugin.bank.showRecipt(p, price, item);
+				if (checkSignParams(event.getClickedBlock(), 1, p)) {
+					// We have valid pound params!
+					double price = getPrice(event.getClickedBlock(), 1, p);
+					int item = getType(event.getClickedBlock(), 1, p);
+					if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
+						plugin.bank.payForWolf(p, price, item);
+						if (price > 0) {
+							plugin.bank.showRecipt(p, price, item);
+						}
+						plugin.spawnWolf(p);
+					} else if (!plugin.bank.isUsingEcon(item)) {
+						plugin.spawnWolf(p);
 					}
-					plugin.spawnWolf(p);
-				} else if(!plugin.bank.isUsingEcon(item)) {
-					plugin.spawnWolf(p);
 				}
 			}
 		}
 	}
 	
-	private int checkSignParms(Block b, int l) {
+	private boolean checkSignParams(Block b, int l, Player p) {
 		Sign s = new CraftSign(b);
+		
 		String line = s.getLine(l);
 		String[] items = line.split(":");
-		return items.length;
+		if (items.length == 0) {
+			return true;
+		}
+		if (items.length == 1) {
+			return WPBlockListener.checkLeftSide(p, items[0]);
+		}
+		if (items.length == 2) {
+			return WPBlockListener.checkLeftSide(p, items[0]) && WPBlockListener.checkRightSide(p, items[1]);
+		}
+		return false;
 	}
-
-	/**
-	 * Returns a price from a sign
-	 * 
-	 * @param b The block to parse
-	 * @param l The line of the sign to parse
-	 * @return The price or 0 if the price was invalid
-	 */
-	private Double getPriceFromBlock(Block b, int l) {
-		try {
-			if (b.getState() instanceof Sign) {
-				Sign s = new CraftSign(b);
-				String line = s.getLine(l);
-				String[] items = line.split(":");
-				if (items.length > 0) {
-					return Double.parseDouble(items[0].replaceAll("\\D", ""));
-				}
-			}
-		} catch (NumberFormatException e) {
-			// We'll return the default
-		} catch (ArrayIndexOutOfBoundsException e) {
-			// Again, we'll return the default
+	
+	private Double getPrice(Block b, int l, Player p) {
+		Sign s = new CraftSign(b);
+		
+		String line = s.getLine(l);
+		String[] items = line.split(":");
+		if(items.length > 0) {
+			return WPBlockListener.getLeftSide(items[0]);
 		}
 		return 0.0;
 	}
 	
-	private int getItemFromBlock(Block b, int l) {
-		String line = "";
-		String[] items;
+	private int getType(Block b, int l, Player p) {
+		Sign s = new CraftSign(b);
 		
-		if (b.getState() instanceof Sign) {
-			try {
-				Sign s = new CraftSign(b);
-				line = s.getLine(l);
-				items = line.split(":");
-				if (items.length > 0) {
-					return Integer.parseInt(items[1].replaceAll("\\D", ""));
-				}
-			} catch (NumberFormatException e) {
-				Sign s = new CraftSign(b);
-				line = s.getLine(l);
-				items = line.split(":");
-				if (items.length > 0) {
-					Material m = Material.matchMaterial(items[1]);
-					return m.getId();
-				}
-			} catch (ArrayIndexOutOfBoundsException e) {
-				
-			}
+		String line = s.getLine(l);
+		String[] items = line.split(":");
+		if(items.length > 1){
+			return WPBlockListener.getRightSide(items[1]);
 		}
-		return -1;
+		return WolfPound.MONEY_ITEM_FOUND;
+			
 	}
 }

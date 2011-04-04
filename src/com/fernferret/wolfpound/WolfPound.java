@@ -36,17 +36,23 @@ public class WolfPound extends JavaPlugin {
 	private static final double DEFAULT_ADOPT_PRICE = 0.0;
 	private static final String ADOPT_TYPE_KEY = "adopt.type";
 	private static final int DEFAULT_ADOPT_TYPE = -1;
+	public static final int NO_ITEM_FOUND = -2;
+	public static final int MULTIPLE_ITEMS_FOUND = -3;
+	public static final int MONEY_ITEM_FOUND = -1;
+	public static final int INVALID_PRICE = -4;
 	public static final ChatColor prefixValid = ChatColor.DARK_BLUE;
 	public static final ChatColor prefixInvalid = ChatColor.DARK_BLUE;
+	
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
 	public Configuration configWP;
 	
-	public final Logger log = Logger.getLogger("Minecraft");
-	public final String logPrefix = "[WolfPound]";
+	public static final Logger log = Logger.getLogger("Minecraft");
+	public static final String logPrefix = "[WolfPound]";
 	
 	public static PermissionHandler Permissions = null;
 	public static boolean usePermissions = false;
+	public static final String chatPrefix = ChatColor.DARK_RED + "[WolfPound]" + ChatColor.WHITE;
 	private double adoptPrice = 0.0;
 	public WPBankAdapter bank;
 	// Used as an item id for transactions with the /adopt command
@@ -233,16 +239,16 @@ public class WolfPound extends JavaPlugin {
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
 		if (testiConomy != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy, this);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy);
 			return true;
 		} else if (testBOSE != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, this, (BOSEconomy) testBOSE);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, (BOSEconomy) testBOSE);
 			return true;
 		} else if (testEssentials != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials, this);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);
 			return true;
 		} else {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.None, this);
+			bank = new WPBankAdapter(WPBankAdapter.Bank.None);
 			return false;
 		}
 	}

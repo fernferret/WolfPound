@@ -20,17 +20,14 @@ public class WPBankAdapter {
 	
 	public BOSEconomy BOSEcon;
 	private Bank bankType = Bank.None;
-	private WolfPound plugin;
 	
-	public WPBankAdapter(Bank bank, final WolfPound plugin) {
+	public WPBankAdapter(Bank bank) {
 		this.bankType = bank;
-		this.plugin = plugin;
 	}
 	
-	public WPBankAdapter(Bank bank, final WolfPound plugin, BOSEconomy econ) {
+	public WPBankAdapter(Bank bank, BOSEconomy econ) {
 		this.bankType = bank;
 		this.BOSEcon = econ;
-		this.plugin = plugin;
 	}
 	
 	/**
@@ -49,9 +46,6 @@ public class WPBankAdapter {
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			playerHasEnough = (item.getTypeId() == type && item.getAmount() >= m);
-			plugin.log.info("Checking Items...");
-			plugin.log.info("Amount player has: " + item.getAmount());
-			plugin.log.info("Amount required: " + m);
 		} else if (isUsing(Bank.iConomy)) {
 			playerHasEnough = iConomy.getBank().getAccount(p.getName()).hasEnough(m);
 		} else if (isUsing(Bank.BOSEconomy)) {
@@ -75,9 +69,6 @@ public class WPBankAdapter {
 			ItemStack item = p.getItemInHand();
 			int finalamount = item.getAmount() - (int)cost;
 			
-			plugin.log.info("Checking Items...");
-			plugin.log.info("Amount player has: " + item.getAmount());
-			plugin.log.info("Final amount: " + finalamount);
 			if(finalamount > 0) {
 				p.getItemInHand().setAmount(finalamount);
 			} else {

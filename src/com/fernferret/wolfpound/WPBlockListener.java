@@ -23,11 +23,17 @@ public class WPBlockListener extends BlockListener {
 		Player p = event.getPlayer();
 		
 		if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
-			if (plugin.hasPermission(p, WolfPound.PERM_CREATE) && validateItemLine(event.getLine(1), p)) {
-				event.getPlayer().sendMessage("Successfully created Wolf Pound!");
+			boolean secondLineValid = validateItemLine(event.getLine(1), p);
+			if (plugin.hasPermission(p, WolfPound.PERM_CREATE) && secondLineValid) {
+				event.getPlayer().sendMessage(WolfPound.chatPrefix + "Successfully created Wolf Pound!");
 				event.setLine(0, WolfPound.prefixValid + "[WolfPound]");
 			} else {
+				
 				event.setLine(0, WolfPound.prefixInvalid + "[WolfPound]");
+			}
+			if(!secondLineValid) {
+				event.getPlayer().sendMessage(WolfPound.chatPrefixError + "Pound creation failed!");
+				event.setLine(1, WolfPound.prefixInvalid + event.getLine(1));
 			}
 		}
 		// TODO: Make wolves assigned to people
@@ -42,16 +48,17 @@ public class WPBlockListener extends BlockListener {
 		} else if (items.length == 2) {
 			return checkLeftSide(p, items[0]) && checkRightSide(p, items[1]);
 		}
+		p.sendMessage(WolfPound.chatPrefixError + "You have more than 1 colon on your 2nd line!");
 		return false;
 	}
 	
 	public static boolean checkRightSide(Player p, String item) {
 		int result = getRightSide(item);
 		if(result == WolfPound.MULTIPLE_ITEMS_FOUND) {
-			p.sendMessage(WolfPound.chatPrefix + "Found multiple items that match: " + item);
+			p.sendMessage(WolfPound.chatPrefixError + "Found multiple items that match: " + item);
 			return false;
 		} else if(result == WolfPound.NO_ITEM_FOUND) {
-			p.sendMessage(WolfPound.chatPrefix + "Could not find item: " + item);
+			p.sendMessage(WolfPound.chatPrefixError + "Could not find item: " + item);
 			return false;
 		}
 		return true;
@@ -59,7 +66,7 @@ public class WPBlockListener extends BlockListener {
 	public static boolean checkLeftSide(Player p, String item) {
 		double leftSide = getLeftSide(item);
 		if(leftSide == WolfPound.INVALID_PRICE) {
-			p.sendMessage(WolfPound.chatPrefix + "Please enter a valid price on Line 2");
+			p.sendMessage(WolfPound.chatPrefixError + "Please enter a valid price on Line 2");
 			return false;
 		}
 		return true;
@@ -125,7 +132,7 @@ public class WPBlockListener extends BlockListener {
 			if (!plugin.hasPermission(event.getPlayer(), WolfPound.PERM_CREATE)) {
 				event.setCancelled(true);
 			} else {
-				event.getPlayer().sendMessage("Destroying Wolf Pound");
+				event.getPlayer().sendMessage(WolfPound.chatPrefixError + "Destroying Wolf Pound");
 			}
 		}
 	}

@@ -41,7 +41,7 @@ public class WolfPound extends JavaPlugin {
 	public static final int MONEY_ITEM_FOUND = -1;
 	public static final int INVALID_PRICE = -4;
 	public static final ChatColor prefixValid = ChatColor.DARK_BLUE;
-	public static final ChatColor prefixInvalid = ChatColor.DARK_BLUE;
+	public static final ChatColor prefixInvalid = ChatColor.DARK_RED;
 	
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
@@ -52,7 +52,8 @@ public class WolfPound extends JavaPlugin {
 	
 	public static PermissionHandler Permissions = null;
 	public static boolean usePermissions = false;
-	public static final String chatPrefix = ChatColor.DARK_RED + "[WolfPound]" + ChatColor.WHITE;
+	public static final String chatPrefixError = ChatColor.DARK_RED + "[WolfPound]" + ChatColor.WHITE + " ";
+	public static final String chatPrefix = ChatColor.DARK_GREEN + "[WolfPound]" + ChatColor.WHITE + " ";
 	private double adoptPrice = 0.0;
 	public WPBankAdapter bank;
 	// Used as an item id for transactions with the /adopt command
@@ -122,15 +123,12 @@ public class WolfPound extends JavaPlugin {
 						return false;
 					}
 					if (changeSetting(args[0], args[1])) {
-						player.sendMessage("Setting changed successfully!");
+						player.sendMessage(chatPrefix + "Setting changed successfully!");
 					} else {
-						player.sendMessage("Setting change failed.");
+						player.sendMessage(chatPrefixError + "Setting change failed.");
 					}
 					return true;
 				default:
-					player.sendMessage("Usage: /adopt [x]");
-					player.sendMessage("       /adopt price");
-					player.sendMessage("       /adopt setprice [x]");
 					return false;
 			}
 		}
@@ -140,15 +138,15 @@ public class WolfPound extends JavaPlugin {
 	private void sendWolfPrice(Player p) {
 		if (hasPermission(p, PERM_ADOPT))
 			if (this.adoptPrice == 0) {
-				p.sendMessage("Adopting a wolf is FREE!");
+				p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE!");
 			} else if(this.adoptType == -1) {
-				p.sendMessage("It costs " + adoptPrice + " to adopt a wolf!");
+				p.sendMessage(chatPrefix + "It costs " + adoptPrice + " to adopt a wolf!");
 			} else {
 				Material m = Material.getMaterial(adoptType);
 				if (m != null) {
-					p.sendMessage("It costs " + adoptPrice + " " + m.toString() + " to adopt a wolf!");
+					p.sendMessage(chatPrefix + "It costs " + adoptPrice + " " + m.toString() + " to adopt a wolf!");
 				} else {
-					p.sendMessage("It costs " + adoptPrice + " items to adopt a wolf!");
+					p.sendMessage(chatPrefix + "It costs " + adoptPrice + " items to adopt a wolf!");
 				}
 				
 			}
@@ -197,7 +195,7 @@ public class WolfPound extends JavaPlugin {
 		try {
 			return Math.abs(Integer.parseInt(wolves));
 		} catch (NumberFormatException e) {
-			p.sendMessage(errorMsg);
+			p.sendMessage(chatPrefixError + errorMsg);
 			return 0;
 		}
 	}
@@ -277,7 +275,7 @@ public class WolfPound extends JavaPlugin {
 			return true;
 		}
 		if (!WolfPound.Permissions.has(p, permission)) {
-			p.sendMessage("You don't have permission(" + permission + ") to do this!");
+			p.sendMessage(chatPrefixError + "You don't have permission(" + permission + ") to do this!");
 			return false;
 		}
 		return true;

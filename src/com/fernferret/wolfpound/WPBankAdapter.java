@@ -1,6 +1,5 @@
 package com.fernferret.wolfpound;
 
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -92,7 +91,7 @@ public class WPBankAdapter {
 	
 	public void userIsTooPoor(Player p, int item) {
 		String type = (item == -1) ? "funds" : "items";
-		p.sendMessage("Sorry but you do not have the required " + type + " for a wolf");
+		p.sendMessage(WolfPound.chatPrefixError + "Sorry but you do not have the required " + type + " for a wolf");
 	}
 	
 	public void showRecipt(Player p, double price, int item) {
@@ -113,7 +112,7 @@ public class WPBankAdapter {
 			}
 			
 		}
-		p.sendMessage(ChatColor.WHITE + "[WolfPound]" + ChatColor.DARK_RED
+		p.sendMessage(WolfPound.chatPrefix
 				+ " You have been charged " + price + " " + moneyName);
 	}
 	

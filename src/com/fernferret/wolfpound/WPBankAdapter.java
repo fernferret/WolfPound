@@ -96,7 +96,7 @@ public class WPBankAdapter {
 	}
 	
 	public void showRecipt(Player p, double price, int item) {
-		p.sendMessage(WolfPound.chatPrefix + " You have been charged " + item + " " + getBankCurrency(price, item));
+		p.sendMessage(WolfPound.chatPrefix + " You have been charged " + price + " " + getBankCurrency(price, item));
 	}
 	
 	private boolean isUsing(Bank banktype) {

@@ -1,5 +1,5 @@
 package com.fernferret.wolfpound;
 
-public class WPCommands {
+public class WPConfig {
 	
 }

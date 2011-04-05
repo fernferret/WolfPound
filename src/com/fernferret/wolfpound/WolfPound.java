@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import net.minecraft.server.EntityWolf;
+
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.block.CraftSign;
+import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -426,6 +429,13 @@ public class WolfPound extends JavaPlugin {
 	public void spawnWolf(Player p) {
 		p.sendMessage("BAM! You got a Wolf!");
 		Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
+		
+		//Workaround to set the wolf's owner from: ashtonw
+		// THANKS!
+		EntityWolf newMcwolf = ((CraftWolf)  w).getHandle();
+			 	newMcwolf.a(p.getName()); //setOwner
+			 	newMcwolf.d(true); // owned
+			 	newMcwolf.b(false); // sitting
 		w.setAngry(false);
 	}
 	

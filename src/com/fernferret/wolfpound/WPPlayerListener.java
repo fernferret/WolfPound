@@ -25,18 +25,35 @@ public class WPPlayerListener extends PlayerListener {
 					// We have valid pound params!
 					double price = getPrice(event.getClickedBlock(), 1, p);
 					int item = getType(event.getClickedBlock(), 1, p);
+					String agro = getAgro(event.getClickedBlock(), 2, p);
 					if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
 						plugin.bank.payForWolf(p, price, item);
 						if (price > 0) {
 							plugin.bank.showRecipt(p, price, item);
 						}
-						plugin.spawnWolf(p);
+						plugin.spawnWolf(p, agro);
 					} else if (!plugin.bank.isUsingEcon(item)) {
-						plugin.spawnWolf(p);
+						plugin.spawnWolf(p, agro);
 					}
 				}
 			}
 		}
+	}
+	
+	private String getAgro(Block b, int l, Player p) {
+		Sign s = new CraftSign(b);
+		
+		String line = s.getLine(l);
+		if(line.matches("(.*" + WolfPound.ADOPT_FRIEND + ".*)")) {
+			return WolfPound.ADOPT_FRIEND;
+		}
+		if(line.matches("(.*" + WolfPound.ADOPT_NEUTRAL + ".*)")) {
+			return WolfPound.ADOPT_NEUTRAL;
+		}
+		if(line.matches("(.*" + WolfPound.ADOPT_ANGRY + ".*)")) {
+			return WolfPound.ADOPT_ANGRY;
+		}
+		return "";
 	}
 	
 	private boolean checkSignParams(Block b, int l, Player p) {
@@ -61,7 +78,7 @@ public class WPPlayerListener extends PlayerListener {
 		
 		String line = s.getLine(l);
 		String[] items = line.split(":");
-		if(items.length > 0) {
+		if (items.length > 0) {
 			return WPBlockListener.getLeftSide(items[0]);
 		}
 		return 0.0;
@@ -72,10 +89,10 @@ public class WPPlayerListener extends PlayerListener {
 		
 		String line = s.getLine(l);
 		String[] items = line.split(":");
-		if(items.length > 1){
+		if (items.length > 1) {
 			return WPBlockListener.getRightSide(items[1]);
 		}
 		return WolfPound.MONEY_ITEM_FOUND;
-			
+		
 	}
 }

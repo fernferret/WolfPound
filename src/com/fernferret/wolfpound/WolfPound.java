@@ -291,6 +291,7 @@ public class WolfPound extends JavaPlugin {
 		if (hasPermission(p, PERM_ADOPT)) {
 			if (world.equalsIgnoreCase("")) {
 				String everywhere = "everywhere";
+				log.info(this.adoptPriceWorlds.keySet().toString());
 				for (String s : this.adoptPriceWorlds.keySet()) {
 					getHumanReadablePriceMessage(p, this.adoptPriceWorlds.get(s), this.adoptTypeWorlds.get(s), "in " + ChatColor.AQUA + s + ChatColor.WHITE + "!");
 					everywhere = "everywhere else";
@@ -409,6 +410,26 @@ public class WolfPound extends JavaPlugin {
 					p.sendMessage(chatPrefixError + "Sorry, world " + value + " does not exist!");
 					return false;
 				}
+			}
+		} else if (command.toLowerCase().matches("(.*agro.*)")) {
+			String agro = DEFAULT_ADOPT_AGRO;
+			if(agroValueCheck(value)) {
+				if (world.equalsIgnoreCase("")) {
+					adoptAgro = agro;
+					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
+				} else {
+					checkPriceProperty(worldString);
+					checkTypeProperty(worldString);
+					checkLimitProperty(worldString);
+					adoptAgroWorlds.put(worldString, agro);
+					p.sendMessage(chatPrefix + "Wolf agro for " + worldString + " changed successfully!");
+				}
+				configWP.setProperty(ADOPT_KEY + "." + world + AGRO_KEY, agro);
+				configWP.save();
+				return true;
+			} else {
+				p.sendMessage(chatPrefixError + "Sorry, world " + value + " does not exist!");
+				return false;
 			}
 		}
 		return false;

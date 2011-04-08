@@ -8,10 +8,12 @@ import com.earth2me.essentials.User;
 import com.nijiko.coelho.iConomy.iConomy;
 
 import cosine.boseconomy.BOSEconomy;
+import fr.crafter.tickleman.RealEconomy.RealEconomy;
+import fr.crafter.tickleman.RealShop.RealShop;
 
 public class WPBankAdapter {
 	public enum Bank {
-		iConomy, BOSEconomy, Essentials, None
+		iConomy, BOSEconomy, Essentials, RealShop, None
 	}
 	
 	public enum Type {
@@ -19,6 +21,7 @@ public class WPBankAdapter {
 	}
 	
 	public BOSEconomy BOSEcon;
+	public RealEconomy RealEcon;
 	private Bank bankType = Bank.None;
 	
 	public WPBankAdapter(Bank bank) {
@@ -28,6 +31,11 @@ public class WPBankAdapter {
 	public WPBankAdapter(Bank bank, BOSEconomy econ) {
 		this.bankType = bank;
 		this.BOSEcon = econ;
+	}
+	
+	public WPBankAdapter(Bank bank, RealEconomy econ) {
+		this.bankType = bank;
+		this.RealEcon = econ;
 	}
 	
 	/**
@@ -42,14 +50,15 @@ public class WPBankAdapter {
 		
 		if (m == 0 || (isUsing(Bank.None) && type == -1)) {
 			playerHasEnough = true;
-		}
-		else if (type != -1) {
+		} else if (type != -1) {
 			ItemStack item = p.getItemInHand();
 			playerHasEnough = (item.getTypeId() == type && item.getAmount() >= m);
 		} else if (isUsing(Bank.iConomy)) {
 			playerHasEnough = iConomy.getBank().getAccount(p.getName()).hasEnough(m);
 		} else if (isUsing(Bank.BOSEconomy)) {
 			playerHasEnough = BOSEcon.getPlayerMoney(p.getName()) >= m;
+		} else if (isUsing(Bank.RealShop)) {
+			playerHasEnough = RealEcon.getBalance(p.getName()) >= m;
 		} else if (isUsing(Bank.Essentials)) {
 			User user = User.get(p);
 			playerHasEnough = (user.getMoney() >= m);
@@ -67,20 +76,24 @@ public class WPBankAdapter {
 			return true;
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();
-			int finalamount = item.getAmount() - (int)cost;
+			int finalamount = item.getAmount() - (int) cost;
 			
-			if(finalamount > 0) {
+			if (finalamount > 0) {
 				p.getItemInHand().setAmount(finalamount);
 			} else {
 				p.getInventory().remove(item);
 			}
-			//p.getItemInHand().setAmount(0);
+			// p.getItemInHand().setAmount(0);
 		} else if (isUsing(Bank.iConomy)) {
 			iConomy.getBank().getAccount(p.getName()).subtract(cost);
 			return true;
 		} else if (isUsing(Bank.BOSEconomy)) {
 			int intPrice = (int) (-1 * cost);
 			return BOSEcon.addPlayerMoney(p.getName(), intPrice, true);
+			
+		} else if (isUsing(Bank.RealShop)) {
+			double totalmoney = RealEcon.getBalance(p.getName());
+			return RealEcon.setBalance(p.getName(), totalmoney - cost);
 			
 		} else if (isUsing(Bank.Essentials)) {
 			User user = User.get(p);
@@ -104,7 +117,7 @@ public class WPBankAdapter {
 	}
 	
 	public boolean isUsingEcon(int item) {
-		if(item == -1) {
+		if (item == -1) {
 			return bankType != Bank.None;
 		}
 		return true;
@@ -113,27 +126,32 @@ public class WPBankAdapter {
 	public String getBankCurrency(double amount, int type) {
 		if (type != -1) {
 			Material m = Material.getMaterial(type);
-			if(m != null) {
+			if (m != null) {
 				return m.toString();
 			} else {
 				return "NO ITEM FOUND";
 			}
 		}
-		if(bankType == Bank.BOSEconomy) {
-			if(amount == 1) {
+		
+		if (bankType == Bank.iConomy) {
+			return iConomy.getBank().getCurrency();
+		}
+		if (bankType == Bank.BOSEconomy) {
+			if (amount == 1) {
 				return BOSEcon.getMoneyName();
 			}
 			return BOSEcon.getMoneyNamePlural();
 		}
-		if(bankType == Bank.Essentials) {
-			if(amount == 1) {
+		if (bankType == Bank.RealShop) {
+			return RealEcon.getCurrency();
+		}
+		if (bankType == Bank.Essentials) {
+			if (amount == 1) {
 				return "dollar";
 			}
 			return "dollars";
 		}
-		if(bankType == Bank.iConomy) {
-			return iConomy.getBank().getCurrency();
-		}
+		
 		return "";
 	}
 	
@@ -146,6 +164,8 @@ public class WPBankAdapter {
 			return " using iConomy Economy!";
 		} else if (isUsing(Bank.BOSEconomy)) {
 			return " using BOSEconomy!";
+		} else if (isUsing(Bank.RealShop)) {
+			return " using RealEconomy!";
 		} else if (isUsing(Bank.Essentials)) {
 			return " using Essentials Economy!";
 		} else {

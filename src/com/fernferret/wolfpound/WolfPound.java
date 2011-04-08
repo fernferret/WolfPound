@@ -29,6 +29,9 @@ import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 import cosine.boseconomy.BOSEconomy;
+import fr.crafter.tickleman.RealEconomy.RealEconomy;
+import fr.crafter.tickleman.RealPlugin.RealPlugin;
+import fr.crafter.tickleman.RealShop.RealShop;
 
 public class WolfPound extends JavaPlugin {
 	
@@ -415,7 +418,7 @@ public class WolfPound extends JavaPlugin {
 			}
 		} else if (command.toLowerCase().matches("(.*agro.*)")) {
 			String agro = DEFAULT_ADOPT_AGRO;
-			if(agroValueCheck(value)) {
+			if (agroValueCheck(value)) {
 				if (world.equalsIgnoreCase("")) {
 					adoptAgro = agro;
 					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
@@ -508,11 +511,15 @@ public class WolfPound extends JavaPlugin {
 		Plugin testiConomy = this.getServer().getPluginManager().getPlugin("iConomy");
 		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
 		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
+		Plugin testReal = this.getServer().getPluginManager().getPlugin("RealShop");
 		if (testiConomy != null) {
 			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy);
 			return true;
 		} else if (testBOSE != null) {
 			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, (BOSEconomy) testBOSE);
+			return true;
+		} else if (testReal != null) {
+			bank = new WPBankAdapter(WPBankAdapter.Bank.RealShop, new RealEconomy((RealPlugin) testReal));
 			return true;
 		} else if (testEssentials != null) {
 			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);

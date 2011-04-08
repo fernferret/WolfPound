@@ -25,22 +25,22 @@ public class WPPlayerListener extends PlayerListener {
 					// We have valid pound params!
 					double price = getPrice(event.getClickedBlock(), 1, p);
 					int item = getType(event.getClickedBlock(), 1, p);
-					String agro = getAgro(event.getClickedBlock(), 2, p);
+					String aggro = getAggro(event.getClickedBlock(), 2, p);
 					if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
 						plugin.bank.payForWolf(p, price, item);
 						if (price > 0) {
 							plugin.bank.showRecipt(p, price, item);
 						}
-						plugin.spawnWolf(p, agro);
+						plugin.spawnWolf(p, aggro);
 					} else if (!plugin.bank.isUsingEcon(item)) {
-						plugin.spawnWolf(p, agro);
+						plugin.spawnWolf(p, aggro);
 					}
 				}
 			}
 		}
 	}
 	
-	private String getAgro(Block b, int l, Player p) {
+	private String getAggro(Block b, int l, Player p) {
 		Sign s = new CraftSign(b);
 		
 		String line = s.getLine(l);

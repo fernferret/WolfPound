@@ -64,7 +64,7 @@ public class WolfPound extends JavaPlugin {
 	public static final String chatPrefixError = ChatColor.DARK_RED + "[WolfPound]" + ChatColor.WHITE + " ";
 	public static final String chatPrefix = ChatColor.DARK_GREEN + "[WolfPound]" + ChatColor.WHITE + " ";
 	private static final String ADOPT_KEY = "adopt";
-	private static final String AGRO_KEY = "agro";
+	private static final String AGGRO_KEY = "aggro";
 	private static final String LIMIT_KEY = "limit";
 	private static final String PRICE_KEY = "price";
 	private static final String TYPE_KEY = "type";
@@ -73,19 +73,19 @@ public class WolfPound extends JavaPlugin {
 	public static final String ADOPT_NEUTRAL = "neutral";
 	public static final String ADOPT_FRIEND = "friend";
 	public static final String ADOPT_ANGRY = "angry";
-	private static final String DEFAULT_ADOPT_AGRO = ADOPT_FRIEND;
+	private static final String DEFAULT_ADOPT_AGGRO = ADOPT_FRIEND;
 	
 	public WPBankAdapter bank;
 	// Used as an item id for transactions with the /adopt command
 	private double adoptPrice = DEFAULT_ADOPT_PRICE;
 	private int adoptType = DEFAULT_ADOPT_TYPE;
 	private int adoptLimit = DEFAULT_ADOPT_LIMIT;
-	private String adoptAgro = DEFAULT_ADOPT_AGRO;
+	private String adoptAggro = DEFAULT_ADOPT_AGGRO;
 	// For Multi-WorldSupport
 	private HashMap<String, Double> adoptPriceWorlds = new HashMap<String, Double>();
 	private HashMap<String, Integer> adoptTypeWorlds = new HashMap<String, Integer>();
 	private HashMap<String, Integer> adoptLimitWorlds = new HashMap<String, Integer>();
-	private HashMap<String, String> adoptAgroWorlds = new HashMap<String, String>();
+	private HashMap<String, String> adoptAggroWorlds = new HashMap<String, String>();
 	
 	@Override
 	public void onEnable() {
@@ -113,7 +113,7 @@ public class WolfPound extends JavaPlugin {
 		configWP.load();
 		// If the config was empty or not specified correctly, overwrite it!
 		checkPriceProperty("");
-		checkAgroProperty("");
+		checkAggroProperty("");
 		checkTypeProperty("");
 		checkLimitProperty("");
 		
@@ -124,15 +124,15 @@ public class WolfPound extends JavaPlugin {
 				checkPriceProperty(s);
 				checkTypeProperty(s);
 				checkLimitProperty(s);
-				checkAgroProperty(s);
+				checkAggroProperty(s);
 				String world = MULTI_WORLD_KEY + "." + s + ".";
-				this.adoptAgro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGRO);
+				this.adoptAggro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGGRO);
 				this.adoptPriceWorlds.put(s, configWP.getDouble(ADOPT_KEY + "." + world + PRICE_KEY, DEFAULT_ADOPT_PRICE));
 				this.adoptTypeWorlds.put(s, configWP.getInt(ADOPT_KEY + "." + world + TYPE_KEY, DEFAULT_ADOPT_TYPE));
 				this.adoptLimitWorlds.put(s, configWP.getInt(ADOPT_KEY + "." + world + LIMIT_KEY, DEFAULT_ADOPT_LIMIT));
 			}
 		}
-		this.adoptAgro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGRO);
+		this.adoptAggro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGGRO);
 		this.adoptPrice = configWP.getDouble(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_PRICE);
 		this.adoptType = configWP.getInt(ADOPT_KEY + "." + TYPE_KEY, DEFAULT_ADOPT_TYPE);
 		this.adoptLimit = configWP.getInt(ADOPT_KEY + "." + LIMIT_KEY, DEFAULT_ADOPT_LIMIT);
@@ -141,7 +141,7 @@ public class WolfPound extends JavaPlugin {
 	
 
 	
-	private boolean agroValueCheck(String value) {
+	private boolean aggroValueCheck(String value) {
 		return (value.equalsIgnoreCase(ADOPT_ANGRY) || value.equalsIgnoreCase(ADOPT_FRIEND) || value.equalsIgnoreCase(ADOPT_NEUTRAL));
 	}
 	
@@ -202,18 +202,18 @@ public class WolfPound extends JavaPlugin {
 		
 	}
 	
-	private void checkAgroProperty(String world) {
+	private void checkAggroProperty(String world) {
 		String worldString = world;
 		if (!world.equalsIgnoreCase("")) {
 			world = MULTI_WORLD_KEY + "." + world + ".";
 		}
-		if (configWP.getProperty(ADOPT_KEY + "." + world + AGRO_KEY) == null || !agroValueCheck(configWP.getString(ADOPT_KEY + "." + world + AGRO_KEY))) {
-			configWP.setProperty(ADOPT_KEY + "." + world + AGRO_KEY, DEFAULT_ADOPT_AGRO);
+		if (configWP.getProperty(ADOPT_KEY + "." + world + AGGRO_KEY) == null || !aggroValueCheck(configWP.getString(ADOPT_KEY + "." + world + AGGRO_KEY))) {
+			configWP.setProperty(ADOPT_KEY + "." + world + AGGRO_KEY, DEFAULT_ADOPT_AGGRO);
 			configWP.save();
 			if (worldString.equalsIgnoreCase("")) {
-				this.adoptAgro = DEFAULT_ADOPT_AGRO;
+				this.adoptAggro = DEFAULT_ADOPT_AGGRO;
 			} else {
-				this.adoptAgroWorlds.put(worldString, DEFAULT_ADOPT_AGRO);
+				this.adoptAggroWorlds.put(worldString, DEFAULT_ADOPT_AGGRO);
 			}
 		}
 	}
@@ -298,13 +298,6 @@ public class WolfPound extends JavaPlugin {
 		if (hasPermission(p, PERM_ADOPT)) {
 			if (world.equalsIgnoreCase("")) {
 				String everywhere = "everywhere";
-				log.info(this.adoptPriceWorlds.keySet().toString());
-				log.info("Price: " + this.adoptPriceWorlds.size());
-				log.info("Type: " + this.adoptTypeWorlds.size());
-				log.info("Limit: " + this.adoptLimitWorlds.size());
-				log.info("Agro: " + this.adoptAgroWorlds.size());
-				log.info(this.adoptPriceWorlds.keySet().toString());
-				log.info(this.adoptPriceWorlds.keySet().toString());
 				for (String s : this.adoptPriceWorlds.keySet()) {
 					getHumanReadablePriceMessage(p, this.adoptPriceWorlds.get(s), this.adoptTypeWorlds.get(s), "in " + ChatColor.AQUA + s + ChatColor.WHITE + "!");
 					everywhere = "everywhere else";
@@ -351,7 +344,7 @@ public class WolfPound extends JavaPlugin {
 				configWP.save();
 				checkLimitProperty(worldString);
 				checkTypeProperty(worldString);
-				checkAgroProperty(worldString);
+				checkAggroProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptPrice = newprice;
 					p.sendMessage(chatPrefix + "Global price changed successfully!");
@@ -385,7 +378,7 @@ public class WolfPound extends JavaPlugin {
 			configWP.save();
 			checkLimitProperty(worldString);
 			checkPriceProperty(worldString);
-			checkAgroProperty(worldString);
+			checkAggroProperty(worldString);
 			if (world.equalsIgnoreCase("")) {
 				adoptType = type;
 				p.sendMessage(chatPrefix + "Global currency type for changed successfully!");
@@ -405,7 +398,7 @@ public class WolfPound extends JavaPlugin {
 				configWP.save();
 				checkPriceProperty(worldString);
 				checkTypeProperty(worldString);
-				checkAgroProperty(worldString);
+				checkAggroProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptLimit = limit;
 					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
@@ -423,24 +416,28 @@ public class WolfPound extends JavaPlugin {
 					return false;
 				}
 			}
-		} else if (command.toLowerCase().matches("(.*agro.*)")) {
-			String agro = DEFAULT_ADOPT_AGRO;
-			if (agroValueCheck(value)) {
+		} else if (command.toLowerCase().matches("(.*ag{1,2}ro.*)")) {
+			if (aggroValueCheck(value)) {
 				checkPriceProperty(worldString);
 				checkTypeProperty(worldString);
 				checkLimitProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
-					adoptAgro = agro;
+					adoptAggro = value;
 					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
 				} else {
-					adoptAgroWorlds.put(worldString, agro);
-					p.sendMessage(chatPrefix + "Wolf agro for " + worldString + " changed successfully!");
+					adoptAggroWorlds.put(worldString, value);
+					p.sendMessage(chatPrefix + "Wolf aggro for " + worldString + " changed successfully!");
 				}
-				configWP.setProperty(ADOPT_KEY + "." + world + AGRO_KEY, agro);
+				configWP.setProperty(ADOPT_KEY + "." + world + AGGRO_KEY, value);
 				configWP.save();
 				return true;
 			} else {
-				p.sendMessage(chatPrefixError + "Sorry, world " + value + " does not exist!");
+				p.sendMessage(chatPrefixError + "Value not set, valid aggro types are " + 
+						ChatColor.AQUA + "neutral" + 
+						ChatColor.WHITE + ", " + 
+						ChatColor.GREEN + "friend" + 
+						ChatColor.WHITE + " or " + 
+						ChatColor.RED + "angry");
 				return false;
 			}
 		}
@@ -467,12 +464,12 @@ public class WolfPound extends JavaPlugin {
 		double price = this.adoptPrice;
 		int type = this.adoptType;
 		int limit = this.adoptLimit;
-		String agro = this.adoptAgro;
+		String aggro = this.adoptAggro;
 		if (this.adoptPriceWorlds.containsKey(world)) {
 			price = this.adoptPriceWorlds.get(world);
 			limit = this.adoptLimitWorlds.get(world);
 			type = this.adoptTypeWorlds.get(world);
-			agro = this.adoptAgroWorlds.get(world);
+			aggro = this.adoptAggroWorlds.get(world);
 			
 		}
 		if (limit >= 0) {
@@ -484,23 +481,23 @@ public class WolfPound extends JavaPlugin {
 				bank.showRecipt(p, price * wolves, type);
 			}
 			for (int i = 0; i < wolves; i++) {
-				spawnWolf(p, agro);
+				spawnWolf(p, aggro);
 			}
 		}
 	}
 	
-	public void spawnWolf(Player p, String agro) {
+	public void spawnWolf(Player p, String aggro) {
 		p.sendMessage("BAM! You got a Wolf!");
 		Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
 		
 		// Workaround to set the wolf's owner from: ashtonw
 		// THANKS!
-		if (agro != null && agro.equals(ADOPT_FRIEND)) {
+		if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
 			EntityWolf newMcwolf = ((CraftWolf) w).getHandle();
 			newMcwolf.a(p.getName()); // setOwner
 			newMcwolf.d(true); // owned
 			newMcwolf.b(false); // sitting
-		} else if (agro != null && agro.equals(ADOPT_ANGRY)) {
+		} else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
 			w.setAngry(true);
 		}
 		

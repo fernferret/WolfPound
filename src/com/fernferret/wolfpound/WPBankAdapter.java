@@ -58,7 +58,6 @@ public class WPBankAdapter {
 			playerHasEnough = BOSEcon.getPlayerMoney(p.getName()) >= m;
 		} else if (isUsing(Bank.RealShop)) {
 			playerHasEnough = RealEcon.getBalance(p.getName()) >= m;
-			WolfPound.log.info("RealEcon Money: " + RealEcon.getBalance(p.getName()));
 		} else if (isUsing(Bank.Essentials)) {
 			User user = User.get(p);
 			playerHasEnough = (user.getMoney() >= m);

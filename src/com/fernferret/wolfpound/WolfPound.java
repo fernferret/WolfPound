@@ -31,7 +31,6 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.RealEconomy.RealEconomy;
 import fr.crafter.tickleman.RealPlugin.RealPlugin;
-import fr.crafter.tickleman.RealShop.RealShop;
 
 public class WolfPound extends JavaPlugin {
 	

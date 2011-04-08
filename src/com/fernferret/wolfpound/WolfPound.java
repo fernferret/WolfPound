@@ -121,13 +121,15 @@ public class WolfPound extends JavaPlugin {
 				checkPriceProperty(s);
 				checkTypeProperty(s);
 				checkLimitProperty(s);
+				checkAgroProperty(s);
 				String world = MULTI_WORLD_KEY + "." + s + ".";
+				this.adoptAgro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGRO);
 				this.adoptPriceWorlds.put(s, configWP.getDouble(ADOPT_KEY + "." + world + PRICE_KEY, DEFAULT_ADOPT_PRICE));
 				this.adoptTypeWorlds.put(s, configWP.getInt(ADOPT_KEY + "." + world + TYPE_KEY, DEFAULT_ADOPT_TYPE));
 				this.adoptLimitWorlds.put(s, configWP.getInt(ADOPT_KEY + "." + world + LIMIT_KEY, DEFAULT_ADOPT_LIMIT));
 			}
 		}
-		
+		this.adoptAgro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGRO);
 		this.adoptPrice = configWP.getDouble(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_PRICE);
 		this.adoptType = configWP.getInt(ADOPT_KEY + "." + TYPE_KEY, DEFAULT_ADOPT_TYPE);
 		this.adoptLimit = configWP.getInt(ADOPT_KEY + "." + LIMIT_KEY, DEFAULT_ADOPT_LIMIT);
@@ -483,12 +485,12 @@ public class WolfPound extends JavaPlugin {
 		
 		// Workaround to set the wolf's owner from: ashtonw
 		// THANKS!
-		if (agro.equals(ADOPT_FRIEND)) {
+		if (agro != null && agro.equals(ADOPT_FRIEND)) {
 			EntityWolf newMcwolf = ((CraftWolf) w).getHandle();
 			newMcwolf.a(p.getName()); // setOwner
 			newMcwolf.d(true); // owned
 			newMcwolf.b(false); // sitting
-		} else if (agro.equals(ADOPT_ANGRY)) {
+		} else if (agro != null && agro.equals(ADOPT_ANGRY)) {
 			w.setAngry(true);
 		}
 		

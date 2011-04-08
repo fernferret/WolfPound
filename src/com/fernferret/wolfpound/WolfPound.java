@@ -131,7 +131,7 @@ public class WolfPound extends JavaPlugin {
 				this.adoptLimitWorlds.put(s, configWP.getInt(ADOPT_KEY + "." + world + LIMIT_KEY, DEFAULT_ADOPT_LIMIT));
 			}
 		}
-		this.adoptAggro = configWP.getString(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_AGGRO);
+		this.adoptAggro = configWP.getString(ADOPT_KEY + "." + AGGRO_KEY, DEFAULT_ADOPT_AGGRO);
 		this.adoptPrice = configWP.getDouble(ADOPT_KEY + "." + PRICE_KEY, DEFAULT_ADOPT_PRICE);
 		this.adoptType = configWP.getInt(ADOPT_KEY + "." + TYPE_KEY, DEFAULT_ADOPT_TYPE);
 		this.adoptLimit = configWP.getInt(ADOPT_KEY + "." + LIMIT_KEY, DEFAULT_ADOPT_LIMIT);
@@ -486,7 +486,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public void spawnWolf(Player p, String aggro) {
-		p.sendMessage("BAM! You got a Wolf!");
+		
 		Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
 		
 		// Workaround to set the wolf's owner from: ashtonw
@@ -496,8 +496,12 @@ public class WolfPound extends JavaPlugin {
 			newMcwolf.a(p.getName()); // setOwner
 			newMcwolf.d(true); // owned
 			newMcwolf.b(false); // sitting
+			p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
 		} else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
 			w.setAngry(true);
+			p.sendMessage(chatPrefixError + "Run Awayyyy! That thing looks angry!");
+		} else {
+			p.sendMessage(chatPrefix + "Woah! A wolf! You should befriend it!");
 		}
 		
 	}

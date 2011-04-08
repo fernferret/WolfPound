@@ -139,21 +139,7 @@ public class WolfPound extends JavaPlugin {
 		
 	}
 	
-	private void checkAgroProperty(String world) {
-		String worldString = world;
-		if (!world.equalsIgnoreCase("")) {
-			world = MULTI_WORLD_KEY + "." + world + ".";
-		}
-		if (configWP.getProperty(ADOPT_KEY + "." + world + AGRO_KEY) == null || !agroValueCheck(configWP.getString(ADOPT_KEY + "." + world + AGRO_KEY))) {
-			configWP.setProperty(ADOPT_KEY + "." + world + AGRO_KEY, DEFAULT_ADOPT_AGRO);
-			configWP.save();
-			if (worldString.equalsIgnoreCase("")) {
-				this.adoptAgro = DEFAULT_ADOPT_AGRO;
-			} else {
-				this.adoptAgroWorlds.put(worldString, DEFAULT_ADOPT_AGRO);
-			}
-		}
-	}
+
 	
 	private boolean agroValueCheck(String value) {
 		return (value.equalsIgnoreCase(ADOPT_ANGRY) || value.equalsIgnoreCase(ADOPT_FRIEND) || value.equalsIgnoreCase(ADOPT_NEUTRAL));
@@ -184,9 +170,9 @@ public class WolfPound extends JavaPlugin {
 			configWP.setProperty(ADOPT_KEY + "." + world + TYPE_KEY, DEFAULT_ADOPT_TYPE);
 			configWP.save();
 			if (worldString.equalsIgnoreCase("")) {
-				this.adoptPrice = DEFAULT_ADOPT_PRICE;
+				this.adoptType = DEFAULT_ADOPT_TYPE;
 			} else {
-				this.adoptPriceWorlds.put(worldString, DEFAULT_ADOPT_PRICE);
+				this.adoptTypeWorlds.put(worldString, DEFAULT_ADOPT_TYPE);
 			}
 		} else if (!WPBlockListener.checkItem(configWP.getInt(ADOPT_KEY + "." + world + TYPE_KEY, DEFAULT_ADOPT_TYPE) + "")) {
 			configWP.setProperty(ADOPT_KEY + "." + world + TYPE_KEY, DEFAULT_ADOPT_TYPE);
@@ -214,6 +200,22 @@ public class WolfPound extends JavaPlugin {
 			}
 		}
 		
+	}
+	
+	private void checkAgroProperty(String world) {
+		String worldString = world;
+		if (!world.equalsIgnoreCase("")) {
+			world = MULTI_WORLD_KEY + "." + world + ".";
+		}
+		if (configWP.getProperty(ADOPT_KEY + "." + world + AGRO_KEY) == null || !agroValueCheck(configWP.getString(ADOPT_KEY + "." + world + AGRO_KEY))) {
+			configWP.setProperty(ADOPT_KEY + "." + world + AGRO_KEY, DEFAULT_ADOPT_AGRO);
+			configWP.save();
+			if (worldString.equalsIgnoreCase("")) {
+				this.adoptAgro = DEFAULT_ADOPT_AGRO;
+			} else {
+				this.adoptAgroWorlds.put(worldString, DEFAULT_ADOPT_AGRO);
+			}
+		}
 	}
 	
 	@Override
@@ -297,6 +299,12 @@ public class WolfPound extends JavaPlugin {
 			if (world.equalsIgnoreCase("")) {
 				String everywhere = "everywhere";
 				log.info(this.adoptPriceWorlds.keySet().toString());
+				log.info("Price: " + this.adoptPriceWorlds.size());
+				log.info("Type: " + this.adoptTypeWorlds.size());
+				log.info("Limit: " + this.adoptLimitWorlds.size());
+				log.info("Agro: " + this.adoptAgroWorlds.size());
+				log.info(this.adoptPriceWorlds.keySet().toString());
+				log.info(this.adoptPriceWorlds.keySet().toString());
 				for (String s : this.adoptPriceWorlds.keySet()) {
 					getHumanReadablePriceMessage(p, this.adoptPriceWorlds.get(s), this.adoptTypeWorlds.get(s), "in " + ChatColor.AQUA + s + ChatColor.WHITE + "!");
 					everywhere = "everywhere else";
@@ -341,14 +349,13 @@ public class WolfPound extends JavaPlugin {
 				double newprice = Double.parseDouble(value);
 				configWP.setProperty(ADOPT_KEY + "." + world + PRICE_KEY, newprice);
 				configWP.save();
-				
+				checkLimitProperty(worldString);
+				checkTypeProperty(worldString);
+				checkAgroProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptPrice = newprice;
 					p.sendMessage(chatPrefix + "Global price changed successfully!");
 				} else {
-					checkLimitProperty(worldString);
-					checkTypeProperty(worldString);
-					checkAgroProperty(worldString);
 					adoptPriceWorlds.put(worldString, newprice);
 					p.sendMessage(chatPrefix + "Price for " + worldString + " changed successfully!");
 				}
@@ -376,13 +383,13 @@ public class WolfPound extends JavaPlugin {
 			}
 			configWP.setProperty(ADOPT_KEY + "." + world + TYPE_KEY, type);
 			configWP.save();
+			checkLimitProperty(worldString);
+			checkPriceProperty(worldString);
+			checkAgroProperty(worldString);
 			if (world.equalsIgnoreCase("")) {
 				adoptType = type;
 				p.sendMessage(chatPrefix + "Global currency type for changed successfully!");
 			} else {
-				checkLimitProperty(worldString);
-				checkPriceProperty(worldString);
-				checkAgroProperty(worldString);
 				adoptTypeWorlds.put(worldString, type);
 				p.sendMessage(chatPrefix + "Currency type for " + worldString + " changed successfully!");
 			}
@@ -396,13 +403,13 @@ public class WolfPound extends JavaPlugin {
 				}
 				configWP.setProperty(ADOPT_KEY + "." + world + LIMIT_KEY, limit);
 				configWP.save();
+				checkPriceProperty(worldString);
+				checkTypeProperty(worldString);
+				checkAgroProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptLimit = limit;
 					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
 				} else {
-					checkPriceProperty(worldString);
-					checkTypeProperty(worldString);
-					checkAgroProperty(worldString);
 					adoptLimitWorlds.put(worldString, limit);
 					p.sendMessage(chatPrefix + "Wolf limit for " + worldString + " changed successfully!");
 				}
@@ -419,13 +426,13 @@ public class WolfPound extends JavaPlugin {
 		} else if (command.toLowerCase().matches("(.*agro.*)")) {
 			String agro = DEFAULT_ADOPT_AGRO;
 			if (agroValueCheck(value)) {
+				checkPriceProperty(worldString);
+				checkTypeProperty(worldString);
+				checkLimitProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptAgro = agro;
 					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
 				} else {
-					checkPriceProperty(worldString);
-					checkTypeProperty(worldString);
-					checkLimitProperty(worldString);
 					adoptAgroWorlds.put(worldString, agro);
 					p.sendMessage(chatPrefix + "Wolf agro for " + worldString + " changed successfully!");
 				}

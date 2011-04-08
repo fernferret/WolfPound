@@ -9,7 +9,6 @@ import com.nijiko.coelho.iConomy.iConomy;
 
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.RealEconomy.RealEconomy;
-import fr.crafter.tickleman.RealShop.RealShop;
 
 public class WPBankAdapter {
 	public enum Bank {
@@ -59,6 +58,7 @@ public class WPBankAdapter {
 			playerHasEnough = BOSEcon.getPlayerMoney(p.getName()) >= m;
 		} else if (isUsing(Bank.RealShop)) {
 			playerHasEnough = RealEcon.getBalance(p.getName()) >= m;
+			WolfPound.log.info("RealEcon Money: " + RealEcon.getBalance(p.getName()));
 		} else if (isUsing(Bank.Essentials)) {
 			User user = User.get(p);
 			playerHasEnough = (user.getMoney() >= m);

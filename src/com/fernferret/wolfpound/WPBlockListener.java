@@ -137,7 +137,7 @@ public class WPBlockListener extends BlockListener {
 		if (event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST) {
 			Sign sign = new CraftSign(event.getBlock());
 			// Don't let the user make this an auth'd sign
-			if (sign.getLine(0).matches(WolfPound.prefixValid + "\\[[a-zA-Z]+\\]")) {
+			if (sign.getLine(0).matches(WolfPound.prefixValid + "\\[[Ww]olf[Pp]ound\\]")) {
 				event.setCancelled(true);
 				return;
 			}

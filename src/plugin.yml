@@ -1,7 +1,7 @@
 name: WolfPound
 main: com.fernferret.wolfpound.WolfPound
 author: FernFerret
-version: 0.9
+version: 0.11
 commands:
   adopt:
     description: Gives you a wolf! (You'll need to befriend it though...)

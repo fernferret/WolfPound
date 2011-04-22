@@ -495,7 +495,7 @@ public class WolfPound extends JavaPlugin {
 			EntityWolf newMcwolf = ((CraftWolf) w).getHandle();
 			newMcwolf.a(p.getName()); // setOwner
 			newMcwolf.d(true); // owned
-			newMcwolf.b(false); // sitting
+			newMcwolf.setSitting(false); // sitting
 			p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
 		} else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
 			w.setAngry(true);

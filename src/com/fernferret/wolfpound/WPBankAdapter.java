@@ -71,7 +71,7 @@ public class WPBankAdapter {
 	
 	public boolean payForWolf(Player p, double cost, int type) {
 		
-		if (cost == 0 || (isUsing(Bank.None) && type == -1))
+		if (cost <= 0 || (isUsing(Bank.None) && type == -1))
 			return true;
 		else if (type != -1) {
 			ItemStack item = p.getItemInHand();

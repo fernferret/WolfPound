@@ -44,13 +44,13 @@ public class WPPlayerListener extends PlayerListener {
 		Sign s = new CraftSign(b);
 		
 		String line = s.getLine(l);
-		if(line.matches("(.*" + WolfPound.ADOPT_FRIEND + ".*)")) {
+		if(line.matches("(?i)(.*" + WolfPound.ADOPT_FRIEND + ".*)")) {
 			return WolfPound.ADOPT_FRIEND;
 		}
-		if(line.matches("(.*" + WolfPound.ADOPT_NEUTRAL + ".*)")) {
+		if(line.matches("(?i)(.*" + WolfPound.ADOPT_NEUTRAL + ".*)")) {
 			return WolfPound.ADOPT_NEUTRAL;
 		}
-		if(line.matches("(.*" + WolfPound.ADOPT_ANGRY + ".*)")) {
+		if(line.matches("(?i)(.*" + WolfPound.ADOPT_ANGRY + ".*)")) {
 			return WolfPound.ADOPT_ANGRY;
 		}
 		return "";

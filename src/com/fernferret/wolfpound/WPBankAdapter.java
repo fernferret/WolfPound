@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.earth2me.essentials.User;
-import com.nijiko.coelho.iConomy.iConomy;
+import com.iConomy.*;
 
 import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.RealEconomy.RealEconomy;
-
+// TODO: Turn into Interface
 public class WPBankAdapter {
 	public enum Bank {
 		iConomy, BOSEconomy, Essentials, RealShop, None
@@ -53,7 +53,7 @@ public class WPBankAdapter {
 			ItemStack item = p.getItemInHand();
 			playerHasEnough = (item.getTypeId() == type && item.getAmount() >= m);
 		} else if (isUsing(Bank.iConomy)) {
-			playerHasEnough = iConomy.getBank().getAccount(p.getName()).hasEnough(m);
+			playerHasEnough = iConomy.getAccount(p.getName()).getHoldings().hasEnough(m);
 		} else if (isUsing(Bank.BOSEconomy)) {
 			playerHasEnough = BOSEcon.getPlayerMoney(p.getName()) >= m;
 		} else if (isUsing(Bank.RealShop)) {
@@ -84,7 +84,7 @@ public class WPBankAdapter {
 			}
 			// p.getItemInHand().setAmount(0);
 		} else if (isUsing(Bank.iConomy)) {
-			iConomy.getBank().getAccount(p.getName()).subtract(cost);
+			iConomy.getAccount(p.getName()).getHoldings().subtract(cost);
 			return true;
 		} else if (isUsing(Bank.BOSEconomy)) {
 			int intPrice = (int) (-1 * cost);
@@ -133,7 +133,7 @@ public class WPBankAdapter {
 		}
 		
 		if (bankType == Bank.iConomy) {
-			return iConomy.getBank().getCurrency();
+			return iConomy.format(amount);
 		}
 		if (bankType == Bank.BOSEconomy) {
 			if (amount == 1) {

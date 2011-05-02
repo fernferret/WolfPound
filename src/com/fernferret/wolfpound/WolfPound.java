@@ -5,15 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
-import net.minecraft.server.EntityWolf;
-
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.block.CraftSign;
-import org.bukkit.craftbukkit.entity.CraftWolf;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -88,7 +85,7 @@ public class WolfPound extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		getDataFolder().mkdirs();
+		
 		loadConfiguration();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
@@ -108,6 +105,7 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	private void loadConfiguration() {
+		getDataFolder().mkdirs();
 		configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
 		configWP.load();
 		// If the config was empty or not specified correctly, overwrite it!
@@ -489,13 +487,9 @@ public class WolfPound extends JavaPlugin {
 		
 		Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
 		
-		// Workaround to set the wolf's owner from: ashtonw
-		// THANKS!
 		if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
-			EntityWolf newMcwolf = ((CraftWolf) w).getHandle();
-			newMcwolf.a(p.getName()); // setOwner
-			newMcwolf.d(true); // owned
-			newMcwolf.setSitting(false); // sitting
+			w.setOwner(p);
+			w.setSitting(false);
 			p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
 		} else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
 			w.setAngry(true);

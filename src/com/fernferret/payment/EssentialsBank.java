@@ -1,6 +1,7 @@
-package com.fernferret.wolfpound;
+package com.fernferret.payment;
 
 import org.bukkit.entity.Player;
+
 
 public class EssentialsBank extends GenericBank {
 	
@@ -16,7 +17,7 @@ public class EssentialsBank extends GenericBank {
 	}
 	
 	@Override
-	public boolean hasMoney(Player p, double money, int type) {
+	public boolean hasItem(Player p, double money, int type) {
 		// TODO Auto-generated method stub
 		return false;
 	}

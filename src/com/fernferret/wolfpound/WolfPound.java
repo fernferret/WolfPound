@@ -50,6 +50,7 @@ public class WolfPound extends JavaPlugin {
 	
 	private WPPlayerListener playerListener;
 	private WPBlockListener blockListener;
+	private WPPluginListener pluginListener;
 	public Configuration configWP;
 	
 	public static final Logger log = Logger.getLogger("Minecraft");
@@ -89,6 +90,7 @@ public class WolfPound extends JavaPlugin {
 		loadConfiguration();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
+		pluginListener = new WPPluginListener(this);
 		
 		log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " Enabled");
 		
@@ -102,6 +104,7 @@ public class WolfPound extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
+		pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this)
 	}
 	
 	private void loadConfiguration() {

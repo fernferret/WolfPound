@@ -30,7 +30,7 @@ public class EssentialsBank extends GenericBank {
 	}
 
 	@Override
-	public boolean hasMoney(Player player, double money) {
+	public boolean hasMoney(Player player, double money, String message) {
 		return User.get(player).canAfford(money);
 	}
 

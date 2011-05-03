@@ -23,11 +23,10 @@ public class iConomyBank extends GenericBank {
 	}
 	
 	@SuppressWarnings("static-access")
-	@Override
-	public boolean hasMoney(Player player, double money) {
+	public boolean hasMoney(Player player, double money, String message) {
 		boolean result = plugin.getAccount(player.getName()).getHoldings().hasEnough(money);
 		if(!result) {
-			userIsTooPoor(player, -1);
+			userIsTooPoor(player, -1, message);
 		}
 		return result;
 	}

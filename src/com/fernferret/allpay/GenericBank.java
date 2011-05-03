@@ -1,10 +1,9 @@
 package com.fernferret.allpay;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import com.fernferret.wolfpound.WolfPound;
 
 public abstract class GenericBank {
 	/**
@@ -24,13 +23,27 @@ public abstract class GenericBank {
 		return (item.getTypeId() == type && item.getAmount() >= amount);
 		
 	}
+	
 	/**
 	 * Check to ensure the player has enough money
+	 * 
 	 * @param player Check this player's bank/pocket for money.
 	 * @param money How much money should we see if they have?
 	 * @return
 	 */
-	public abstract boolean hasMoney(Player player, double money);
+	public abstract boolean hasMoney(Player player, double money, String message);
+	
+	/**
+	 * Convenience method that does not require a message
+	 * 
+	 * @param player
+	 * @param money
+	 * @return
+	 */
+	public final boolean hasMoney(Player player, double money) {
+		return hasMoney(player, money, null);
+	}
+	
 	/**
 	 * Check to ensure the player has enough money or items.
 	 * 
@@ -39,12 +52,22 @@ public abstract class GenericBank {
 	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their inventory.
 	 * @return true if they have enough money/items false if not.
 	 */
-	public final boolean hasEnough(Player player, double amount, int type) {
+	public final boolean hasEnough(Player player, double amount, int type, String message) {
 		if (type == -1) {
-			return hasMoney(player, amount);
+			return hasMoney(player, amount, message);
 		} else {
 			return hasItem(player, amount, type);
 		}
+	}
+	/**
+	 * Convenience method that does not require a message
+	 * @param player
+	 * @param amount
+	 * @param type
+	 * @return
+	 */
+	public final boolean hasEnough(Player player, double amount, int type) {
+		return hasEnough(player, amount, type, null);
 	}
 	
 	/**
@@ -67,7 +90,7 @@ public abstract class GenericBank {
 	
 	public abstract void payMoney(Player player, double amount);
 	
-	public final void payForWolf(Player player, double amount, int type) {
+	public final void pay(Player player, double amount, int type) {
 		if (type == -1) {
 			payMoney(player, amount);
 		} else {
@@ -102,15 +125,22 @@ public abstract class GenericBank {
 	}
 	
 	/**
-	 * This method is called if a user does not have enough money. You can't touch this. My my my...
+	 * This method is called if a user does not have enough money or items. The message parameter allows you to customize what the user does not have enough money for. The format follows: "Sorry but you do not have the required [funds|items] {message}" You can't touch this. My my my...
 	 * 
 	 * @param player
 	 * @param item
+	 * @param message This message will appear after the sentence that follows: "{prefix}Sorry but you do not have the required [funds|items] {message}"
+	 * @param prefix A prefix to show which plugin charged the user, if you don't want this, just put ""
 	 */
-	public final void userIsTooPoor(Player player, int item) {
+	protected final void userIsTooPoor(Player player, int item, String message) {
 		// TODO: Make this non-WolfPound generic
 		String type = (item == -1) ? "funds" : "items";
-		player.sendMessage(WolfPound.chatPrefixError + "Sorry but you do not have the required " + type + " for a wolf");
+		if (message == null) {
+			message = "";
+		} else {
+			message = " " + message;
+		}
+		player.sendMessage(ChatColor.DARK_RED + AllPay.prefix + ChatColor.WHITE + "Sorry but you do not have the required " + type + message);
 	}
 	
 	/**
@@ -121,8 +151,8 @@ public abstract class GenericBank {
 	 * @param item The item the user was charged for a wolf (-1 is money)
 	 */
 	public void showReceipt(Player player, double price, int item) {
-		if(price > 0)
-			player.sendMessage(WolfPound.chatPrefix + "You have been charged " + getFormattedAmount(price, item));
+		if (price > 0)
+			player.sendMessage(ChatColor.DARK_GREEN + AllPay.prefix + ChatColor.WHITE + "You have been charged " + ChatColor.GREEN + getFormattedAmount(price, item));
 	}
 	
 	/**

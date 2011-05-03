@@ -22,13 +22,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
+import com.fernferret.allpay.AllPay;
 import com.fernferret.allpay.GenericBank;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
-
-import cosine.boseconomy.BOSEconomy;
-import fr.crafter.tickleman.RealEconomy.RealEconomy;
-import fr.crafter.tickleman.RealPlugin.RealPlugin;
 
 public class WolfPound extends JavaPlugin {
 	
@@ -74,6 +71,7 @@ public class WolfPound extends JavaPlugin {
 	private static final String DEFAULT_ADOPT_AGGRO = ADOPT_FRIEND;
 	
 	//public WPBankAdapter bank;
+	public AllPay allPay;
 	public GenericBank bank;
 	// Used as an item id for transactions with the /adopt command
 	private double adoptPrice = DEFAULT_ADOPT_PRICE;
@@ -88,7 +86,7 @@ public class WolfPound extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		
+		allPay = new AllPay(this, "[WolfPound] ");
 		loadConfiguration();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);
@@ -478,10 +476,8 @@ public class WolfPound extends JavaPlugin {
 			wolves = (wolves > limit) ? limit : wolves;
 		}
 		if (hasPermission(p, PERM_ADOPT) && bank.hasEnough(p, price * wolves, type)) {
-			bank.payForWolf(p, price * wolves, type);
-			if (price > 0) {
-				bank.showReceipt(p, price * wolves, type);
-			}
+			bank.pay(p, price * wolves, type);
+			bank.showReceipt(p, price * wolves, type);
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p, aggro);
 			}

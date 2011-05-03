@@ -22,8 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.fernferret.allpay.AllPay;
-import com.fernferret.allpay.GenericBank;
+import com.fernferret.allpay.*;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -71,7 +70,6 @@ public class WolfPound extends JavaPlugin {
 	private static final String DEFAULT_ADOPT_AGGRO = ADOPT_FRIEND;
 	
 	//public WPBankAdapter bank;
-	public AllPay allPay;
 	public GenericBank bank;
 	// Used as an item id for transactions with the /adopt command
 	private double adoptPrice = DEFAULT_ADOPT_PRICE;
@@ -86,7 +84,6 @@ public class WolfPound extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
-		allPay = new AllPay(this, "[WolfPound] ");
 		loadConfiguration();
 		playerListener = new WPPlayerListener(this);
 		blockListener = new WPBlockListener(this);

@@ -141,7 +141,6 @@ public abstract class GenericBank {
 	 * @param prefix A prefix to show which plugin charged the user, if you don't want this, just put ""
 	 */
 	protected final void userIsTooPoor(Player player, int item, String message) {
-		// TODO: Make this non-WolfPound generic
 		String type = (item == -1) ? "funds" : "items";
 		if (message == null) {
 			message = "";

@@ -7,7 +7,7 @@ import com.earth2me.essentials.User;
 
 /**
  * Essentials class is on hold until they give me access to the currency string
- * @author stokesej
+ * @author Eric Stokes
  *
  */
 public class EssentialsBank extends GenericBank {

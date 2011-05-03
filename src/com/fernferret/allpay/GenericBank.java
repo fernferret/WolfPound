@@ -160,7 +160,5 @@ public abstract class GenericBank {
 	 * 
 	 * @return The economy plugin used
 	 */
-	public String getEconUsed() {
-		return " using simple items as economy!";
-	}
+	public abstract String getEconUsed();
 }

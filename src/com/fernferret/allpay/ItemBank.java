@@ -41,4 +41,9 @@ public class ItemBank extends GenericBank {
 		}
 	}
 	
+	@Override
+	public String getEconUsed() {
+		// TODO Auto-generated method stub
+		return " using simple items as economy!";
+	}
 }

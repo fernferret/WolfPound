@@ -11,6 +11,12 @@ import cosine.boseconomy.BOSEconomy;
 import fr.crafter.tickleman.RealEconomy.RealEconomy;
 import fr.crafter.tickleman.RealPlugin.RealPlugin;
 
+/**
+ * AllPay is a nifty little payment wrapper class that takes the heavy lifting out of integrating payments into your plugin!
+ * 
+ * @author Eric Stokes
+ * 
+ */
 public class AllPay {
 	public static final String logPrefix = "[AllPay]";
 	private static final Logger log = Logger.getLogger("Minecraft");
@@ -23,13 +29,26 @@ public class AllPay {
 		AllPay.prefix = prefix;
 	}
 	
-	
+	/**
+	 * Load an econ plugin. Plugins are loaded in this order: iConomy, BOSEconomy, RealShop, Essentials and simple items
+	 * 
+	 * @return The GenericBank object to process payments.
+	 */
 	public GenericBank loadEconPlugin() {
-		loadiConomy();
+		loadiConomy(); // Supports both 4.x and 5.x
 		loadBOSEconomy();
 		loadRealShopEconomy();
 		loadEssentialsEconomoy();
 		loadDefaultItemEconomy();
+		return this.bank;
+	}
+	
+	/**
+	 * Returns the AllPay GenericBank object that you can issue calls to and from
+	 * 
+	 * @return The GenericBank object to process payments.
+	 */
+	public GenericBank getEconPlugin() {
 		return this.bank;
 	}
 	
@@ -66,14 +85,27 @@ public class AllPay {
 	}
 	
 	private void loadiConomy() {
-		iConomy iConomyPlugin = (iConomy) plugin.getServer().getPluginManager().getPlugin("iConomy");
-		if (iConomyPlugin != null && this.bank == null) {
-			this.bank = new iConomyBank(iConomyPlugin);
-			log.info(logPrefix + " - hooked into iConomy for " + plugin.getDescription().getFullName());
+		if (this.bank == null) {
+			Plugin iConomyTest = plugin.getServer().getPluginManager().getPlugin("iConomy");
+			try {
+				if (iConomyTest != null && iConomyTest instanceof com.iConomy.iConomy) {
+					this.bank = new iConomyBank((iConomy) iConomyTest);
+					log.info(logPrefix + " - hooked into iConomy for " + plugin.getDescription().getFullName());
+				}
+			} catch (NoClassDefFoundError e) {
+				if (iConomyTest != null) {
+					loadiConomy4X();
+				}
+			}
 		}
 	}
 	
-	public GenericBank getEconPlugin() {
-		return this.bank;
+	private void loadiConomy4X() {
+		com.nijiko.coelho.iConomy.iConomy iConomyPlugin = (com.nijiko.coelho.iConomy.iConomy) plugin.getServer().getPluginManager().getPlugin("iConomy");
+		if (iConomyPlugin != null && this.bank == null) {
+			this.bank = new iConomyBank4X(iConomyPlugin);
+			log.info(logPrefix + " - hooked into iConomy(4.X) for " + plugin.getDescription().getFullName());
+		}
 	}
+	
 }

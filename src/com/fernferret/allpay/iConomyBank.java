@@ -1,4 +1,4 @@
-package com.fernferret.payment;
+package com.fernferret.allpay;
 
 import org.bukkit.entity.Player;
 
@@ -25,7 +25,11 @@ public class iConomyBank extends GenericBank {
 	@SuppressWarnings("static-access")
 	@Override
 	public boolean hasMoney(Player player, double money) {
-		return plugin.getAccount(player.getName()).getHoldings().hasEnough(money);
+		boolean result = plugin.getAccount(player.getName()).getHoldings().hasEnough(money);
+		if(!result) {
+			userIsTooPoor(player, -1);
+		}
+		return result;
 	}
 	
 	@SuppressWarnings("static-access")

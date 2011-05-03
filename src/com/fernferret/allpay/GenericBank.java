@@ -1,4 +1,4 @@
-package com.fernferret.payment;
+package com.fernferret.allpay;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -27,7 +27,7 @@ public abstract class GenericBank {
 	/**
 	 * Check to ensure the player has enough money
 	 * @param player Check this player's bank/pocket for money.
-	 * @param money
+	 * @param money How much money should we see if they have?
 	 * @return
 	 */
 	public abstract boolean hasMoney(Player player, double money);
@@ -39,11 +39,11 @@ public abstract class GenericBank {
 	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their inventory.
 	 * @return true if they have enough money/items false if not.
 	 */
-	public final void hasEnough(Player player, double amount, int type) {
+	public final boolean hasEnough(Player player, double amount, int type) {
 		if (type == -1) {
-			payMoney(player, amount);
+			return hasMoney(player, amount);
 		} else {
-			payItem(player, amount, type);
+			return hasItem(player, amount, type);
 		}
 	}
 	
@@ -69,9 +69,9 @@ public abstract class GenericBank {
 	
 	public final void payForWolf(Player player, double amount, int type) {
 		if (type == -1) {
-			payItem(player, amount, type);
-		} else {
 			payMoney(player, amount);
+		} else {
+			payItem(player, amount, type);
 		}
 	}
 	
@@ -107,7 +107,7 @@ public abstract class GenericBank {
 	 * @param player
 	 * @param item
 	 */
-	protected final void userIsTooPoor(Player player, int item) {
+	public final void userIsTooPoor(Player player, int item) {
 		// TODO: Make this non-WolfPound generic
 		String type = (item == -1) ? "funds" : "items";
 		player.sendMessage(WolfPound.chatPrefixError + "Sorry but you do not have the required " + type + " for a wolf");
@@ -120,8 +120,9 @@ public abstract class GenericBank {
 	 * @param price The price the user was charged for a wolf
 	 * @param item The item the user was charged for a wolf (-1 is money)
 	 */
-	protected final void showReceipt(Player player, double price, int item) {
-		player.sendMessage(WolfPound.chatPrefix + " You have been charged " + price + " " + getFormattedAmount(price, item));
+	public void showReceipt(Player player, double price, int item) {
+		if(price > 0)
+			player.sendMessage(WolfPound.chatPrefix + "You have been charged " + getFormattedAmount(price, item));
 	}
 	
 	/**

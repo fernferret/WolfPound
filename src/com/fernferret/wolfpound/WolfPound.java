@@ -22,6 +22,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
+import com.fernferret.allpay.GenericBank;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -72,7 +73,8 @@ public class WolfPound extends JavaPlugin {
 	public static final String ADOPT_ANGRY = "angry";
 	private static final String DEFAULT_ADOPT_AGGRO = ADOPT_FRIEND;
 	
-	public WPBankAdapter bank;
+	//public WPBankAdapter bank;
+	public GenericBank bank;
 	// Used as an item id for transactions with the /adopt command
 	private double adoptPrice = DEFAULT_ADOPT_PRICE;
 	private int adoptType = DEFAULT_ADOPT_TYPE;
@@ -94,9 +96,9 @@ public class WolfPound extends JavaPlugin {
 		
 		log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " Enabled");
 		
-		if (setEconPlugin()) {
-			log.info(logPrefix + bank.getEconUsed());
-		}
+//		if (setEconPlugin()) {
+//			log.info(logPrefix + bank.getEconUsed());
+//		}
 		checkPermissions();
 		
 		PluginManager pm = getServer().getPluginManager();
@@ -104,7 +106,7 @@ public class WolfPound extends JavaPlugin {
 		pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
 		pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
-		pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this)
+		pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
 	}
 	
 	private void loadConfiguration() {
@@ -290,7 +292,7 @@ public class WolfPound extends JavaPlugin {
 		if (price == 0) {
 			p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
 		} else {
-			p.sendMessage(chatPrefix + "It costs " + price + " " + bank.getBankCurrency(price, type) + " to adopt a wolf " + end);
+			p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(price, type) + " to adopt a wolf " + end);
 		}
 	}
 	
@@ -475,10 +477,10 @@ public class WolfPound extends JavaPlugin {
 		if (limit >= 0) {
 			wolves = (wolves > limit) ? limit : wolves;
 		}
-		if (hasPermission(p, PERM_ADOPT) && bank.hasMoney(p, price * wolves, type)) {
+		if (hasPermission(p, PERM_ADOPT) && bank.hasEnough(p, price * wolves, type)) {
 			bank.payForWolf(p, price * wolves, type);
 			if (price > 0) {
-				bank.showRecipt(p, price * wolves, type);
+				bank.showReceipt(p, price * wolves, type);
 			}
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p, aggro);
@@ -506,32 +508,6 @@ public class WolfPound extends JavaPlugin {
 	@Override
 	public void onDisable() {
 		log.info(logPrefix + " - Disabled");
-	}
-	
-	/**
-	 * Grab the iConomy plugin from the Plugin Manager.
-	 */
-	public boolean setEconPlugin() {
-		Plugin testiConomy = this.getServer().getPluginManager().getPlugin("iConomy");
-		Plugin testBOSE = this.getServer().getPluginManager().getPlugin("BOSEconomy");
-		Plugin testEssentials = this.getServer().getPluginManager().getPlugin("Essentials");
-		Plugin testReal = this.getServer().getPluginManager().getPlugin("RealShop");
-		if (testiConomy != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.iConomy);
-			return true;
-		} else if (testBOSE != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.BOSEconomy, (BOSEconomy) testBOSE);
-			return true;
-		} else if (testReal != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.RealShop, new RealEconomy((RealPlugin) testReal));
-			return true;
-		} else if (testEssentials != null) {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.Essentials);
-			return true;
-		} else {
-			bank = new WPBankAdapter(WPBankAdapter.Bank.None);
-			return false;
-		}
 	}
 	
 	/**

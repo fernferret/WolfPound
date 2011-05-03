@@ -26,13 +26,9 @@ public class WPPlayerListener extends PlayerListener {
 					double price = getPrice(event.getClickedBlock(), 1, p);
 					int item = getType(event.getClickedBlock(), 1, p);
 					String aggro = getAggro(event.getClickedBlock(), 2, p);
-					if (plugin.bank.isUsingEcon(item) && plugin.bank.hasMoney(p, price, item)) {
+					if (plugin.bank.hasEnough(p, price, item)) {
 						plugin.bank.payForWolf(p, price, item);
-						if (price > 0) {
-							plugin.bank.showRecipt(p, price, item);
-						}
-						plugin.spawnWolf(p, aggro);
-					} else if (!plugin.bank.isUsingEcon(item)) {
+						plugin.bank.showReceipt(p, price, item);
 						plugin.spawnWolf(p, aggro);
 					}
 				}

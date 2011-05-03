@@ -30,6 +30,7 @@ public class RealEconomyBank extends GenericBank {
 	public void payMoney(Player player, double amount) {
 		double totalmoney = plugin.getBalance(player.getName());
 		plugin.setBalance(player.getName(), totalmoney - amount);
+		showReceipt(player, amount, -1);
 	}
 	
 	@Override

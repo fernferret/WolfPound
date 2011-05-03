@@ -25,8 +25,8 @@ public class EssentialsBank extends GenericBank {
 
 	@Override
 	public String getFormattedMoneyAmount(double amount) {
-		//Util
-		return null;
+		//Until Essentials let's me read this, it's gonna be FernDollars
+		return amount + "FernDollars";
 	}
 
 	@Override
@@ -38,5 +38,7 @@ public class EssentialsBank extends GenericBank {
 	public void payMoney(Player player, double amount) {
 		User user = User.get(player);
 		user.takeMoney(amount);
+		// Don't need to show receipt, Essentials already does
+		//showReceipt(player, amount, -1);
 	}
 }

@@ -35,6 +35,7 @@ public class iConomyBank4X extends GenericBank {
 	@Override
 	public void payMoney(Player player, double amount) {
 		plugin.getBank().getAccount(player.getName()).subtract(amount);
+		showReceipt(player, amount, -1);
 	}
 
 	@SuppressWarnings("static-access")

@@ -7,12 +7,12 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class GenericBank {
 	/**
-	 * Check to ensure the player has enough items.
+	 * Check to ensure the player has enough items for a transaction.
 	 * 
 	 * @param player Check this player's item in hand.
-	 * @param amount How much money should we see if they have?
-	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their inventory.
-	 * @return true if they have enough money/items false if not.
+	 * @param amount How many items should we see if they have?
+	 * @param type A valid item id. This will check to see if they have the item(s) in their hand.
+	 * @return true if they have enough items false if not.
 	 */
 	public final boolean hasItem(Player player, double amount, int type, String message) {
 		if (amount == 0) {
@@ -21,7 +21,7 @@ public abstract class GenericBank {
 		// TODO: Make this inventory
 		ItemStack item = player.getItemInHand();
 		boolean hasEnough = (item.getTypeId() == type && item.getAmount() >= amount);
-		if(!hasEnough) {
+		if (!hasEnough) {
 			userIsTooPoor(player, type, message);
 		}
 		return hasEnough;
@@ -33,27 +33,29 @@ public abstract class GenericBank {
 	 * 
 	 * @param player Check this player's bank/pocket for money.
 	 * @param money How much money should we see if they have?
-	 * @return
+	 * @param message The error message to display after the string. NULL will be passed if one is not required.
+	 * @return true if they have enough, false if not
 	 */
 	public abstract boolean hasMoney(Player player, double money, String message);
 	
 	/**
 	 * Convenience method that does not require a message
 	 * 
-	 * @param player
-	 * @param money
-	 * @return
+	 * @param player Check this player's bank/pocket for money.
+	 * @param money How much money should we see if they have?
+	 * @return true if they have enough, false if not
 	 */
 	public final boolean hasMoney(Player player, double money) {
 		return hasMoney(player, money, null);
 	}
 	
 	/**
-	 * Check to ensure the player has enough money or items.
+	 * Check to ensure the player has enough money or items. This method is intended if you want to accept items or money
 	 * 
-	 * @param player Check this player's bank/pocket for money.
-	 * @param amount How much money should we see if they have?
-	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their inventory.
+	 * @param player Check this player's bank/currently held item for money/items.
+	 * @param amount How much money or how many items should we see if they have?
+	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their hand.
+	 * @param message The error message to display after the string. NULL will be passed if one is not required.
 	 * @return true if they have enough money/items false if not.
 	 */
 	public final boolean hasEnough(Player player, double amount, int type, String message) {
@@ -63,12 +65,14 @@ public abstract class GenericBank {
 			return hasItem(player, amount, type, message);
 		}
 	}
+	
 	/**
 	 * Convenience method that does not require a message
-	 * @param player
-	 * @param amount
-	 * @param type
-	 * @return
+	 * 
+	 * @param player Check this player's bank/currently held item for money/items.
+	 * @param amount How much money or how many items should we see if they have?
+	 * @param type -1 for money, any other valid item id for items. This will check to see if they have the items in their hand.
+	 * @return true if they have enough money/items false if not.
 	 */
 	public final boolean hasEnough(Player player, double amount, int type) {
 		return hasEnough(player, amount, type, null);
@@ -154,13 +158,13 @@ public abstract class GenericBank {
 	 * @param price The price the user was charged for a wolf
 	 * @param item The item the user was charged for a wolf (-1 is money)
 	 */
-	public void showReceipt(Player player, double price, int item) {
+	protected void showReceipt(Player player, double price, int item) {
 		if (price > 0)
 			player.sendMessage(ChatColor.DARK_GREEN + AllPay.prefix + ChatColor.WHITE + "You have been charged " + ChatColor.GREEN + getFormattedAmount(price, item));
 	}
 	
 	/**
-	 * Simply prints the economy being used, this is shown to help users debug issues with other plugin interfacing.
+	 * Simply returns the economy being used.
 	 * 
 	 * @return The economy plugin used
 	 */

@@ -477,7 +477,6 @@ public class WolfPound extends JavaPlugin {
 		}
 		if (hasPermission(p, PERM_ADOPT) && bank.hasEnough(p, price * wolves, type)) {
 			bank.pay(p, price * wolves, type);
-			bank.showReceipt(p, price * wolves, type);
 			for (int i = 0; i < wolves; i++) {
 				spawnWolf(p, aggro);
 			}

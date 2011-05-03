@@ -32,6 +32,7 @@ public class BOSEconomyBank extends GenericBank {
 	public void payMoney(Player player, double amount) {
 		int negativePrice = (int) (-1 * Math.abs(amount));
 		plugin.addPlayerMoney(player.getName(), negativePrice, true);
+		showReceipt(player, amount, -1);
 	}
 	
 	@Override

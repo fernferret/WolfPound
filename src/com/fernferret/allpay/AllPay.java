@@ -53,27 +53,33 @@ public class AllPay {
 	}
 	
 	private void loadEssentialsEconomoy() {
-		Essentials essentialsPlugin = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
-		if (essentialsPlugin != null) {
-			this.bank = new EssentialsBank(essentialsPlugin);
-			log.info(logPrefix + " - hooked into Essentials Economy for " + plugin.getDescription().getFullName());
+		if (this.bank == null) {
+			Essentials essentialsPlugin = (Essentials) plugin.getServer().getPluginManager().getPlugin("Essentials");
+			if (essentialsPlugin != null) {
+				this.bank = new EssentialsBank(essentialsPlugin);
+				log.info(logPrefix + " - hooked into Essentials Economy for " + plugin.getDescription().getFullName());
+			}
 		}
 	}
 	
 	private void loadRealShopEconomy() {
-		Plugin realShopPlugin = plugin.getServer().getPluginManager().getPlugin("RealShop");
-		if (realShopPlugin != null && this.bank == null) {
-			RealEconomy realEconPlugin = new RealEconomy((RealPlugin) realShopPlugin);
-			log.info(logPrefix + " - hooked into RealEconomy for " + plugin.getDescription().getFullName());
-			this.bank = new RealEconomyBank(realEconPlugin);
+		if (this.bank == null) {
+			Plugin realShopPlugin = plugin.getServer().getPluginManager().getPlugin("RealShop");
+			if (realShopPlugin != null) {
+				RealEconomy realEconPlugin = new RealEconomy((RealPlugin) realShopPlugin);
+				log.info(logPrefix + " - hooked into RealEconomy for " + plugin.getDescription().getFullName());
+				this.bank = new RealEconomyBank(realEconPlugin);
+			}
 		}
 	}
 	
 	private void loadBOSEconomy() {
-		BOSEconomy boseconPlugin = (BOSEconomy) plugin.getServer().getPluginManager().getPlugin("BOSEconomy");
-		if (boseconPlugin != null && this.bank == null) {
-			this.bank = new BOSEconomyBank(boseconPlugin);
-			log.info(logPrefix + " - hooked into BOSEconomy " + plugin.getDescription().getFullName());
+		if (this.bank == null) {
+			BOSEconomy boseconPlugin = (BOSEconomy) plugin.getServer().getPluginManager().getPlugin("BOSEconomy");
+			if (boseconPlugin != null) {
+				this.bank = new BOSEconomyBank(boseconPlugin);
+				log.info(logPrefix + " - hooked into BOSEconomy " + plugin.getDescription().getFullName());
+			}
 		}
 	}
 	
@@ -102,7 +108,7 @@ public class AllPay {
 	
 	private void loadiConomy4X() {
 		com.nijiko.coelho.iConomy.iConomy iConomyPlugin = (com.nijiko.coelho.iConomy.iConomy) plugin.getServer().getPluginManager().getPlugin("iConomy");
-		if (iConomyPlugin != null && this.bank == null) {
+		if (iConomyPlugin != null) {
 			this.bank = new iConomyBank4X(iConomyPlugin);
 			log.info(logPrefix + " - hooked into iConomy(4.X) for " + plugin.getDescription().getFullName());
 		}

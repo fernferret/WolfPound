@@ -18,7 +18,7 @@ public class WPPluginListener extends ServerListener {
 	@Override
 	public void onPluginEnable(PluginEnableEvent event) {
 		// Let AllPay handle all econ plugin loadings
-		AllPay banker = new AllPay(plugin, WolfPound.logPrefix);
+		AllPay banker = new AllPay(plugin, WolfPound.logPrefix + " ");
 		plugin.bank = banker.getEconPlugin();
 	}
 }

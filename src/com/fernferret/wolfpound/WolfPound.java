@@ -23,6 +23,10 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.fernferret.allpay.*;
+import com.fernferret.wolfpound.commands.CommandAdoptWolf;
+import com.fernferret.wolfpound.commands.CommandSetAggro;
+import com.fernferret.wolfpound.commands.CommandSetPrice;
+import com.fernferret.wolfpound.commands.WolfPoundCommand;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -108,6 +112,7 @@ public class WolfPound extends JavaPlugin {
 		getDataFolder().mkdirs();
 		configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
 		configWP.load();
+		registerCommands();
 		// If the config was empty or not specified correctly, overwrite it!
 		checkPriceProperty("");
 		checkAggroProperty("");
@@ -215,61 +220,14 @@ public class WolfPound extends JavaPlugin {
 		}
 	}
 	
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		String commandName = command.getName().toLowerCase();
-		
-		if (commandName.equalsIgnoreCase("adopt")) {
-			Player player = (Player) sender;
-			switch (args.length) {
-				case 0:
-					// Adopt a wolf with no params
-					adoptWolf(player, 1);
-					return true;
-				case 1:
-					// Display the wolf price
-					if (args[0].equalsIgnoreCase("price")) {
-						sendWolfPrice(player, player.getWorld().getName());
-						return true;
-					} else if (args[0].equalsIgnoreCase("limit")) {
-						sendWolfLimit(player, player.getWorld().getName());
-						return true;
-					}
-					// Adopt X wolves
-					adoptWolf(player, getWolfInt(args[0], player, "I didn't understand how many wolves you wanted!"));
-					return true;
-				case 2:
-					// change a setting!,
-					if (hasPermission(player, PERM_ADMIN) && args[0].equalsIgnoreCase("remove")) {
-						removeWorld(args[1]);
-						return true;
-					}
-					if (hasPermission(player, PERM_ADOPT) && args[0].equalsIgnoreCase("price") && args[1].equalsIgnoreCase("all")) {
-						sendWolfPrice(player, "");
-						return true;
-					}
-					if (hasPermission(player, PERM_ADOPT) && args[0].equalsIgnoreCase("limit") && args[1].equalsIgnoreCase("all")) {
-						sendWolfLimit(player, "");
-						return true;
-					}
-					if (!hasPermission(player, PERM_ADMIN)) {
-						return false;
-					}
-					return (changeSetting(args[0], args[1], player.getWorld().getName(), player));
-				case 3:
-					// change a setting!,
-					if (!hasPermission(player, PERM_ADMIN)) {
-						return false;
-					}
-					return (changeSetting(args[0], args[1], args[2], player));
-				default:
-					return false;
-			}
-		}
-		return false;
-	}
+	private void registerCommands() {
+        // Page 1
+        getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
+        getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
+        getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
+    }
 	
-	private void removeWorld(String string) {
+	public void removeWorld(String string) {
 		configWP.removeProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string);
 		configWP.save();
 		
@@ -291,7 +249,7 @@ public class WolfPound extends JavaPlugin {
 		}
 	}
 	
-	private void sendWolfPrice(Player p, String world) {
+	public void sendWolfPrice(Player p, String world) {
 		if (hasPermission(p, PERM_ADOPT)) {
 			if (world.equalsIgnoreCase("")) {
 				String everywhere = "everywhere";
@@ -309,7 +267,7 @@ public class WolfPound extends JavaPlugin {
 		}
 	}
 	
-	private void sendWolfLimit(Player p, String world) {
+	public void sendWolfLimit(Player p, String world) {
 		if (hasPermission(p, PERM_ADOPT)) {
 			if (world.equalsIgnoreCase("")) {
 				String everywhere = "everywhere";
@@ -326,7 +284,7 @@ public class WolfPound extends JavaPlugin {
 		}
 	}
 	
-	private boolean changeSetting(String command, String value, String world, Player p) {
+	public boolean changeSetting(String command, String value, String world, Player p) {
 		
 		String worldString = world;
 		world = MULTI_WORLD_KEY + "." + world + ".";
@@ -441,7 +399,7 @@ public class WolfPound extends JavaPlugin {
 		return false;
 	}
 	
-	private int getWolfInt(String wolves, Player p, String errorMsg) {
+	public int getWolfInt(String wolves, Player p, String errorMsg) {
 		try {
 			return Math.abs(Integer.parseInt(wolves));
 		} catch (NumberFormatException e) {
@@ -456,7 +414,7 @@ public class WolfPound extends JavaPlugin {
 	 * @param p The player
 	 * @param wolves How many wolves
 	 */
-	private void adoptWolf(Player p, int wolves) {
+	public void adoptWolf(Player p, int wolves) {
 		String world = p.getWorld().getName();
 		double price = this.adoptPrice;
 		int type = this.adoptType;

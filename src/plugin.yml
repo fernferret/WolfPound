@@ -14,4 +14,7 @@ commands:
     usage: /<command>
   wpsettype:
     description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
-    usage: /<command> [TYPE] {global|world}
+    usage: /<command> [TYPE] {global|w:WORLD}
+  wpremoveprice:
+    description: Removes the price from the current world if none is specified, or all if global is specified
+    usage: /<command> {global|w:WORLD}

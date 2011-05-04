@@ -4,5 +4,14 @@ author: FernFerret
 version: 1.0
 commands:
   adopt:
-    description: Gives you a wolf! (You'll need to befriend it though...)
+    description: Gives you a wolf!
     usage: /<command>
+  wpsetprice:
+    description: Gives you a wolf!
+    usage: /<command>
+  wpsetaggro:
+    description: Gives you a wolf!
+    usage: /<command>
+  wpsettype:
+    description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
+    usage: /<command> [TYPE] {global|world}

@@ -6,15 +6,18 @@ commands:
   adopt:
     description: Gives you a wolf!
     usage: /<command>
+  wpprice:
+    description: States the price of a wolf.
+    usage: /<command> [all|w:WORLD]
   wpsetprice:
-    description: Gives you a wolf!
-    usage: /<command>
+    description: Sets the price to buy a wolf using the /adopt command.
+    usage: /<command> {QUANTITY} [global|w:WORLD]
   wpsetaggro:
-    description: Gives you a wolf!
-    usage: /<command>
+    description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
+    usage: /<command> {angry|tame|neutral} [global|w:WORLD]
   wpsettype:
     description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
-    usage: /<command> [TYPE] {global|w:WORLD}
-  wpremoveprice:
-    description: Removes the price from the current world if none is specified, or all if global is specified
-    usage: /<command> {global|w:WORLD}
+    usage: /<command> {TYPE} [global|w:WORLD]
+  wpremove:
+    description: Resets specified world to default from the current world if none is specified, or all if global is specified
+    usage: /<command> [w:WORLD]

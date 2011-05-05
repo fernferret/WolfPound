@@ -5,14 +5,15 @@ import org.bukkit.command.CommandSender;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class CommandSetPrice extends WolfPoundCommand{
-	public CommandSetPrice(WolfPound plugin) {
+public class CommandLimitWolf extends WolfPoundCommand {
+
+	public CommandLimitWolf(WolfPound plugin) {
 		super(plugin);
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		super.plugin.bank.getEconUsed();
+		// TODO Auto-generated method stub
 		return false;
 	}
 	

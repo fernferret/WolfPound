@@ -59,8 +59,8 @@ public class WolfPound extends JavaPlugin {
 	
 	public static PermissionHandler Permissions = null;
 	public static boolean usePermissions = false;
-	public static final String chatPrefixError = ChatColor.DARK_RED + "[WolfPound]" + ChatColor.WHITE + " ";
-	public static final String chatPrefix = ChatColor.DARK_GREEN + "[WolfPound]" + ChatColor.WHITE + " ";
+	public static final String chatPrefixError = ChatColor.DARK_RED + logPrefix + ChatColor.WHITE + " ";
+	public static final String chatPrefix = ChatColor.DARK_GREEN + logPrefix + ChatColor.WHITE + " ";
 	private static final String ADOPT_KEY = "adopt";
 	private static final String AGGRO_KEY = "aggro";
 	private static final String LIMIT_KEY = "limit";
@@ -224,7 +224,7 @@ public class WolfPound extends JavaPlugin {
         // Page 1
         getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
         getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
-        getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
+        //getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
     }
 	
 	public void removeWorld(String string) {

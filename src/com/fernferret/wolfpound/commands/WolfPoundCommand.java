@@ -86,5 +86,20 @@ public abstract class WolfPoundCommand implements CommandExecutor {
 		return null;
 	}
 	
+	/**
+	 * Checks to see if the given list contains the given string
+	 * @param s The passed in string
+	 * @param choices The list to check
+	 * @return true if the string is in the list, false if not
+	 */
+	protected boolean isAKeyword(String s, String[] choices) {
+		for(String word : choices) {
+			if(s.matches("(?i)(.*" + word + ".*)")) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 }

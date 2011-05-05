@@ -43,9 +43,6 @@ public class CommandAdoptWolf extends WolfPoundCommand {
 //					this.plugin.sendWolfLimit(player, player.getWorld().getName());
 //					return true;
 //				}
-//				// Adopt X wolves
-//				plugin.adoptWolf(player, plugin.getWolfInt(args[0], player, "I didn't understand how many wolves you wanted!"));
-//				return true;
 //			case 2:
 //				// change a setting!,
 //				if (plugin.hasPermission(player, WolfPound.PERM_ADMIN) && args[0].equalsIgnoreCase("remove")) {

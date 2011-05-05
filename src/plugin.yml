@@ -23,4 +23,4 @@ commands:
     usage: /<command> {NUMBER} [global|w:WORLD]
   wpremove:
     description: Resets specified world to default from the current world if none is specified, or all if global is specified
-    usage: /<command> [w:WORLD]
+    usage: /<command> {w:WORLD | global}

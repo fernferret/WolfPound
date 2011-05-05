@@ -9,6 +9,9 @@ commands:
   wpprice:
     description: States the price of a wolf.
     usage: /<command> [all|w:WORLD]
+  wplimit:
+    description: States how many wolves can be adopted at once.
+    usage: /<command> [all|w:WORLD]
   wpsetprice:
     description: Sets the price to buy a wolf using the /adopt command.
     usage: /<command> {PRICE} [global|w:WORLD]

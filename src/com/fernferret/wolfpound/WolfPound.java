@@ -217,10 +217,13 @@ public class WolfPound extends JavaPlugin {
 		// Page 1
 		getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
 		getCommand("wpprice").setExecutor(new CommandPrice(this));
+		getCommand("wplimit").setExecutor(new CommandLimit(this));
 		getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
 		getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
 		getCommand("wpsettype").setExecutor(new CommandSetType(this));
+		getCommand("wpsetlimit").setExecutor(new CommandSetLimit(this));
 		getCommand("wpreset").setExecutor(new CommandReset(this));
+		
 	}
 	
 	public void removeWorld(String string, Player p) {
@@ -276,7 +279,7 @@ public class WolfPound extends JavaPlugin {
 	
 	public void sendWolfLimit(Player p, String world) {
 		if (hasPermission(p, PERM_ADOPT)) {
-			if (world.equalsIgnoreCase("")) {
+			if (world.equalsIgnoreCase("all")) {
 				String everywhere = "everywhere";
 				for (String s : this.adoptPriceWorlds.keySet()) {
 					getHumanReadableAdoptLimitMessage(p, this.adoptLimitWorlds.get(s), "in " + ChatColor.AQUA + s + ChatColor.WHITE + "!");
@@ -385,7 +388,7 @@ public class WolfPound extends JavaPlugin {
 				checkLimitProperty(worldString);
 				if (world.equalsIgnoreCase("")) {
 					adoptAggro = value;
-					p.sendMessage(chatPrefix + "Global wolf limit changed successfully!");
+					p.sendMessage(chatPrefix + "Global wolf aggro changed successfully!");
 				} else {
 					adoptAggroWorlds.put(worldString, value);
 					p.sendMessage(chatPrefix + "Wolf aggro for " + worldString + " changed successfully!");

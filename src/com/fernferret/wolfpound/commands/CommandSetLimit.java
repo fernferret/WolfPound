@@ -6,29 +6,30 @@ import org.bukkit.entity.Player;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class CommandLimitWolf extends WolfPoundCommand {
+public class CommandSetLimit extends WolfPoundCommand {
 	private static final String[] LIMIT_KEYWORDS = { "global" };
-	public CommandLimitWolf(WolfPound plugin) {
+	
+	public CommandSetLimit(WolfPound plugin) {
 		super(plugin);
 	}
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		Player p = null;
-		if(sender instanceof Player) {
+		if (sender instanceof Player) {
 			p = (Player) sender;
 		}
-		if(args.length == 1) {
-			if(p != null) {
+		if (args.length == 1) {
+			if (p != null) {
 				this.plugin.changeSetting("limit", args[0], p.getWorld().getName(), p);
 				return true;
 			}
-		} else if(args.length == 2) {
-			if(p != null) {
-				if(isAKeyword(args[1], LIMIT_KEYWORDS)) {
+		} else if (args.length == 2) {
+			if (p != null) {
+				if (isAKeyword(args[1], LIMIT_KEYWORDS)) {
 					// Change the global type
 					this.plugin.changeSetting("limitglobal", args[0], "", p);
-				} else if(isValidWorld(args[1])) {
+				} else if (isValidWorld(args[1])) {
 					this.plugin.changeSetting("limit", args[0], getWorldName(args[1]), p);
 				} else {
 					// Not global or a world, something is wrong...

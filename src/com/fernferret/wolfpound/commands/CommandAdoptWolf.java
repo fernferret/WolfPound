@@ -1,7 +1,5 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.logging.Logger;
-
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -9,7 +7,6 @@ import org.bukkit.entity.Player;
 import com.fernferret.wolfpound.WolfPound;
 
 public class CommandAdoptWolf extends WolfPoundCommand {
-	private static final Logger log = Logger.getLogger("Minecraft");
 	public CommandAdoptWolf(WolfPound plugin) {
 		super(plugin);
     }

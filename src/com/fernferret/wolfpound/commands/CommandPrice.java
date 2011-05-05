@@ -12,7 +12,8 @@ public class CommandPrice extends WolfPoundCommand {
 	public CommandPrice(WolfPound plugin) {
 		super(plugin);
 	}
-	// TODO: place price messengers in here!
+	
+	// TODO: place price message functions in this class!
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// Someone tried just /wpprice

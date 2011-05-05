@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -23,11 +21,7 @@ import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
 import com.fernferret.allpay.*;
-import com.fernferret.wolfpound.commands.CommandAdoptWolf;
-import com.fernferret.wolfpound.commands.CommandPrice;
-import com.fernferret.wolfpound.commands.CommandSetAggro;
-import com.fernferret.wolfpound.commands.CommandSetPrice;
-import com.fernferret.wolfpound.commands.WolfPoundCommand;
+import com.fernferret.wolfpound.commands.*;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -224,8 +218,11 @@ public class WolfPound extends JavaPlugin {
 	private void registerCommands() {
         // Page 1
         getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
-        getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
         getCommand("wpprice").setExecutor(new CommandPrice(this));
+        getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
+        getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
+        getCommand("wpsettype").setExecutor(new CommandSetType(this));
+        getCommand("wpreset").setExecutor(new CommandReset(this));
     }
 	
 	public void removeWorld(String string) {

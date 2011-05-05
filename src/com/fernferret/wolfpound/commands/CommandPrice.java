@@ -30,7 +30,7 @@ public class CommandPrice extends WolfPoundCommand {
 				return true;
 			}
 		} else if (args.length == 1) {
-			if (checkKeyword(args[0], PRICE_KEYWORDS) == "all") {
+			if (isAKeyword(args[0], PRICE_KEYWORDS)) {
 				if (p != null) {
 					this.plugin.sendWolfPrice((Player) sender, "all");
 				} else {

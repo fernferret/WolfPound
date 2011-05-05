@@ -242,6 +242,10 @@ public class WolfPound extends JavaPlugin {
 	private void getHumanReadablePriceMessage(Player p, double price, int type, String end) {
 		if (price == 0) {
 			p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
+		} else if(bank instanceof ItemBank && type == -1) {
+			if(hasPermission(p, PERM_ADMIN))
+				p.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
+			p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
 		} else {
 			p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(price, type) + " to adopt a wolf " + end);
 		}

@@ -35,10 +35,6 @@ public class CommandAdoptWolf extends WolfPoundCommand {
 //		Player player = (Player) sender;
 //		switch (ifargs.length) {
 //			case 1:
-//				// Display the wolf price
-//				if (args[0].equalsIgnoreCase("price")) {
-//					this.plugin.sendWolfPrice(player, player.getWorld().getName());
-//					return true;
 //				} else if (args[0].equalsIgnoreCase("limit")) {
 //					this.plugin.sendWolfLimit(player, player.getWorld().getName());
 //					return true;
@@ -47,10 +43,6 @@ public class CommandAdoptWolf extends WolfPoundCommand {
 //				// change a setting!,
 //				if (plugin.hasPermission(player, WolfPound.PERM_ADMIN) && args[0].equalsIgnoreCase("remove")) {
 //					this.plugin.removeWorld(args[1]);
-//					return true;
-//				}
-//				if (this.plugin.hasPermission(player, WolfPound.PERM_ADOPT) && args[0].equalsIgnoreCase("price") && args[1].equalsIgnoreCase("all")) {
-//					this.plugin.sendWolfPrice(player, "");
 //					return true;
 //				}
 //				if (this.plugin.hasPermission(player, WolfPound.PERM_ADOPT) && args[0].equalsIgnoreCase("limit") && args[1].equalsIgnoreCase("all")) {

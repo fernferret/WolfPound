@@ -16,13 +16,23 @@ public class CommandAdoptWolf extends WolfPoundCommand {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		log.info(WolfPound.logPrefix + " Firing adopt command");
 		// TODO: Allow players to buy multiple wolves
-		if (args.length == 0 && sender instanceof Player) {
-			Player player = (Player) sender;
+		if(!(sender instanceof Player)) {
+			log.info("Only Players can spawn wolves!");
+			return true;
+		}
+		Player player = (Player)sender;
+		if (args.length == 0) {
 			// Adopt a wolf with no params
 			this.plugin.adoptWolf(player, 1);
 			return true;
+		} else if(args.length == 1) {
+			try{
+				int wolves = Integer.parseInt(args[0]);
+				this.plugin.adoptWolf(player, wolves);
+				return true;
+			} catch (NumberFormatException e) {
+			}
 		}
 		return false;
 //		Player player = (Player) sender;

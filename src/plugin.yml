@@ -5,7 +5,7 @@ version: 1.0
 commands:
   adopt:
     description: Gives you a wolf!
-    usage: /<command>
+    usage: /<command> [NUMBER]
   wpprice:
     description: States the price of a wolf.
     usage: /<command> [all|w:WORLD]

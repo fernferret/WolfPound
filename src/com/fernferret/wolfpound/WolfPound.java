@@ -24,6 +24,7 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.fernferret.allpay.*;
 import com.fernferret.wolfpound.commands.CommandAdoptWolf;
+import com.fernferret.wolfpound.commands.CommandPrice;
 import com.fernferret.wolfpound.commands.CommandSetAggro;
 import com.fernferret.wolfpound.commands.CommandSetPrice;
 import com.fernferret.wolfpound.commands.WolfPoundCommand;
@@ -224,7 +225,7 @@ public class WolfPound extends JavaPlugin {
         // Page 1
         getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
         getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
-        //getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
+        getCommand("wpprice").setExecutor(new CommandPrice(this));
     }
 	
 	public void removeWorld(String string) {
@@ -250,8 +251,9 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public void sendWolfPrice(Player p, String world) {
+		p.sendMessage(world);
 		if (hasPermission(p, PERM_ADOPT)) {
-			if (world.equalsIgnoreCase("")) {
+			if (world.equalsIgnoreCase("all")) {
 				String everywhere = "everywhere";
 				for (String s : this.adoptPriceWorlds.keySet()) {
 					getHumanReadablePriceMessage(p, this.adoptPriceWorlds.get(s), this.adoptTypeWorlds.get(s), "in " + ChatColor.AQUA + s + ChatColor.WHITE + "!");

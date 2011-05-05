@@ -18,15 +18,22 @@ public class CommandPrice extends WolfPoundCommand {
 		if(args.length == 0) {
 			if(sender instanceof Player) {
 				Player p = (Player)sender;
-				plugin.sendWolfPrice(p, p.getWorld().toString());
+				plugin.sendWolfPrice(p, p.getWorld().getName());
+				return true;
 			} else {
 				WolfPound.log.info("Please use: /wpprice {w:WORLD|all} from the console");
 			}
 		} else if(args.length == 1) {
 			if(checkKeyword(args[0], PRICE_KEYWORDS) == "all") {
-				// TODO: Display all prices
+				if(sender instanceof Player) {
+					this.plugin.sendWolfPrice((Player)sender, "all");
+					return true;
+				}
+				// TODO: Fix for console
 			} else if(isValidWorld(args[0])) {
-				// TODO: Display the price for the specified world
+				this.plugin.sendWolfPrice((Player)sender, getWorldName(args[0]));
+				return true;
+				// TODO: Fix for console
 			} else {
 				if(!(sender instanceof Player)) {
 					WolfPound.log.info("Please use: /wpprice {w:WORLD|all}");

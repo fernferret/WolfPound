@@ -1,6 +1,7 @@
 package com.fernferret.wolfpound.commands;
 
 import java.util.HashSet;
+import java.util.logging.Logger;
 
 import org.bukkit.Server;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +10,7 @@ import com.fernferret.wolfpound.WolfPound;
 
 public abstract class WolfPoundCommand implements CommandExecutor {
 	protected WolfPound plugin;
+	protected static final Logger log = Logger.getLogger("Minecraft");
 	
 	public WolfPoundCommand(WolfPound plugin) {
 		this.plugin = plugin;
@@ -52,6 +54,21 @@ public abstract class WolfPoundCommand implements CommandExecutor {
 		return(values.length == 2 && values[0].equalsIgnoreCase("w") && 
 				plugin.getServer().getWorld(values[1]) != null);
 	}
+	/**
+	 * Returns just the worldname
+	 * @param worldString String in format: w:WORLD
+	 * @return
+	 */
+	protected String getWorldName(String worldString) {
+		String[] values = worldString.split(":");
+		if(values.length != 2 || !values[0].equalsIgnoreCase("w") || plugin.getServer().getWorld(values[1]) == null) {
+			log.severe(WolfPound.logPrefix + " Could not find world name(" + worldString + ") in getWorldName(String worldString)");
+			log.severe("Worlds: " + plugin.getServer().getWorlds());
+			return "";
+		} else {
+			return values[1];
+		}
+	}
 	
 	/**
 	 * Checks to see if the given string was:
@@ -68,4 +85,6 @@ public abstract class WolfPoundCommand implements CommandExecutor {
 		}
 		return null;
 	}
+	
+	
 }

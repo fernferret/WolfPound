@@ -2,10 +2,12 @@ package com.fernferret.wolfpound.commands;
 
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import com.fernferret.wolfpound.WolfPound;
 
 public class CommandSetAggro extends WolfPoundCommand {
+	private static final String[] AGGRO_KEYWORDS = { "global" };
 	
 	public CommandSetAggro(WolfPound plugin) {
 		super(plugin);
@@ -13,7 +15,30 @@ public class CommandSetAggro extends WolfPoundCommand {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// TODO Auto-generated method stub
+		Player p = null;
+		if (sender instanceof Player) {
+			p = (Player) sender;
+		}
+		if (args.length == 1) {
+			if (p != null) {
+				this.plugin.changeSetting("aggro", args[0], p.getWorld().getName(), p);
+				return true;
+			}
+		} else if (args.length == 2) {
+			if (p != null) {
+				if (checkKeyword(args[1], AGGRO_KEYWORDS) == "global") {
+					// Change the global aggro
+					this.plugin.changeSetting("aggroglobal", args[0], "", p);
+				} else if (isValidWorld(args[1])) {
+					this.plugin.changeSetting("aggro", args[0], getWorldName(args[1]), p);
+				} else {
+					// Not global or a world, something is wrong...
+					return false;
+				}
+				return true;
+			}
+			// TODO: Implement console commands here
+		}
 		return false;
 	}
 	

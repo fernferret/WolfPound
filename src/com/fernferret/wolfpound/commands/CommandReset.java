@@ -19,10 +19,10 @@ public class CommandReset extends WolfPoundCommand {
 			Player player = (Player) sender;
 			if (plugin.hasPermission(player, WolfPound.PERM_ADMIN) && args.length == 1) {
 				if(isValidWorld(args[0])) {
-					this.plugin.removeWorld(getWorldName(args[0]));
+					this.plugin.removeWorld(getWorldName(args[0]), player);
 				} else if(isAKeyword(args[0], RESET_KEYWORDS)) {
 					for(World w : this.plugin.getServer().getWorlds()) {
-						this.plugin.removeWorld(w.getName());
+						this.plugin.removeWorld(w.getName(), player);
 					}
 				} else {
 					// Was an INVALID world or keyword, return false.

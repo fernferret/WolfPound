@@ -44,8 +44,10 @@ public class CommandPrice extends WolfPoundCommand {
 					// TODO: Add console support
 					WolfPound.log.info("This command is currently not supported from the console.");
 				}
-			} else if (!(sender instanceof Player)) {
+			} else if (p == null) {
 				WolfPound.log.info("Please use: wpprice [w:WORLD | all]");
+			} else {
+				return false;
 			}
 			return true;
 		}

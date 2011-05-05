@@ -7,7 +7,8 @@ import org.bukkit.entity.Player;
 import com.fernferret.wolfpound.WolfPound;
 
 public class CommandSetPrice extends WolfPoundCommand {
-	private static final String[] PRICE_KEYWORDS = { "all", "global" };
+	// TODO: make "all" iterate through all worlds and the global and change all prices
+	private static final String[] PRICE_KEYWORDS = { "global" };
 	public CommandSetPrice(WolfPound plugin) {
 		super(plugin);
 	}
@@ -20,6 +21,9 @@ public class CommandSetPrice extends WolfPoundCommand {
 		}
 		if(args.length == 1) {
 			if(p != null) {
+				if(args[0].equalsIgnoreCase("free")) {
+					args[0] = "0";
+				}
 				this.plugin.changeSetting("price", args[0], p.getWorld().getName(), p);
 				return true;
 			}
@@ -27,7 +31,7 @@ public class CommandSetPrice extends WolfPoundCommand {
 			if(p != null) {
 				if(isAKeyword(args[1], PRICE_KEYWORDS)) {
 					// Change the global price
-					this.plugin.changeSetting("price", args[0], "", p);
+					this.plugin.changeSetting("priceglobal", args[0], "", p);
 				} else if(isValidWorld(args[1])) {
 					this.plugin.changeSetting("price", args[0], getWorldName(args[1]), p);
 				} else {

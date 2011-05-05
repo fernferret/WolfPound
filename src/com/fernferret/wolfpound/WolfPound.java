@@ -68,7 +68,7 @@ public class WolfPound extends JavaPlugin {
 	public static final String ADOPT_ANGRY = "angry";
 	private static final String DEFAULT_ADOPT_AGGRO = ADOPT_FRIEND;
 	
-	//public WPBankAdapter bank;
+	// public WPBankAdapter bank;
 	public GenericBank bank;
 	// Used as an item id for transactions with the /adopt command
 	private double adoptPrice = DEFAULT_ADOPT_PRICE;
@@ -90,9 +90,9 @@ public class WolfPound extends JavaPlugin {
 		
 		log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " Enabled");
 		
-//		if (setEconPlugin()) {
-//			log.info(logPrefix + bank.getEconUsed());
-//		}
+		// if (setEconPlugin()) {
+		// log.info(logPrefix + bank.getEconUsed());
+		// }
 		checkPermissions();
 		
 		PluginManager pm = getServer().getPluginManager();
@@ -135,8 +135,6 @@ public class WolfPound extends JavaPlugin {
 		this.adoptLimit = configWP.getInt(ADOPT_KEY + "." + LIMIT_KEY, DEFAULT_ADOPT_LIMIT);
 		
 	}
-	
-
 	
 	private boolean aggroValueCheck(String value) {
 		return (value.equalsIgnoreCase(ADOPT_ANGRY) || value.equalsIgnoreCase(ADOPT_FRIEND) || value.equalsIgnoreCase(ADOPT_NEUTRAL));
@@ -216,18 +214,25 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	private void registerCommands() {
-        // Page 1
-        getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
-        getCommand("wpprice").setExecutor(new CommandPrice(this));
-        getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
-        getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
-        getCommand("wpsettype").setExecutor(new CommandSetType(this));
-        getCommand("wpreset").setExecutor(new CommandReset(this));
-    }
+		// Page 1
+		getCommand("adopt").setExecutor(new CommandAdoptWolf(this));
+		getCommand("wpprice").setExecutor(new CommandPrice(this));
+		getCommand("wpsetprice").setExecutor(new CommandSetPrice(this));
+		getCommand("wpsetaggro").setExecutor(new CommandSetAggro(this));
+		getCommand("wpsettype").setExecutor(new CommandSetType(this));
+		getCommand("wpreset").setExecutor(new CommandReset(this));
+	}
 	
-	public void removeWorld(String string) {
-		configWP.removeProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string);
-		configWP.save();
+	public void removeWorld(String string, Player p) {
+		if (configWP.getProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string) != null) {
+			p.sendMessage(chatPrefix + "Reverting " + ChatColor.GREEN + string + ChatColor.WHITE + " to global default...");
+			configWP.removeProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string);
+			configWP.save();
+			this.adoptAggroWorlds.remove(string);
+			this.adoptLimitWorlds.remove(string);
+			this.adoptPriceWorlds.remove(string);
+			this.adoptTypeWorlds.remove(string);
+		}
 		
 	}
 	
@@ -242,8 +247,8 @@ public class WolfPound extends JavaPlugin {
 	private void getHumanReadablePriceMessage(Player p, double price, int type, String end) {
 		if (price == 0) {
 			p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
-		} else if(bank instanceof ItemBank && type == -1) {
-			if(hasPermission(p, PERM_ADMIN))
+		} else if (bank instanceof ItemBank && type == -1) {
+			if (hasPermission(p, PERM_ADMIN))
 				p.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
 			p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
 		} else {
@@ -252,7 +257,6 @@ public class WolfPound extends JavaPlugin {
 	}
 	
 	public void sendWolfPrice(Player p, String world) {
-		p.sendMessage(world);
 		if (hasPermission(p, PERM_ADOPT)) {
 			if (world.equalsIgnoreCase("all")) {
 				String everywhere = "everywhere";
@@ -390,11 +394,11 @@ public class WolfPound extends JavaPlugin {
 				configWP.save();
 				return true;
 			} else {
-				p.sendMessage(chatPrefixError + "Value not set, valid aggro types are " + 
-						ChatColor.AQUA + "neutral" + 
-						ChatColor.WHITE + ", " + 
-						ChatColor.GREEN + "friend" + 
-						ChatColor.WHITE + " or " + 
+				p.sendMessage(chatPrefixError + "Value not set, valid aggro types are " +
+						ChatColor.AQUA + "neutral" +
+						ChatColor.WHITE + ", " +
+						ChatColor.GREEN + "friend" +
+						ChatColor.WHITE + " or " +
 						ChatColor.RED + "angry");
 				return false;
 			}
@@ -428,7 +432,6 @@ public class WolfPound extends JavaPlugin {
 			limit = this.adoptLimitWorlds.get(world);
 			type = this.adoptTypeWorlds.get(world);
 			aggro = this.adoptAggroWorlds.get(world);
-			
 		}
 		if (limit >= 0) {
 			wolves = (wolves > limit) ? limit : wolves;

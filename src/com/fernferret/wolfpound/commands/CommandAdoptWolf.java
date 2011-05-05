@@ -15,7 +15,7 @@ public class CommandAdoptWolf extends WolfPoundCommand {
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// TODO: Allow players to buy multiple wolves
 		if(!(sender instanceof Player)) {
-			log.info("Only Players can spawn wolves!");
+			log.info("Only Players can adopt wolves!");
 			return true;
 		}
 		Player player = (Player)sender;

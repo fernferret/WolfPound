@@ -6,7 +6,8 @@ import org.bukkit.entity.Player;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class CommandSetAggro extends WolfPoundCommand {
+public class CommandSetAggro extends WolfPoundCommand implements SavableProperty {
+	private String propertyName;
 	private static final String[] AGGRO_KEYWORDS = { "global" };
 	
 	public CommandSetAggro(WolfPound plugin) {
@@ -42,4 +43,37 @@ public class CommandSetAggro extends WolfPoundCommand {
 		return false;
 	}
 	
+	@Override
+	public String getPropertyName() {
+		return this.propertyName;
+	}
+	
+	@Override
+	public void setPropertyName(String name) {
+		this.propertyName = name;
+	}
+	
+	@Override
+	public void saveProperty(String world) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void savePropertyGlobal() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void checkProperty(String world) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void checkPropertyGlobal() {
+		// TODO Auto-generated method stub
+		
+	}
 }

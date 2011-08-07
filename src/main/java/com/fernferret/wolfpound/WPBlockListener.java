@@ -3,12 +3,12 @@ package com.fernferret.wolfpound;
 import java.util.ArrayList;
 
 import org.bukkit.Material;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.block.Sign;
 
 public class WPBlockListener extends BlockListener {
 	private final WolfPound plugin;
@@ -133,8 +133,8 @@ public class WPBlockListener extends BlockListener {
 	
 	@Override
 	public void onBlockPlace(BlockPlaceEvent event) {
-		if (event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST) {
-			Sign sign = (Sign) event.getBlock();
+		if (event.getBlock() instanceof Sign) {
+			Sign sign = (Sign) event.getBlock().getState();
 			// Don't let the user make this an auth'd sign
 			if (sign.getLine(0).matches(WolfPound.prefixValid + "(?i)\\[WolfPound\\]")) {
 				event.setCancelled(true);
@@ -145,7 +145,11 @@ public class WPBlockListener extends BlockListener {
 	
 	@Override
 	public void onBlockBreak(BlockBreakEvent event) {
-		if (plugin.blockIsValidWolfSign(event.getBlock())) {
+	    if(!(event.getBlock().getState() instanceof Sign)) {
+	        return;
+	    }
+	    Sign s = (Sign)event.getBlock().getState();
+		if (plugin.blockIsValidWolfSign(s)) {
 			if (!plugin.hasPermission(event.getPlayer(), WolfPound.PERM_CREATE)) {
 				event.setCancelled(true);
 			} else {

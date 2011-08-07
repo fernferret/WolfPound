@@ -17,8 +17,8 @@ public class WPPlayerListener extends PlayerListener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         if (event.hasBlock() && event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            Sign s = (Sign)event.getClickedBlock();
-            if (plugin.blockIsValidWolfSign(event.getClickedBlock()) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
+            Sign s = (Sign) event.getClickedBlock().getState();
+            if (plugin.blockIsValidWolfSign(s) && plugin.hasPermission(p, WolfPound.PERM_USE)) {
                 // We have a valid pound!
                 if (checkSignParams(s, 1, p)) {
                     // We have valid pound params!

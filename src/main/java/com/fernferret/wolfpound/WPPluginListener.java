@@ -1,5 +1,7 @@
 package com.fernferret.wolfpound;
 
+import java.util.Arrays;
+
 import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 
@@ -15,9 +17,8 @@ public class WPPluginListener extends ServerListener {
 	@Override
 	public void onPluginEnable(PluginEnableEvent event) {
 		// Let AllPay handle all econ plugin loadings, only go for econ plugins we support
-		if (event.getPlugin().getDescription().getName().equals("WolfPound")) {
-			AllPay banker = new AllPay(plugin, WolfPound.logPrefix + " ");
-			plugin.bank = banker.getEconPlugin();
-		}
+		if (Arrays.asList(AllPay.validEconPlugins).contains(event.getPlugin().getDescription().getName())) {
+            this.plugin.setBank(this.plugin.getBanker().loadEconPlugin());
+        }
 	}
 }

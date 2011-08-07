@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fernferret.wolfpound</groupId>
 	<artifactId>WolfPound</artifactId>
-	<version>1.0.2</version>
+	<version>1.1.0</version>
 	<name>AllPay</name>
 	<description>Multi-economy payment framework</description>
 	<properties>
@@ -46,6 +46,8 @@
 						<configuration>
 							<sources>
 								<source>${project.basedir}/lib/allpay/src</source>
+								<source>${project.basedir}/lib/CommandHandler/src</source>
+								<source>${project.basedir}/lib/CommandHandler/lib/ShellParser/src</source>
 							</sources>
 						</configuration>
 					</execution>
@@ -148,11 +150,12 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		<!-- End of Permissions Dependencies -->
 		<dependency>
 			<groupId>org.junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.8.2</version>
 		</dependency>
-		<!-- End of Permissions Dependencies -->
+		
 	</dependencies>
 </project>

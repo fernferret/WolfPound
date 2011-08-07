@@ -3,7 +3,9 @@ package com.fernferret.wolfpound;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.LoggingMXBean;
 
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
@@ -18,10 +20,20 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.fernferret.allpay.*;
-import com.fernferret.wolfpound.commands.*;
+import com.fernferret.allpay.AllPay;
+import com.fernferret.allpay.GenericBank;
+import com.fernferret.allpay.ItemBank;
+import com.fernferret.wolfpound.commands.CommandAdoptWolf;
+import com.fernferret.wolfpound.commands.CommandLimit;
+import com.fernferret.wolfpound.commands.CommandPrice;
+import com.fernferret.wolfpound.commands.CommandReset;
+import com.fernferret.wolfpound.commands.CommandSetAggro;
+import com.fernferret.wolfpound.commands.CommandSetLimit;
+import com.fernferret.wolfpound.commands.CommandSetPrice;
+import com.fernferret.wolfpound.commands.CommandSetType;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.pneumaticraft.commandhandler.CommandHandler;
 
 public class WolfPound extends JavaPlugin {
 
@@ -80,8 +92,12 @@ public class WolfPound extends JavaPlugin {
     private HashMap<String, String> adoptAggroWorlds = new HashMap<String, String>();
     private AllPay banker = new AllPay(this, "[WolfPound]");
 
+    private CommandHandler commandHandler;
+    private WPPermissions permissions;
     @Override
     public void onEnable() {
+        permissions = new WPPermissions(this);
+         commandHandler = new CommandHandler(this, permissions);
         loadConfiguration();
         playerListener = new WPPlayerListener(this);
         blockListener = new WPBlockListener(this);
@@ -100,7 +116,7 @@ public class WolfPound extends JavaPlugin {
         pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
-        
+
         this.bank = banker.loadEconPlugin();
     }
 
@@ -505,11 +521,19 @@ public class WolfPound extends JavaPlugin {
     }
 
     public AllPay getBanker() {
-        return this.banker ;
+        return this.banker;
     }
 
     public void setBank(GenericBank bank) {
         this.bank = bank;
+    }
+
+    public void log(Level info, String string) {
+        // TODO: write the new logger.
+    }
+
+    public Configuration getConfig() {
+        return this.configWP;
     }
 
 }

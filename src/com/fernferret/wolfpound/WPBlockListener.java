@@ -9,7 +9,6 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.block.CraftSign;
 
 public class WPBlockListener extends BlockListener {
 	private final WolfPound plugin;
@@ -135,7 +134,7 @@ public class WPBlockListener extends BlockListener {
 	@Override
 	public void onBlockPlace(BlockPlaceEvent event) {
 		if (event.getBlock().getType() == Material.WALL_SIGN || event.getBlock().getType() == Material.SIGN_POST) {
-			Sign sign = new CraftSign(event.getBlock());
+			Sign sign = (Sign) event.getBlock();
 			// Don't let the user make this an auth'd sign
 			if (sign.getLine(0).matches(WolfPound.prefixValid + "(?i)\\[WolfPound\\]")) {
 				event.setCancelled(true);

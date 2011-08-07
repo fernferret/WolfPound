@@ -6,9 +6,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
-import org.bukkit.craftbukkit.block.CraftSign;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -502,8 +502,10 @@ public class WolfPound extends JavaPlugin {
 	public boolean blockIsValidWolfSign(Block block) {
 		// TODO: Make this exception more specific
 		try {
-			Sign s = new CraftSign(block);
-			return s.getLine(0).equals(prefixValid + "[WolfPound]");
+			if(block.getType().equals(Material.SIGN) || block.getType().equals(Material.SIGN_POST)) {
+			    return ((Sign)block).getLine(0).equals(prefixValid + "[WolfPound]");    
+			}
+			
 		} catch (Exception e) {
 			
 		}

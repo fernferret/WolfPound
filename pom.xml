@@ -122,6 +122,14 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+		
+		<dependency>
+            <groupId>com.iCo6</groupId>
+            <artifactId>iConomy</artifactId>
+            <version>6.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
 
 		<dependency>
 			<groupId>com.nijiko.coelho.iConomy</groupId>

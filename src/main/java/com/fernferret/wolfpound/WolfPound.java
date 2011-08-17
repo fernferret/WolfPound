@@ -256,7 +256,7 @@ public class WolfPound extends JavaPlugin {
                 p.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
             p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else {
-            p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(price, type) + " to adopt a wolf " + end);
+            p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(p, price, type) + " to adopt a wolf " + end);
         }
     }
 

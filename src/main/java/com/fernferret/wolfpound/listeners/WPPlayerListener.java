@@ -1,10 +1,12 @@
-package com.fernferret.wolfpound;
+package com.fernferret.wolfpound.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.block.Sign;
+
+import com.fernferret.wolfpound.WolfPound;
 
 public class WPPlayerListener extends PlayerListener {
     private final WolfPound plugin;

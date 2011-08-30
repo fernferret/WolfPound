@@ -20,6 +20,9 @@ import org.bukkit.util.config.ConfigurationNode;
 
 import com.fernferret.allpay.*;
 import com.fernferret.wolfpound.commands.*;
+import com.fernferret.wolfpound.listeners.WPBlockListener;
+import com.fernferret.wolfpound.listeners.WPPlayerListener;
+import com.fernferret.wolfpound.listeners.WPPluginListener;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
@@ -100,7 +103,7 @@ public class WolfPound extends JavaPlugin {
         pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
         pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
-        
+
         this.bank = banker.loadEconPlugin();
     }
 
@@ -451,7 +454,7 @@ public class WolfPound extends JavaPlugin {
     public void spawnWolf(Player p, String aggro) {
 
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
-
+        w.setHealth(20);
         if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
             w.setOwner(p);
             w.setSitting(false);
@@ -505,7 +508,7 @@ public class WolfPound extends JavaPlugin {
     }
 
     public AllPay getBanker() {
-        return this.banker ;
+        return this.banker;
     }
 
     public void setBank(GenericBank bank) {

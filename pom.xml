@@ -3,12 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fernferret.wolfpound</groupId>
 	<artifactId>WolfPound</artifactId>
-	<version>1.0.3</version>
-	<name>AllPay</name>
-	<description>Multi-economy payment framework</description>
+	<version>1.0.4</version>
+	<name>WolfPound</name>
+	<description>Allow players to buy wolves.</description>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.build.number>UNKNOWN</project.build.number>
 	</properties>
 
 	<repositories>

@@ -31,6 +31,10 @@ import com.fernferret.wolfpound.commands.CommandSetAggro;
 import com.fernferret.wolfpound.commands.CommandSetLimit;
 import com.fernferret.wolfpound.commands.CommandSetPrice;
 import com.fernferret.wolfpound.commands.CommandSetType;
+import com.fernferret.wolfpound.commands.*;
+import com.fernferret.wolfpound.listeners.WPBlockListener;
+import com.fernferret.wolfpound.listeners.WPPlayerListener;
+import com.fernferret.wolfpound.listeners.WPPluginListener;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.pneumaticraft.commandhandler.CommandHandler;
@@ -272,7 +276,7 @@ public class WolfPound extends JavaPlugin {
                 p.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
             p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else {
-            p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(price, type) + " to adopt a wolf " + end);
+            p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(p, price, type) + " to adopt a wolf " + end);
         }
     }
 
@@ -467,7 +471,7 @@ public class WolfPound extends JavaPlugin {
     public void spawnWolf(Player p, String aggro) {
 
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
-
+        w.setHealth(20);
         if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
             w.setOwner(p);
             w.setSitting(false);

@@ -1,4 +1,4 @@
-package com.fernferret.wolfpound;
+package com.fernferret.wolfpound.listeners;
 
 import java.util.Arrays;
 
@@ -6,6 +6,7 @@ import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.event.server.ServerListener;
 
 import com.fernferret.allpay.AllPay;
+import com.fernferret.wolfpound.WolfPound;
 
 public class WPPluginListener extends ServerListener {
 	private WolfPound plugin;

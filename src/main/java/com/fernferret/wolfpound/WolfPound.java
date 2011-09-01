@@ -9,7 +9,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -29,6 +28,7 @@ import com.fernferret.wolfpound.commands.AdoptWolfCommand;
 import com.fernferret.wolfpound.commands.HelpCommand;
 import com.fernferret.wolfpound.commands.LimitCommand;
 import com.fernferret.wolfpound.commands.PriceCommand;
+import com.fernferret.wolfpound.commands.SetPropertyCommand;
 import com.fernferret.wolfpound.listeners.WPBlockListener;
 import com.fernferret.wolfpound.listeners.WPPlayerListener;
 import com.fernferret.wolfpound.listeners.WPPluginListener;
@@ -141,12 +141,12 @@ public class WolfPound extends JavaPlugin {
 
     private void registerCommands() {
         // Page 1
-
         this.commandHandler = new CommandHandler(this, this.permissions);
         this.commandHandler.registerCommand(new HelpCommand(this));
         this.commandHandler.registerCommand(new AdoptWolfCommand(this));
         this.commandHandler.registerCommand(new LimitCommand(this));
         this.commandHandler.registerCommand(new PriceCommand(this));
+        this.commandHandler.registerCommand(new SetPropertyCommand(this));
     }
     
     @Override

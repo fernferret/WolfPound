@@ -9,7 +9,6 @@ import org.bukkit.util.config.Configuration;
  */
 
 public class WPWorld {
-    private WolfPound plugin;
     private double price;
     private int currency;
     private WolfAggro aggro;

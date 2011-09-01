@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
 import com.fernferret.wolfpound.WPWorld;
@@ -18,8 +19,8 @@ public class SetPropertyCommand extends WPCommand {
     public SetPropertyCommand(WolfPound plugin) {
         super(plugin);
         this.setName("Resets wolf Price in a world.");
-        this.setCommandUsage("/wp set" + ChatColor.GREEN + "{PROPERTY} {VALUE} " + ChatColor.GOLD + "[all | w:WORLD]");
-        this.setArgRange(2, 2);
+        this.setCommandUsage("/wp set" + ChatColor.GREEN + " {PROPERTY} {VALUE} " + ChatColor.GOLD + "[all | WORLD]");
+        this.setArgRange(2, 3);
         this.addKey("wp set");
         this.addKey("wpset");
         this.addKey("wps");
@@ -35,15 +36,20 @@ public class SetPropertyCommand extends WPCommand {
     @Override
     public void runCommand(CommandSender sender, List<String> args) {
         WPWorld world = this.plugin.getGlobalWorld();
-        if(args.size() == 3 && !args.get(2).equalsIgnoreCase("all")) {
+        if (args.size() == 3 && !args.get(2).equalsIgnoreCase("all")) {
             world = this.plugin.getWolfPoundWorld(args.get(2));
         }
-        if(validateCommand(args.get(0), args.get(1), world)) {
+
+        if (validateCommand(args.get(0), args.get(1), world)) {
+            if (args.size() < 3 && !(sender instanceof Player)) {
+                sender.sendMessage("You must enter a world or all from the command line.");
+                return;
+            } 
             String worldName = args.get(2);
-            if(world.equals(this.plugin.getGlobalWorld())) {
+            if (world.equals(this.plugin.getGlobalWorld())) {
                 worldName = "all worlds";
             }
-            sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");
+            sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");       
         } else {
             sender.sendMessage("Sorry you can't set" + args.get(0) + " to " + args.get(1));
         }

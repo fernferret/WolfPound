@@ -49,7 +49,7 @@ public class LimitCommand extends WPCommand {
                 }
             } else if (isValidWorld(args.get(0))) {
                 if (p != null) {
-                    this.plugin.sendWolfLimit((Player) sender, getWorldName(args.get(0)));
+                    this.plugin.sendWolfLimit(sender, getWorldName(args.get(0)));
                 } else {
                     // TODO: Add console support
                     WolfPound.log.info("This command is currently not supported from the console.");

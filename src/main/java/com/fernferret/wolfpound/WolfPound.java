@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -145,23 +146,27 @@ public class WolfPound extends JavaPlugin {
 
     }
 
-    private void getHumanReadableAdoptLimitMessage(Player p, int limit, String end) {
+    private void getHumanReadableAdoptLimitMessage(CommandSender s, int limit, String end) {
         if (limit == -1) {
-            p.sendMessage(chatPrefix + "WARNING: There is no limit to how many wolves you can adopt at once " + end);
+            s.sendMessage(chatPrefix + "WARNING: There is no limit to how many wolves you can adopt at once " + end);
         } else {
-            p.sendMessage(chatPrefix + "You can adopt " + limit + " wolves at once " + end);
+            s.sendMessage(chatPrefix + "You can adopt " + limit + " wolves at once " + end);
         }
     }
 
-    private void getHumanReadablePriceMessage(Player p, double price, int type, String end) {
+    private void getHumanReadablePriceMessage(CommandSender sender, double price, int type, String end) {
         if (price == 0) {
-            p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
+            sender.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else if (bank instanceof ItemBank && type == -1) {
-            if (this.permissions.hasPermission(p, PERM_ADMIN, true))
-                p.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
-            p.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
+            if (this.permissions.hasPermission(sender, PERM_ADMIN, true))
+                sender.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
+            sender.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else {
-            p.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(p, price, type) + " to adopt a wolf " + end);
+            if (sender instanceof Player) {
+                sender.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount((Player) sender, price, type) + " to adopt a wolf " + end);
+            } else {
+                sender.sendMessage("Cannot get the wolf price from the console, as it could depend on the player");
+            }
         }
     }
 
@@ -182,20 +187,20 @@ public class WolfPound extends JavaPlugin {
         }
     }
 
-    public void sendWolfLimit(Player p, String world) {
-        
-        if (this.permissions.hasPermission(p, PERM_ADOPT, false)) {
-            //WPWorld w = this.getWolfPoundWorld(world);
+    public void sendWolfLimit(CommandSender sender, String world) {
+
+        if (this.permissions.hasPermission(sender, PERM_ADOPT, false)) {
+            // WPWorld w = this.getWolfPoundWorld(world);
             if (world.equalsIgnoreCase("all")) {
                 String everywhere = "everywhere";
                 for (String worldName : this.worlds.keySet()) {
                     WPWorld w = this.worlds.get(worldName);
-                    getHumanReadableAdoptLimitMessage(p, w.getLimit(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
+                    getHumanReadableAdoptLimitMessage(sender, w.getLimit(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
                     everywhere = "everywhere else";
                 }
-                getHumanReadableAdoptLimitMessage(p, this.globalWorld.getLimit(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
+                getHumanReadableAdoptLimitMessage(sender, this.globalWorld.getLimit(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
             } else {
-                getHumanReadableAdoptLimitMessage(p, this.getWolfPoundWorld(world).getLimit(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
+                getHumanReadableAdoptLimitMessage(sender, this.getWolfPoundWorld(world).getLimit(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
             }
         }
     }
@@ -224,7 +229,7 @@ public class WolfPound extends JavaPlugin {
         // this will return the world settings the player is in
         // or the global if there are no settings
         WPWorld w = this.getWolfPoundWorld(world);
-        
+
         if (w.getLimit() >= 0) {
             wolves = (wolves > w.getLimit()) ? w.getLimit() : wolves;
         }
@@ -291,7 +296,7 @@ public class WolfPound extends JavaPlugin {
 
     public static void staticDebugLog(Level level, String msg) {
         log.log(level, "[WP-Debug] " + msg);
-        //debugLog.log(level, "[WP-Debug] " + msg);
+        // debugLog.log(level, "[WP-Debug] " + msg);
     }
 
     public Configuration getConfig() {
@@ -300,6 +305,10 @@ public class WolfPound extends JavaPlugin {
 
     public CommandHandler getCommandHandler() {
         return this.commandHandler;
+    }
+
+    public WPPermissions getPermissions() {
+        return this.permissions;
     }
 
 }

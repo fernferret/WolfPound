@@ -25,7 +25,7 @@ public class WPBlockListener extends BlockListener {
 
         if (event.getLine(0).equalsIgnoreCase("[WolfPound]")) {
             boolean secondLineValid = validateItemLine(event.getLine(1), p);
-            if (plugin.hasPermission(p, WolfPound.PERM_CREATE) && secondLineValid) {
+            if (plugin.getPermissions().hasPermission(p, WolfPound.PERM_CREATE, true) && secondLineValid) {
                 event.getPlayer().sendMessage(WolfPound.chatPrefix + "Successfully created Wolf Pound!");
                 event.setLine(0, WolfPound.prefixValid + "[WolfPound]");
             } else {
@@ -150,7 +150,7 @@ public class WPBlockListener extends BlockListener {
         }
         Sign s = (Sign) event.getBlock().getState();
         if (plugin.blockIsValidWolfSign(s)) {
-            if (!plugin.hasPermission(event.getPlayer(), WolfPound.PERM_CREATE)) {
+            if (!plugin.getPermissions().hasPermission(event.getPlayer(), WolfPound.PERM_CREATE, true)) {
                 event.setCancelled(true);
             } else {
                 event.getPlayer().sendMessage(WolfPound.chatPrefixError + "Destroying Wolf Pound");

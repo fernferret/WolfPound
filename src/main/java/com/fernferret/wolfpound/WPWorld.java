@@ -23,7 +23,7 @@ public class WPWorld {
 
     public WPWorld(String w) {
         this.config = plugin.getConfig();
-        if(w == null) {
+        if (w == null) {
             worldString = "adopt.";
         } else {
             worldString += w + ".";
@@ -40,46 +40,55 @@ public class WPWorld {
         return price;
     }
 
-    public void setPrice(double price) {
+    public boolean setPrice(double price) {
         this.price = price;
         this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
+        return true;
     }
 
     public int getCurrency() {
         return currency;
     }
 
-    public void setCurrency(int currency) {
+    public boolean setCurrency(int currency) {
         this.currency = currency;
         this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
+        return true;
     }
 
     public WolfAggro getAggro() {
         return aggro;
     }
 
-    public void setAggro(WolfAggro aggro) {
+    public boolean setAggro(WolfAggro aggro) {
         this.aggro = aggro;
         this.config.setProperty(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
+        return true;
     }
-    
-    public void setAggro(String aggro) {
-        this.aggro = WolfAggro.valueOf(aggro.toUpperCase());
+
+    public boolean setAggro(String aggro) {
+        try {
+            this.aggro = WolfAggro.valueOf(aggro.toUpperCase());
+        } catch (Exception e) {
+            return false;
+        }
         this.config.setProperty(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
+        return true;
     }
 
     public int getLimit() {
         return limit;
     }
 
-    public void setLimit(int limit) {
+    public boolean setLimit(int limit) {
         this.limit = limit;
         this.config.setProperty(worldString + "limit", this.limit);
         this.saveConfig();
+        return true;
     }
 
     private void saveConfig() {

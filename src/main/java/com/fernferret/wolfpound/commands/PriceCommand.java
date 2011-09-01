@@ -15,12 +15,12 @@ public class PriceCommand extends WPCommand {
 	public PriceCommand(WolfPound plugin) {
 	    super(plugin);
         this.setName("States the Wolf price.");
-        this.setCommandUsage("/wp price" + ChatColor.GOLD + "[all | w:WORLD]");
+        this.setCommandUsage("/wp price" + ChatColor.GOLD + " [all | w:WORLD]");
         this.setArgRange(0, 1);
         this.addKey("wp price");
         this.addKey("wpprice");
         this.addKey("wpp");
-        this.setPermission("wolfpound.use", "States what the price of a wolf in the given world.", PermissionDefault.OP);
+        this.setPermission("wolfpound.price", "States what the price of a wolf in the given world.", PermissionDefault.OP);
         this.addCommandExample("/wp price");
         this.addCommandExample("/wp price" + ChatColor.GOLD + " all");
         this.addCommandExample("/wp price" + ChatColor.GOLD + " world2");

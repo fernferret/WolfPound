@@ -13,7 +13,7 @@ public class AdoptWolfCommand extends WPCommand {
 	public AdoptWolfCommand(WolfPound plugin) {
         super(plugin);
         this.setName("Adopt Wolf");
-        this.setCommandUsage("/wp adopt" + ChatColor.GOLD + "[NUMBER]");
+        this.setCommandUsage("/wp adopt" + ChatColor.GOLD + " [NUMBER]");
         this.setArgRange(0, 1);
         this.addKey("wp adopt");
         this.addKey("wp a");

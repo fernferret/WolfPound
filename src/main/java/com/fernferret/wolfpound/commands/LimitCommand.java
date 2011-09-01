@@ -15,12 +15,12 @@ public class LimitCommand extends WPCommand {
     public LimitCommand(WolfPound plugin) {
         super(plugin);
         this.setName("States the Wolf adoption limit.");
-        this.setCommandUsage("/wp limit" + ChatColor.GOLD + "[all | w:WORLD]");
+        this.setCommandUsage("/wp limit" + ChatColor.GOLD + " [all | w:WORLD]");
         this.setArgRange(0, 1);
         this.addKey("wp limit");
         this.addKey("wplimit");
         this.addKey("wpl");
-        this.setPermission("wolfpound.use", "States how many wolves can be adopted at once. This is not a limit on how many someone can have.", PermissionDefault.OP);
+        this.setPermission("wolfpound.limit", "States how many wolves can be adopted at once. This is not a limit on how many someone can have.", PermissionDefault.OP);
         this.addCommandExample("/wp limit");
         this.addCommandExample("/wp limit" + ChatColor.GOLD + " all");
         this.addCommandExample("/wp limit" + ChatColor.GOLD + " world2");

@@ -1,8 +1,5 @@
 package com.fernferret.wolfpound;
 
-import java.util.List;
-
-import org.bukkit.World;
 import org.bukkit.util.config.Configuration;
 
 /**
@@ -21,8 +18,8 @@ public class WPWorld {
     private boolean canSave = false;
     private String worldString = "adopt.worlds.";
 
-    public WPWorld(String w) {
-        this.config = plugin.getConfig();
+    public WPWorld(String w, Configuration config) {
+        this.config = config;
         if (w == null) {
             worldString = "adopt.";
         } else {
@@ -32,7 +29,7 @@ public class WPWorld {
         this.setPrice(this.config.getDouble(worldString + "price", 0.0));
         this.setCurrency(this.config.getInt(worldString + "type", -1));
         this.setAggro(this.config.getString(worldString + "aggro", "neutral"));
-        this.setPrice(this.config.getDouble(worldString + "limit", 0.0));
+        this.setLimit(this.config.getInt(worldString + "limit", 1));
         this.saveConfig();
     }
 
@@ -41,6 +38,9 @@ public class WPWorld {
     }
 
     public boolean setPrice(double price) {
+        if(price < 0) {
+            return false;
+        }
         this.price = price;
         this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
@@ -52,6 +52,9 @@ public class WPWorld {
     }
 
     public boolean setCurrency(int currency) {
+        if(currency < -1) {
+            return false;
+        }
         this.currency = currency;
         this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
@@ -85,6 +88,9 @@ public class WPWorld {
     }
 
     public boolean setLimit(int limit) {
+        if (limit < 0) {
+            return false;
+        }
         this.limit = limit;
         this.config.setProperty(worldString + "limit", this.limit);
         this.saveConfig();

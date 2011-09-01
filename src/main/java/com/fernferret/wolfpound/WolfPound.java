@@ -1,6 +1,8 @@
 package com.fernferret.wolfpound;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -9,6 +11,7 @@ import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.block.Sign;
+import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
@@ -70,18 +73,20 @@ public class WolfPound extends JavaPlugin {
     // public WPBankAdapter bank;
     public GenericBank bank;
     // For Multi-WorldSupport
-    private AllPay banker = new AllPay(this, "[WolfPound]");
+    private AllPay banker;
 
-    private WPPermissions permissions = new WPPermissions(this);
-    private CommandHandler commandHandler = new CommandHandler(this, this.permissions);
+    private WPPermissions permissions;
+    private CommandHandler commandHandler;
     private Map<String, WPWorld> worlds;
     private WPWorld globalWorld;
 
     @Override
     public void onEnable() {
-        this.worlds = new HashMap<String, WPWorld>();
-        this.globalWorld = new WPWorld(null);
+        this.permissions = new WPPermissions(this);
+        this.commandHandler = new CommandHandler(this, this.permissions);
+        this.banker = new AllPay(this, "[WolfPound]");
         loadConfiguration();
+
         playerListener = new WPPlayerListener(this);
         blockListener = new WPBlockListener(this);
         pluginListener = new WPPluginListener(this);
@@ -111,19 +116,26 @@ public class WolfPound extends JavaPlugin {
 
     private void loadConfiguration() {
         getDataFolder().mkdirs();
-        configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
-        configWP.load();
-        for (String s : configWP.getKeys("adopt.worlds")) {
-            World w = this.getServer().getWorld(s);
-            if (w != null) {
-                this.worlds.put(s, new WPWorld(w.getName()));
-                this.log(Level.FINE, "Loaded WolfPound Config for: " + w);
-            } else {
-                this.log(Level.FINE, "NO WolfPound Config Found for: " + w);
+        this.configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
+        this.configWP.load();
+        if (this.configWP.getKeys().size() == 0) {
+            this.configWP.setProperty("adopt.price", 0);
+            this.configWP.setProperty("adopt.type", -1);
+            this.configWP.setProperty("adopt.limit", 1);
+            this.configWP.setProperty("adopt.aggro", "friend");
+            this.configWP.save();
+            System.out.print("Createing defaults...");
+        }
+        this.globalWorld = new WPWorld(null, this.getConfig());
+        this.worlds = new HashMap<String, WPWorld>();
+        if (configWP.getKeys("adopt.worlds") != null) {
+            for (String s : configWP.getKeys("adopt.worlds")) {
+                this.worlds.put(s, new WPWorld(s, this.getConfig()));
+                this.log(Level.FINE, "Loaded WolfPound Config for: " + s);
             }
         }
-        // If the config was empty or not specified correctly, overwrite it!
-        this.globalWorld = new WPWorld(null);
+
+        
         registerCommands();
     }
 
@@ -135,6 +147,17 @@ public class WolfPound extends JavaPlugin {
         this.commandHandler.registerCommand(new AdoptWolfCommand(this));
         this.commandHandler.registerCommand(new LimitCommand(this));
         this.commandHandler.registerCommand(new PriceCommand(this));
+    }
+    
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+        if (!this.isEnabled()) {
+            sender.sendMessage("WolfPound is Disabled!");
+            return true;
+        }
+        ArrayList<String> allArgs = new ArrayList<String>(Arrays.asList(args));
+        allArgs.add(0, command.getName());
+        return this.commandHandler.locateAndRunCommand(sender, allArgs);
     }
 
     public void removeWorld(String string, Player p) {

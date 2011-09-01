@@ -1,12 +1,14 @@
 name: WolfPound
 main: com.fernferret.wolfpound.WolfPound
 author: FernFerret
-<<<<<<< HEAD
-version: 1.1.0
-=======
-version: 1.0.4
->>>>>>> master
+version: 1.1
 commands:
+  wp:
+    description: Displays the Help
+    usage: /wp
+  wph:
+    description: Displays the Help
+    usage: /wph
   adopt:
     description: Gives you a wolf!
     usage: /<command> [NUMBER]

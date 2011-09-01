@@ -1,5 +1,7 @@
 package com.fernferret.wolfpound;
 
+import java.util.List;
+
 import org.bukkit.World;
 import org.bukkit.util.config.Configuration;
 
@@ -17,16 +19,20 @@ public class WPWorld {
     private int limit;
     private Configuration config;
     private boolean canSave = false;
-    private World w;
+    private String worldString = "adopt.worlds.";
 
-    public WPWorld(World w) {
+    public WPWorld(String w) {
         this.config = plugin.getConfig();
-
+        if(w == null) {
+            worldString = "adopt.";
+        } else {
+            worldString += w + ".";
+        }
         // Initialize variables
-        this.setPrice(this.config.getDouble("adopt.worlds." + w.getName() + ".price", 0.0));
-        this.setCurrency(this.config.getInt("adopt.worlds." + w.getName() + ".type", -1));
-        this.setAggro(this.config.getString("adopt.worlds." + w.getName() + ".aggro", "neutral"));
-        this.setPrice(this.config.getDouble("adopt.worlds." + w.getName() + ".limit", 0.0));
+        this.setPrice(this.config.getDouble(worldString + "price", 0.0));
+        this.setCurrency(this.config.getInt(worldString + "type", -1));
+        this.setAggro(this.config.getString(worldString + "aggro", "neutral"));
+        this.setPrice(this.config.getDouble(worldString + "limit", 0.0));
         this.saveConfig();
     }
 
@@ -36,7 +42,7 @@ public class WPWorld {
 
     public void setPrice(double price) {
         this.price = price;
-        this.config.setProperty("adopt.worlds." + w.getName() + ".price", this.price);
+        this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
     }
 
@@ -46,7 +52,7 @@ public class WPWorld {
 
     public void setCurrency(int currency) {
         this.currency = currency;
-        this.config.setProperty("adopt.worlds." + w.getName() + ".price", this.price);
+        this.config.setProperty(worldString + "price", this.price);
         this.saveConfig();
     }
 
@@ -56,13 +62,13 @@ public class WPWorld {
 
     public void setAggro(WolfAggro aggro) {
         this.aggro = aggro;
-        this.config.setProperty("adopt.worlds." + w.getName() + ".aggro", this.aggro.toString());
+        this.config.setProperty(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
     }
     
     public void setAggro(String aggro) {
         this.aggro = WolfAggro.valueOf(aggro.toUpperCase());
-        this.config.setProperty("adopt.worlds." + w.getName() + ".aggro", this.aggro.toString());
+        this.config.setProperty(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
     }
 
@@ -72,7 +78,7 @@ public class WPWorld {
 
     public void setLimit(int limit) {
         this.limit = limit;
-        this.config.setProperty("adopt.worlds." + w.getName() + ".limit", this.limit);
+        this.config.setProperty(worldString + "limit", this.limit);
         this.saveConfig();
     }
 

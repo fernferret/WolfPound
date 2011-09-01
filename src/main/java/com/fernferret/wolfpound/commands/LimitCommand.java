@@ -9,10 +9,10 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class Limit extends WPCommand {
+public class LimitCommand extends WPCommand {
     private static final String[] LIMIT_KEYWORDS = { "all" };
 
-    public Limit(WolfPound plugin) {
+    public LimitCommand(WolfPound plugin) {
         super(plugin);
         this.setName("States the Wolf adoption limit.");
         this.setCommandUsage("/wp limit" + ChatColor.GOLD + "[all | w:WORLD]");

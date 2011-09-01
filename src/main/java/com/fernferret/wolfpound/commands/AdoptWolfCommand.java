@@ -9,8 +9,8 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class AdoptWolf extends WPCommand {
-	public AdoptWolf(WolfPound plugin) {
+public class AdoptWolfCommand extends WPCommand {
+	public AdoptWolfCommand(WolfPound plugin) {
         super(plugin);
         this.setName("Adopt Wolf");
         this.setCommandUsage("/wp adopt" + ChatColor.GOLD + "[NUMBER]");

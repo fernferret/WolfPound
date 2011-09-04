@@ -12,14 +12,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.fernferret.allpay.*;
-import com.fernferret.wolfpound.commands.*;
+import com.fernferret.allpay.AllPay;
+import com.fernferret.allpay.GenericBank;
+import com.fernferret.allpay.ItemBank;
+import com.fernferret.wolfpound.commands.CommandAdoptWolf;
+import com.fernferret.wolfpound.commands.CommandLimit;
+import com.fernferret.wolfpound.commands.CommandPrice;
+import com.fernferret.wolfpound.commands.CommandReset;
+import com.fernferret.wolfpound.commands.CommandSetAggro;
+import com.fernferret.wolfpound.commands.CommandSetLimit;
+import com.fernferret.wolfpound.commands.CommandSetPrice;
+import com.fernferret.wolfpound.commands.CommandSetType;
 import com.fernferret.wolfpound.listeners.WPBlockListener;
 import com.fernferret.wolfpound.listeners.WPPlayerListener;
 import com.fernferret.wolfpound.listeners.WPPluginListener;
@@ -456,9 +466,16 @@ public class WolfPound extends JavaPlugin {
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
         w.setHealth(20);
         if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
+          EntityTameEvent event = new EntityTameEvent(w, p);
+          this.getServer().getPluginManager().callEvent(event);
+          if (event.isCancelled()) {
+            w.setAngry(true);
+            p.sendMessage(chatPrefix + "You already have enough tame wolves. How about angry one instead.");
+          } else {
             w.setOwner(p);
             w.setSitting(false);
             p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
+          }
         } else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
             w.setAngry(true);
             p.sendMessage(chatPrefixError + "Run Awayyyy! That thing looks angry!");

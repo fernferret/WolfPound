@@ -19,17 +19,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 import org.bukkit.util.config.ConfigurationNode;
 
-import com.fernferret.allpay.AllPay;
-import com.fernferret.allpay.GenericBank;
-import com.fernferret.allpay.ItemBank;
-import com.fernferret.wolfpound.commands.CommandAdoptWolf;
-import com.fernferret.wolfpound.commands.CommandLimit;
-import com.fernferret.wolfpound.commands.CommandPrice;
-import com.fernferret.wolfpound.commands.CommandReset;
-import com.fernferret.wolfpound.commands.CommandSetAggro;
-import com.fernferret.wolfpound.commands.CommandSetLimit;
-import com.fernferret.wolfpound.commands.CommandSetPrice;
-import com.fernferret.wolfpound.commands.CommandSetType;
+import com.fernferret.allpay.*;
+import com.fernferret.wolfpound.commands.*;
 import com.fernferret.wolfpound.listeners.WPBlockListener;
 import com.fernferret.wolfpound.listeners.WPPlayerListener;
 import com.fernferret.wolfpound.listeners.WPPluginListener;
@@ -454,35 +445,37 @@ public class WolfPound extends JavaPlugin {
             wolves = (wolves > limit) ? limit : wolves;
         }
         if (hasPermission(p, PERM_ADOPT) && bank.hasEnough(p, price * wolves, type)) {
-            bank.pay(p, price * wolves, type);
             for (int i = 0; i < wolves; i++) {
-                spawnWolf(p, aggro);
+                if(spawnWolf(p, aggro)) {
+                    bank.pay(p, price, type);
+                }
             }
         }
     }
 
-    public void spawnWolf(Player p, String aggro) {
+    public boolean spawnWolf(Player p, String aggro) {
 
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
         w.setHealth(20);
         if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
-          EntityTameEvent event = new EntityTameEvent(w, p);
-          this.getServer().getPluginManager().callEvent(event);
-          if (event.isCancelled()) {
-            w.setAngry(true);
-            p.sendMessage(chatPrefix + "You already have enough tame wolves. How about angry one instead.");
-          } else {
-            w.setOwner(p);
-            w.setSitting(false);
-            p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
-          }
+            EntityTameEvent event = new EntityTameEvent(w, p);
+            this.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                w.remove();
+                p.sendMessage(chatPrefix + "You already have enough tame wolves silly.");
+                return false;
+            } else {
+                w.setOwner(p);
+                w.setSitting(false);
+                p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
+            }
         } else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
             w.setAngry(true);
             p.sendMessage(chatPrefixError + "Run Awayyyy! That thing looks angry!");
         } else {
             p.sendMessage(chatPrefix + "Woah! A wolf! You should befriend it!");
         }
-
+        return true;
     }
 
     @Override

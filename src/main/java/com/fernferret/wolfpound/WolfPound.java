@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Priority;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -444,28 +445,38 @@ public class WolfPound extends JavaPlugin {
             wolves = (wolves > limit) ? limit : wolves;
         }
         if (hasPermission(p, PERM_ADOPT) && bank.hasEnough(p, price * wolves, type)) {
-            bank.pay(p, price * wolves, type);
             for (int i = 0; i < wolves; i++) {
-                spawnWolf(p, aggro);
+                if(spawnWolf(p, aggro)) {
+                    bank.pay(p, price, type);
+                }
             }
         }
     }
 
-    public void spawnWolf(Player p, String aggro) {
+    public boolean spawnWolf(Player p, String aggro) {
 
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
         w.setHealth(20);
         if (aggro != null && aggro.equals(ADOPT_FRIEND)) {
-            w.setOwner(p);
-            w.setSitting(false);
-            p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
+            EntityTameEvent event = new EntityTameEvent(w, p);
+            this.getServer().getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                w.damage(200, w);
+                w.remove();
+                p.sendMessage(chatPrefix + "You already have enough tame wolves silly.");
+                return false;
+            } else {
+                w.setOwner(p);
+                w.setSitting(false);
+                p.sendMessage(chatPrefix + "BAM! Your trusty companion is ready for battle!");
+            }
         } else if (aggro != null && aggro.equals(ADOPT_ANGRY)) {
             w.setAngry(true);
             p.sendMessage(chatPrefixError + "Run Awayyyy! That thing looks angry!");
         } else {
             p.sendMessage(chatPrefix + "Woah! A wolf! You should befriend it!");
         }
-
+        return true;
     }
 
     @Override

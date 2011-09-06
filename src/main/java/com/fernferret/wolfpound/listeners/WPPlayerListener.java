@@ -28,8 +28,9 @@ public class WPPlayerListener extends PlayerListener {
                     int item = getType(s, 1, p);
                     String aggro = getAggro(s, 2, p);
                     if (plugin.bank.hasEnough(p, price, item)) {
-                        plugin.bank.pay(p, price, item);
-                        plugin.spawnWolf(p, aggro);
+                        if(plugin.spawnWolf(p, aggro)) {
+                            plugin.bank.pay(p, price, item);
+                        }
                     }
                 }
             }

@@ -461,6 +461,7 @@ public class WolfPound extends JavaPlugin {
             EntityTameEvent event = new EntityTameEvent(w, p);
             this.getServer().getPluginManager().callEvent(event);
             if (event.isCancelled()) {
+                w.damage(200, w);
                 w.remove();
                 p.sendMessage(chatPrefix + "You already have enough tame wolves silly.");
                 return false;

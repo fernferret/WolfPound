@@ -25,11 +25,13 @@ import org.bukkit.util.config.Configuration;
 import com.fernferret.allpay.AllPay;
 import com.fernferret.allpay.GenericBank;
 import com.fernferret.allpay.ItemBank;
-import com.fernferret.wolfpound.commands.AdoptWolfCommand;
+import com.fernferret.wolfpound.commands.AdoptCommand;
+import com.fernferret.wolfpound.commands.DebugCommand;
 import com.fernferret.wolfpound.commands.HelpCommand;
 import com.fernferret.wolfpound.commands.LimitCommand;
 import com.fernferret.wolfpound.commands.PriceCommand;
 import com.fernferret.wolfpound.commands.SetPropertyCommand;
+import com.fernferret.wolfpound.commands.VersionCommand;
 import com.fernferret.wolfpound.listeners.WPBlockListener;
 import com.fernferret.wolfpound.listeners.WPPlayerListener;
 import com.fernferret.wolfpound.listeners.WPPluginListener;
@@ -59,8 +61,7 @@ public class WolfPound extends JavaPlugin {
     public static final Logger log = Logger.getLogger("Minecraft");
     public static final String logPrefix = "[WolfPound]";
 
-    public static boolean usePermissions = false;
-    private static int GlobalDebug;
+    public static int GlobalDebug = 0;
     public static final String chatPrefixError = ChatColor.DARK_RED + logPrefix + ChatColor.WHITE + " ";
     public static final String chatPrefix = ChatColor.DARK_GREEN + logPrefix + ChatColor.WHITE + " ";
     private static final String ADOPT_KEY = "adopt";
@@ -141,10 +142,12 @@ public class WolfPound extends JavaPlugin {
         // Page 1
         this.commandHandler = new CommandHandler(this, this.permissions);
         this.commandHandler.registerCommand(new HelpCommand(this));
-        this.commandHandler.registerCommand(new AdoptWolfCommand(this));
+        this.commandHandler.registerCommand(new AdoptCommand(this));
         this.commandHandler.registerCommand(new LimitCommand(this));
         this.commandHandler.registerCommand(new PriceCommand(this));
         this.commandHandler.registerCommand(new SetPropertyCommand(this));
+        this.commandHandler.registerCommand(new VersionCommand(this));
+        this.commandHandler.registerCommand(new DebugCommand(this));
     }
 
     @Override
@@ -180,30 +183,30 @@ public class WolfPound extends JavaPlugin {
             sender.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else if (bank instanceof ItemBank && type == -1) {
             if (this.permissions.hasPermission(sender, PERM_ADMIN, true))
-                sender.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use /wpsettype to set an item type for trade or install an economy plugin!");
+                sender.sendMessage(chatPrefixError + "You have set the price to a currency, yet no currency plugin is installed! Use" + ChatColor.AQUA + " /wp set curr " + ChatColor.GREEN + "{ITEM_ID}" + ChatColor.WHITE + " to set an item type for trade or install an economy plugin!");
             sender.sendMessage(chatPrefix + "Adopting a wolf is " + ChatColor.GREEN + "FREE " + ChatColor.WHITE + end);
         } else {
             if (sender instanceof Player) {
                 sender.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount((Player) sender, price, type) + " to adopt a wolf " + end);
             } else {
-                sender.sendMessage("Cannot get the wolf price from the console, as it could depend on the player");
+                sender.sendMessage(chatPrefix + "It costs " + bank.getFormattedAmount(null, price, type) + " to adopt a wolf " + end);
             }
         }
     }
 
-    public void sendWolfPrice(Player p, String world) {
-        if (this.permissions.hasPermission(p, PERM_ADOPT, true)) {
+    public void sendWolfPrice(CommandSender s, String world) {
+        if (this.permissions.hasPermission(s, PERM_ADOPT, true)) {
             if (world.equalsIgnoreCase("all")) {
                 String everywhere = "everywhere";
                 for (String worldName : this.worlds.keySet()) {
                     WPWorld w = this.worlds.get(worldName);
-                    getHumanReadablePriceMessage(p, w.getPrice(), w.getCurrency(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
+                    getHumanReadablePriceMessage(s, w.getPrice(), w.getCurrency(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
                     everywhere = "everywhere else";
                 }
 
-                getHumanReadablePriceMessage(p, this.globalWorld.getPrice(), this.getWolfPoundWorld(world).getCurrency(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
+                getHumanReadablePriceMessage(s, this.globalWorld.getPrice(), this.getWolfPoundWorld(world).getCurrency(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
             } else {
-                getHumanReadablePriceMessage(p, this.getWolfPoundWorld(world).getPrice(), this.getWolfPoundWorld(world).getCurrency(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
+                getHumanReadablePriceMessage(s, this.getWolfPoundWorld(world).getPrice(), this.getWolfPoundWorld(world).getCurrency(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
             }
         }
     }

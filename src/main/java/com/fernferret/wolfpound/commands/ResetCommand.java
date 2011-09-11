@@ -10,7 +10,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class ResetCommand extends WPCommand {
+public class ResetCommand extends WolfPoundCommand {
 	private static final String[] RESET_KEYWORDS = { "global", "all" };
 	public ResetCommand(WolfPound plugin) {
 	    super(plugin);

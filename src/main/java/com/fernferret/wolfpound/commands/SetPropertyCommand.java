@@ -14,17 +14,17 @@ enum SetProperties {
     currency, curr, type, price, limit, aggro, agro
 }
 
-public class SetPropertyCommand extends WPCommand {
+public class SetPropertyCommand extends WolfPoundCommand {
 
     public SetPropertyCommand(WolfPound plugin) {
         super(plugin);
-        this.setName("Resets wolf Price in a world.");
+        this.setName("Sets a property.");
         this.setCommandUsage("/wp set" + ChatColor.GREEN + " {PROPERTY} {VALUE} " + ChatColor.GOLD + "[all | WORLD]");
         this.setArgRange(2, 3);
         this.addKey("wp set");
         this.addKey("wpset");
         this.addKey("wps");
-        this.setPermission("wolfpound.admin", "Resets the Price of wolves in the given world to use the default.", PermissionDefault.OP);
+        this.setPermission("wolfpound.admin", "Sets various properties of wolves in different worlds.", PermissionDefault.OP);
         this.addCommandExample("/wp set" + ChatColor.GREEN + " price 1.2");
         this.addCommandExample("/wp set" + ChatColor.GREEN + " curr -1 all");
         this.addCommandExample("/wp set" + ChatColor.GREEN + " limit 10 w:MyWorld");

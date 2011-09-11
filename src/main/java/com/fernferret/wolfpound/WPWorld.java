@@ -29,6 +29,7 @@ public class WPWorld {
         this.setCurrency(this.config.getInt(worldString + "type", -1));
         this.setAggro(this.config.getString(worldString + "aggro", "neutral"));
         this.setLimit(this.config.getInt(worldString + "limit", 1));
+        this.canSave = true;
         this.saveConfig();
     }
 

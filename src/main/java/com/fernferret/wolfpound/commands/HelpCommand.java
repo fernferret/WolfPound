@@ -12,7 +12,7 @@ import org.bukkit.permissions.PermissionDefault;
 import com.fernferret.wolfpound.WolfPound;
 import com.pneumaticraft.commandhandler.Command;
 
-public class HelpCommand extends WPCommand {
+public class HelpCommand extends WolfPoundCommand {
     private static final int CMDS_PER_PAGE = 7;
 
     public HelpCommand(WolfPound plugin) {

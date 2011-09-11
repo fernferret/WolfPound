@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import com.fernferret.wolfpound.WolfPound;
 import com.pneumaticraft.commandhandler.Command;
 
-public abstract class WPCommand extends Command {
+public abstract class WolfPoundCommand extends Command {
 
     protected WolfPound plugin;
 
-    public WPCommand(WolfPound plugin) {
+    public WolfPoundCommand(WolfPound plugin) {
         super(plugin);
         this.plugin = plugin;
     }

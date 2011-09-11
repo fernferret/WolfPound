@@ -9,7 +9,7 @@ import org.bukkit.permissions.PermissionDefault;
 
 import com.fernferret.wolfpound.WolfPound;
 
-public class LimitCommand extends WPCommand {
+public class LimitCommand extends WolfPoundCommand {
     private static final String[] LIMIT_KEYWORDS = { "all" };
 
     public LimitCommand(WolfPound plugin) {

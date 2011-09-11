@@ -11,7 +11,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 import com.pneumaticraft.commandhandler.PermissionsInterface;
 
 public class WPPermissions implements PermissionsInterface {
-    
+
     private WolfPound plugin;
     private PermissionHandler permissions = null;
 
@@ -23,9 +23,21 @@ public class WPPermissions implements PermissionsInterface {
             this.plugin.log(Level.INFO, "- Attached to Permissions");
         }
     }
-    
+
     public void setPermissions(PermissionHandler handler) {
-        this.permissions  = handler;
+        this.permissions = handler;
+    }
+
+    public String getType() {
+        String opsfallback = "";
+        if (this.plugin.getConfig().getBoolean("opfallback", true)) {
+            opsfallback = " WITH OPs.txt fallback";
+        }
+        if (this.permissions != null) {
+            return "Permissions " + this.plugin.getServer().getPluginManager().getPlugin("Permissions").getDescription().getVersion() + opsfallback;
+        }
+
+        return "Bukkit Permissions" + opsfallback;
     }
 
     @Override
@@ -34,14 +46,14 @@ public class WPPermissions implements PermissionsInterface {
         if (!(sender instanceof Player)) {
             return true;
         }
-        
+
         // NO one can access a null permission (mainly used for destinations):w
-        if(node == null) {
+        if (node == null) {
             return false;
         }
         // Everyone can access an empty permission
         // Currently used for the PlayerDestination
-        if(node.equals("")) {
+        if (node.equals("")) {
             return true;
         }
 

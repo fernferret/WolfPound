@@ -6,6 +6,9 @@ import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -80,6 +83,12 @@ public class VersionCommand extends WolfPoundCommand {
             String data = URLEncoder.encode("api_dev_key", "UTF-8") + "=" + URLEncoder.encode("33ab32380506d99d872b69d35dc9d007", "UTF-8");
             data += "&" + URLEncoder.encode("api_option", "UTF-8") + "=" + URLEncoder.encode("paste", "UTF-8");
             data += "&" + URLEncoder.encode("api_paste_code", "UTF-8") + "=" + URLEncoder.encode(this.pasteBinBuffer, "UTF-8");
+            data += "&" + URLEncoder.encode("api_paste_private", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8");
+            data += "&" + URLEncoder.encode("api_paste_format", "UTF-8") + "=" + URLEncoder.encode("yaml", "UTF-8");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            data += "&" + URLEncoder.encode("api_paste_name", "UTF-8") + "=" + URLEncoder.encode("WolfPound Dump " + dateFormat.format(date), "UTF-8");
+            data += "&" + URLEncoder.encode("api_user_key", "UTF-8") + "=" + URLEncoder.encode("6a52cf4a933ba328784ae2b25a70da29", "UTF-8");
 
             URL url = new URL("http://pastebin.com/api/api_post.php");
             URLConnection conn = url.openConnection();

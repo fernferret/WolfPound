@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.fernferret.wolfpound</groupId>
 	<artifactId>WolfPound</artifactId>
-	<version>1.1</version>
+	<version>1.1b1</version>
 	<name>WolfPound</name>
 	<description>Allow players to buy wolves.</description>
 	<properties>

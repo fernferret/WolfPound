@@ -15,7 +15,7 @@ public class LimitCommand extends WolfPoundCommand {
     public LimitCommand(WolfPound plugin) {
         super(plugin);
         this.setName("States the Wolf adoption limit.");
-        this.setCommandUsage("/wp limit" + ChatColor.GOLD + " [all | w:WORLD]");
+        this.setCommandUsage("/wp limit" + ChatColor.GOLD + " [all | WORLD]");
         this.setArgRange(0, 1);
         this.addKey("wp limit");
         this.addKey("wplimit");
@@ -37,24 +37,14 @@ public class LimitCommand extends WolfPoundCommand {
             if (p != null) {
                 plugin.sendWolfLimit(p, p.getWorld().getName());
             } else {
-                sender.sendMessage("From the console, please use: wp limit" + ChatColor.GREEN + " {w:WORLD | all}");
+                this.plugin.sendWolfLimit((Player) sender, "all");
             }
         } else if (args.size() == 1) {
             if (isAKeyword(args.get(0), LIMIT_KEYWORDS)) {
-                if (p != null) {
-                    this.plugin.sendWolfLimit((Player) sender, "all");
-                } else {
-                    // TODO: Add console support
-                    WolfPound.log.info("This command is currently not supported from the console.");
-                }
+                this.plugin.sendWolfLimit((Player) sender, "all");
             } else if (isValidWorld(args.get(0))) {
-                if (p != null) {
-                    this.plugin.sendWolfLimit(sender, getWorldName(args.get(0)));
-                } else {
-                    // TODO: Add console support
-                    WolfPound.log.info("This command is currently not supported from the console.");
-                }
-            } else if (p == null) {
+                this.plugin.sendWolfLimit(sender, getWorldName(args.get(0)));
+            } else {
                 WolfPound.log.info("Please use: wplimit [w:WORLD | all]");
             }
         }

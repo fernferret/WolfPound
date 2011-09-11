@@ -16,7 +16,7 @@ public class AdoptCommand extends WolfPoundCommand {
         this.setCommandUsage("/wp adopt" + ChatColor.GOLD + " [NUMBER]");
         this.setArgRange(0, 1);
         this.addKey("wp adopt");
-        this.addKey("wp a");
+        this.addKey("wpa");
         this.addKey("adopt");
         this.setPermission("wolfpound.adopt", "Allows players to adopt wolves.", PermissionDefault.OP);
         this.addCommandExample("/wp adopt " + ChatColor.GOLD + "2");

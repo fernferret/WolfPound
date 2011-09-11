@@ -1,7 +1,7 @@
 name: WolfPound
 main: com.fernferret.wolfpound.WolfPound
 author: FernFerret
-version: 1.1
+version: 1.1b1
 commands:
   wp:
     description: Displays the Help
@@ -12,24 +12,36 @@ commands:
   adopt:
     description: Gives you a wolf!
     usage: /<command> [NUMBER]
+  wpa:
+    description: Gives you a wolf!
+    usage: /<command> [NUMBER]
   wpprice:
     description: States the price of a wolf.
-    usage: /<command> [all|w:WORLD]
+    usage: /<command> [all|WORLD]
+  wpp:
+    description: States the price of a wolf.
+    usage: /<command> [all|WORLD]
   wplimit:
     description: States how many wolves can be adopted at once.
-    usage: /<command> [all|w:WORLD]
+    usage: /<command> [all|WORLD]
+  wpl:
+    description: States how many wolves can be adopted at once.
+    usage: /<command> [all|WORLD]
   wpsetprice:
     description: Sets the price to buy a wolf using the /adopt command.
-    usage: /<command> {PRICE} [global|w:WORLD]
+    usage: /<command> {PRICE} [all|WORLD]
   wpsetaggro:
-    description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
-    usage: /<command> {angry|tame|neutral} [global|w:WORLD]
+    description: Sets the type of currency used to buy a wolf. {Use ITEM_NAME|money|ITEM_ID}
+    usage: /<command> {angry|tame|neutral} [all|WORLD]
   wpsettype:
-    description: Sets the type of currency used to buy a wolf. {Use i:ITEM_NAME|money|ITEM_ID}
-    usage: /<command> {TYPE} [global|w:WORLD]
+    description: Sets the type of currency used to buy a wolf. {Use ITEM_NAME|money|ITEM_ID}
+    usage: /<command> {TYPE} [all|WORLD]
   wpsetlimit:
     description: Sets the number of wolves one can adopt at once.
-    usage: /<command> {NUMBER} [global|w:WORLD]
+    usage: /<command> {NUMBER} [all|WORLD]
   wpreset:
     description: Resets specified world to default from the current world if none is specified, or all if global is specified
-    usage: /<command> {w:WORLD | global}
+    usage: /<command> {WORLD | all}
+  wpr:
+    description: Resets specified world to default from the current world if none is specified, or all if global is specified
+    usage: /<command> {WORLD | all}

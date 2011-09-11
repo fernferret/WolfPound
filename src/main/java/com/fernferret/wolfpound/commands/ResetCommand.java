@@ -19,7 +19,7 @@ public class ResetCommand extends WolfPoundCommand {
         this.setArgRange(0, 1);
         this.addKey("wp reset");
         this.addKey("wpreset");
-        this.addKey("wpp");
+        this.addKey("wpr");
         this.setPermission("wolfpound.admin", "Resets the Price of wolves in the given world to use the default.", PermissionDefault.OP);
         this.addCommandExample("/wp reset");
         this.addCommandExample("/wp reset" + ChatColor.GOLD + " all");

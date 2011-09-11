@@ -5,3 +5,4 @@
 manifest
 bin/
 target/
+lib/CommandHandler/

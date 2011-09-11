@@ -56,7 +56,7 @@ public class WPWorld {
             return false;
         }
         this.currency = currency;
-        this.config.setProperty(worldString + "price", this.price);
+        this.config.setProperty(worldString + "type", this.price);
         this.saveConfig();
         return true;
     }

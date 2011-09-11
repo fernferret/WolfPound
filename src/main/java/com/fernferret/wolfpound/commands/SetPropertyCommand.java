@@ -44,15 +44,15 @@ public class SetPropertyCommand extends WolfPoundCommand {
             if (args.size() < 3 && !(sender instanceof Player)) {
                 sender.sendMessage("You must enter a world or all from the command line.");
                 return;
-            } 
+            }
             String worldName = args.get(2);
             world = this.plugin.getWolfPoundWorld(worldName);
             if (world.equals(this.plugin.getGlobalWorld())) {
                 worldName = "all worlds";
             }
-            sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");       
+            sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");
         } else {
-            sender.sendMessage("Sorry you can't set" + args.get(0) + " to " + args.get(1));
+            sender.sendMessage("Sorry you can't set " + ChatColor.AQUA + args.get(0) + ChatColor.WHITE + " to " + ChatColor.GREEN + args.get(1));
         }
     }
 

@@ -103,8 +103,18 @@ public class WolfPound extends JavaPlugin {
         this.bank = banker.loadEconPlugin();
     }
 
+    /**
+     * Returns the existing wolfPound world that exists, or creates one if the world is a loaded world, but not created, or the global world.
+     * 
+     * @param world The worldname to get.
+     * @return A WolfPound World
+     */
     public WPWorld getWolfPoundWorld(String world) {
         if (this.worlds.containsKey(world)) {
+            return this.worlds.get(world);
+        } else if (this.getServer().getWorld(world) != null) {
+            WPWorld w = new WPWorld(world, configWP);
+            this.worlds.put(world, w);
             return this.worlds.get(world);
         }
         return this.globalWorld;

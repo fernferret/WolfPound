@@ -42,21 +42,23 @@ public class VersionCommand extends WolfPoundCommand {
         logAndAddToPasteBinBuffer("Bukkit Version: " + this.plugin.getServer().getVersion());
         logAndAddToPasteBinBuffer("Economy being used: " + this.plugin.getBanker().getEconPlugin().getEconUsed());
         logAndAddToPasteBinBuffer("Permissions Plugin: " + this.plugin.getPermissions().getType());
-        logAndAddToPasteBinBuffer("Global Values:");
         logAndAddToPasteBinBuffer("Op Fallback: " + this.plugin.getConfig().getString("opfallback", "NOT SET"));
-        logAndAddToPasteBinBuffer("Limit: " + this.plugin.getConfig().getString("adopt.limit", "NOT SET"));
-        logAndAddToPasteBinBuffer("Price: " + this.plugin.getConfig().getString("adopt.price", "NOT SET"));
-        logAndAddToPasteBinBuffer("Aggro: " + this.plugin.getConfig().getString("adopt.aggro", "NOT SET"));
-        logAndAddToPasteBinBuffer("Curr: " + this.plugin.getConfig().getString("adopt.type", "NOT SET"));
-        logAndAddToPasteBinBuffer("worldnameprefix: " + this.plugin.getConfig().getString("adopt.limit", "NOT SET"));
+        logAndAddToPasteBinBuffer("");
+        logAndAddToPasteBinBuffer("Global Values:");
+        logAndAddToPasteBinBuffer("  Limit: " + this.plugin.getConfig().getString("adopt.limit", "NOT SET"));
+        logAndAddToPasteBinBuffer("  Price: " + this.plugin.getConfig().getString("adopt.price", "NOT SET"));
+        logAndAddToPasteBinBuffer("  Aggro: " + this.plugin.getConfig().getString("adopt.aggro", "NOT SET"));
+        logAndAddToPasteBinBuffer("  Curr: " + this.plugin.getConfig().getString("adopt.type", "NOT SET"));
+        logAndAddToPasteBinBuffer("");
         List<String> keys = this.plugin.getConfig().getKeys("adopt.worlds");
         if (keys != null && keys.size() > 0) {
             for (String key : keys) {
                 logAndAddToPasteBinBuffer("Values for: " + key);
-                logAndAddToPasteBinBuffer("Limit: " + this.plugin.getConfig().getString("adopt.limit.worlds." + key, "NOT SET"));
-                logAndAddToPasteBinBuffer("Price: " + this.plugin.getConfig().getString("adopt.price.worlds." + key, "NOT SET"));
-                logAndAddToPasteBinBuffer("Aggro: " + this.plugin.getConfig().getString("adopt.aggro.worlds." + key, "NOT SET"));
-                logAndAddToPasteBinBuffer("Curr: " + this.plugin.getConfig().getString("adopt.type.worlds." + key, "NOT SET"));
+                logAndAddToPasteBinBuffer("  Limit: " + this.plugin.getConfig().getString("adopt.worlds." + key + ".limit", "NOT SET"));
+                logAndAddToPasteBinBuffer("  Price: " + this.plugin.getConfig().getString("adopt.worlds." + key + ".price", "NOT SET"));
+                logAndAddToPasteBinBuffer("  Aggro: " + this.plugin.getConfig().getString("adopt.worlds." + key + ".aggro", "NOT SET"));
+                logAndAddToPasteBinBuffer("  Curr: " + this.plugin.getConfig().getString("adopt.worlds." + key + ".type", "NOT SET"));
+                logAndAddToPasteBinBuffer("");
             }
         }
         logAndAddToPasteBinBuffer("Special Code: FRN001");

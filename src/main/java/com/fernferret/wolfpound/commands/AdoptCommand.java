@@ -23,7 +23,6 @@ public class AdoptCommand extends WolfPoundCommand {
     }
     @Override
     public void runCommand(CommandSender sender, List<String> args) {
-        // TODO: Allow players to buy multiple wolves
         if(!(sender instanceof Player)) {
             WolfPound.log.info("Only Players can adopt wolves!");
             return;

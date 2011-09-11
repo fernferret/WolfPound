@@ -46,6 +46,7 @@ public class SetPropertyCommand extends WolfPoundCommand {
                 return;
             } 
             String worldName = args.get(2);
+            world = this.plugin.getWolfPoundWorld(worldName);
             if (world.equals(this.plugin.getGlobalWorld())) {
                 worldName = "all worlds";
             }

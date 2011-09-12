@@ -30,6 +30,7 @@ import com.fernferret.wolfpound.commands.DebugCommand;
 import com.fernferret.wolfpound.commands.HelpCommand;
 import com.fernferret.wolfpound.commands.LimitCommand;
 import com.fernferret.wolfpound.commands.PriceCommand;
+import com.fernferret.wolfpound.commands.ResetCommand;
 import com.fernferret.wolfpound.commands.SetPropertyCommand;
 import com.fernferret.wolfpound.commands.VersionCommand;
 import com.fernferret.wolfpound.listeners.WPBlockListener;
@@ -156,6 +157,7 @@ public class WolfPound extends JavaPlugin {
         this.commandHandler.registerCommand(new LimitCommand(this));
         this.commandHandler.registerCommand(new PriceCommand(this));
         this.commandHandler.registerCommand(new SetPropertyCommand(this));
+        this.commandHandler.registerCommand(new ResetCommand(this));
         this.commandHandler.registerCommand(new VersionCommand(this));
         this.commandHandler.registerCommand(new DebugCommand(this));
     }

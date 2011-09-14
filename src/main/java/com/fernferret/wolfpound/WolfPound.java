@@ -78,13 +78,13 @@ public class WolfPound extends JavaPlugin {
 
     private WPPermissions permissions;
     private CommandHandler commandHandler;
-    private Map<String, WPWorld> worlds;
-    private WPWorld globalWorld;
+    private WorldManager worldManager;
 
     @Override
     public void onEnable() {
         this.permissions = new WPPermissions(this);
         this.commandHandler = new CommandHandler(this, this.permissions);
+        this.worldManager = new WorldManager(this);
         this.banker = new AllPay(this, "[WolfPound]");
         loadConfiguration();
 
@@ -104,26 +104,7 @@ public class WolfPound extends JavaPlugin {
         this.bank = banker.loadEconPlugin();
     }
 
-    /**
-     * Returns the existing wolfPound world that exists, or creates one if the world is a loaded world, but not created, or the global world.
-     * 
-     * @param world The worldname to get.
-     * @return A WolfPound World
-     */
-    public WPWorld getWolfPoundWorld(String world) {
-        if (this.worlds.containsKey(world)) {
-            return this.worlds.get(world);
-        } else if (this.getServer().getWorld(world) != null) {
-            WPWorld w = new WPWorld(world, configWP);
-            this.worlds.put(world, w);
-            return this.worlds.get(world);
-        }
-        return this.globalWorld;
-    }
-
-    public WPWorld getGlobalWorld() {
-        return this.globalWorld;
-    }
+    
 
     private void loadConfiguration() {
         getDataFolder().mkdirs();
@@ -137,11 +118,10 @@ public class WolfPound extends JavaPlugin {
             this.configWP.save();
             System.out.print("Createing defaults...");
         }
-        this.globalWorld = new WPWorld(null, this.getConfig());
-        this.worlds = new HashMap<String, WPWorld>();
+        this.worldManager.setGlobalWorld(new WPWorld(null, this.getConfig()));
         if (configWP.getKeys("adopt.worlds") != null) {
             for (String s : configWP.getKeys("adopt.worlds")) {
-                this.worlds.put(s, new WPWorld(s, this.getConfig()));
+                this.worldManager.addWorld(s, new WPWorld(s, this.getConfig()));
                 this.log(Level.FINE, "Loaded WolfPound Config for: " + s);
             }
         }
@@ -173,15 +153,6 @@ public class WolfPound extends JavaPlugin {
         return this.commandHandler.locateAndRunCommand(sender, allArgs);
     }
 
-    public void removeWorld(String string, Player p) {
-        if (configWP.getProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string) != null) {
-            p.sendMessage(chatPrefix + "Reverting " + ChatColor.GREEN + string + ChatColor.WHITE + " to global default...");
-            configWP.removeProperty(ADOPT_KEY + "." + MULTI_WORLD_KEY + "." + string);
-            configWP.save();
-        }
-
-    }
-
     private void getHumanReadableAdoptLimitMessage(CommandSender s, int limit, String end) {
         if (limit == -1) {
             s.sendMessage(chatPrefix + "WARNING: There is no limit to how many wolves you can adopt at once " + end);
@@ -210,15 +181,14 @@ public class WolfPound extends JavaPlugin {
         if (this.permissions.hasPermission(s, PERM_ADOPT, true)) {
             if (world.equalsIgnoreCase("all")) {
                 String everywhere = "everywhere";
-                for (String worldName : this.worlds.keySet()) {
-                    WPWorld w = this.worlds.get(worldName);
+                for (String worldName : this.worldManager.getWorldNames()) {
+                    WPWorld w = this.worldManager.getWorld(worldName);
                     getHumanReadablePriceMessage(s, w.getPrice(), w.getCurrency(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
                     everywhere = "everywhere else";
                 }
-
-                getHumanReadablePriceMessage(s, this.globalWorld.getPrice(), this.getWolfPoundWorld(world).getCurrency(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
+                getHumanReadablePriceMessage(s, this.worldManager.getGlobalWorld().getPrice(), this.worldManager.getWorld(world).getCurrency(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
             } else {
-                getHumanReadablePriceMessage(s, this.getWolfPoundWorld(world).getPrice(), this.getWolfPoundWorld(world).getCurrency(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
+                getHumanReadablePriceMessage(s, this.worldManager.getWorld(world).getPrice(), this.worldManager.getWorld(world).getCurrency(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
             }
         }
     }
@@ -229,20 +199,16 @@ public class WolfPound extends JavaPlugin {
             // WPWorld w = this.getWolfPoundWorld(world);
             if (world.equalsIgnoreCase("all")) {
                 String everywhere = "everywhere";
-                for (String worldName : this.worlds.keySet()) {
-                    WPWorld w = this.worlds.get(worldName);
+                for (String worldName : this.worldManager.getWorldNames()) {
+                    WPWorld w = this.worldManager.getWorld(worldName);
                     getHumanReadableAdoptLimitMessage(sender, w.getLimit(), "in " + ChatColor.AQUA + worldName + ChatColor.WHITE + "!");
                     everywhere = "everywhere else";
                 }
-                getHumanReadableAdoptLimitMessage(sender, this.globalWorld.getLimit(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
+                getHumanReadableAdoptLimitMessage(sender, this.worldManager.getGlobalWorld().getLimit(), ChatColor.AQUA + everywhere + ChatColor.WHITE + "!");
             } else {
-                getHumanReadableAdoptLimitMessage(sender, this.getWolfPoundWorld(world).getLimit(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
+                getHumanReadableAdoptLimitMessage(sender, this.worldManager.getWorld(world).getLimit(), "in " + ChatColor.AQUA + world + ChatColor.WHITE + "!");
             }
         }
-    }
-
-    public Map<String, WPWorld> getWolfPoundWorlds() {
-        return this.worlds;
     }
 
     public int getWolfInt(String wolves, Player p, String errorMsg) {
@@ -264,7 +230,7 @@ public class WolfPound extends JavaPlugin {
         String world = p.getWorld().getName();
         // this will return the world settings the player is in
         // or the global if there are no settings
-        WPWorld w = this.getWolfPoundWorld(world);
+        WPWorld w = this.worldManager.getWorld(world);
 
         if (w.getLimit() >= 0) {
             wolves = (wolves > w.getLimit()) ? w.getLimit() : wolves;
@@ -356,6 +322,10 @@ public class WolfPound extends JavaPlugin {
 
     public WPPermissions getPermissions() {
         return this.permissions;
+    }
+
+    public WorldManager getWorldManager() {
+        return this.worldManager;
     }
 
 }

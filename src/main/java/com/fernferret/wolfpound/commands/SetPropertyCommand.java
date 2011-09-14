@@ -35,9 +35,9 @@ public class SetPropertyCommand extends WolfPoundCommand {
 
     @Override
     public void runCommand(CommandSender sender, List<String> args) {
-        WPWorld world = this.plugin.getGlobalWorld();
+        WPWorld world = this.plugin.getWorldManager().getGlobalWorld();
         if (args.size() == 3 && !args.get(2).equalsIgnoreCase("all")) {
-            world = this.plugin.getWolfPoundWorld(args.get(2));
+            world = this.plugin.getWorldManager().getWorld(args.get(2));
         }
 
         if (validateCommand(args.get(0), args.get(1), world)) {
@@ -46,8 +46,8 @@ public class SetPropertyCommand extends WolfPoundCommand {
                 return;
             }
             String worldName = args.get(2);
-            world = this.plugin.getWolfPoundWorld(worldName);
-            if (world.equals(this.plugin.getGlobalWorld())) {
+            world = this.plugin.getWorldManager().getWorld(worldName);
+            if (world.equals(this.plugin.getWorldManager().getGlobalWorld())) {
                 worldName = "all worlds";
             }
             sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");

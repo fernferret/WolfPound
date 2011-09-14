@@ -31,23 +31,6 @@ public abstract class WolfPoundCommand extends Command {
     }
 
     /**
-     * Returns just the worldname
-     * 
-     * @param worldString String in format: w:WORLD
-     * @return
-     */
-    protected String getWorldName(String worldString) {
-        String[] values = worldString.split(":");
-        if (values.length != 2 || !values[0].equalsIgnoreCase("w") || plugin.getServer().getWorld(values[1]) == null) {
-            WolfPound.log.severe(WolfPound.logPrefix + " Could not find world name(" + worldString + ") in getWorldName(String worldString)");
-            WolfPound.log.severe("Worlds: " + plugin.getServer().getWorlds());
-            return "";
-        } else {
-            return values[1];
-        }
-    }
-
-    /**
      * Checks to see if the given list contains the given string
      * 
      * @param s The passed in string

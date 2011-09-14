@@ -43,7 +43,7 @@ public class PriceCommand extends WolfPoundCommand {
             if (isAKeyword(args.get(0), PRICE_KEYWORDS)) {
                 this.plugin.sendWolfPrice(sender, "all");
             } else if (isValidWorld(args.get(0))) {
-                this.plugin.sendWolfPrice(sender, getWorldName(args.get(0)));
+                this.plugin.sendWolfPrice(sender, args.get(0));
             } else if (p == null) {
                 WolfPound.log.info("Please use: wpprice [w:WORLD | all]");
             }

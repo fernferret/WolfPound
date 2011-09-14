@@ -43,7 +43,7 @@ public class LimitCommand extends WolfPoundCommand {
             if (isAKeyword(args.get(0), LIMIT_KEYWORDS)) {
                 this.plugin.sendWolfLimit((Player) sender, "all");
             } else if (isValidWorld(args.get(0))) {
-                this.plugin.sendWolfLimit(sender, getWorldName(args.get(0)));
+                this.plugin.sendWolfLimit(sender, args.get(0));
             } else {
                 WolfPound.log.info("Please use: wplimit [w:WORLD | all]");
             }

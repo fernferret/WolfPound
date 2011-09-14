@@ -102,4 +102,8 @@ public class WPWorld {
             this.config.save();
         }
     }
+
+    public void removeFromConfig() {
+        this.config.removeProperty(worldString);
+    }
 }

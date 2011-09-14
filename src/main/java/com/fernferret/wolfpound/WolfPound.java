@@ -72,12 +72,11 @@ public class WolfPound extends JavaPlugin {
     private WPPermissions permissions;
     private CommandHandler commandHandler;
     private WorldManager worldManager;
-    private static double allpayversion = 2;
+    private static double allpayversion = 3;
 
     @Override
     public void onEnable() {
         if (!this.validateAllpay()) {
-
             this.getServer().getPluginManager().disablePlugin(this);
             return;
         }
@@ -113,7 +112,7 @@ public class WolfPound extends JavaPlugin {
                 log.info(logPrefix + " A plugin that has loaded before WolfPound has an incompatable version of AllPay!");
                 log.info(logPrefix + " The Following Plugins MAY out of date!");
                 log.info(logPrefix + " This plugin needs AllPay v" + allpayversion + " or higher and another plugin has loaded v" + this.banker.getVersion() + "!");
-                log.info(logPrefix + AllPay.pluginsThatUseUs);
+                log.info(logPrefix + AllPay.pluginsThatUseUs.toString());
                 return false;
             }
         } catch (Throwable t) {

@@ -41,10 +41,10 @@ public class WPPlayerListener extends PlayerListener {
     private WolfAggro getAggro(Sign s, int l, Player p) {
 
         String line = s.getLine(l);
-        if (line.matches("(?i)(.*" + WolfPound.ADOPT_FRIEND + ".*)")) {
+        if (line.matches("(?i)(.*friend.*)")) {
             return WolfAggro.FRIEND;
         }
-        if (line.matches("(?i)(.*" + WolfPound.ADOPT_ANGRY + ".*)")) {
+        if (line.matches("(?i)(.*angry.*)")) {
             return WolfAggro.ANGRY;
         }
         // Default to neutral.

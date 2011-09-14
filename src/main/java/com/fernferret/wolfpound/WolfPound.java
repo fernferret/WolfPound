@@ -3,8 +3,6 @@ package com.fernferret.wolfpound;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -65,11 +63,6 @@ public class WolfPound extends JavaPlugin {
     public static int GlobalDebug = 0;
     public static final String chatPrefixError = ChatColor.DARK_RED + logPrefix + ChatColor.WHITE + " ";
     public static final String chatPrefix = ChatColor.DARK_GREEN + logPrefix + ChatColor.WHITE + " ";
-    private static final String ADOPT_KEY = "adopt";
-    private static final String MULTI_WORLD_KEY = "worlds";
-    public static final String ADOPT_NEUTRAL = "neutral";
-    public static final String ADOPT_FRIEND = "friend";
-    public static final String ADOPT_ANGRY = "angry";
 
     // public WPBankAdapter bank;
     public GenericBank bank;
@@ -79,9 +72,15 @@ public class WolfPound extends JavaPlugin {
     private WPPermissions permissions;
     private CommandHandler commandHandler;
     private WorldManager worldManager;
+    private static double allpayversion = 2;
 
     @Override
     public void onEnable() {
+        if (!this.validateAllpay()) {
+
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         this.permissions = new WPPermissions(this);
         this.commandHandler = new CommandHandler(this, this.permissions);
         this.worldManager = new WorldManager(this);
@@ -104,7 +103,28 @@ public class WolfPound extends JavaPlugin {
         this.bank = banker.loadEconPlugin();
     }
 
-    
+    private boolean validateAllpay() {
+        try {
+            this.banker = new AllPay(this, "Verify");
+            if (this.banker.getVersion() >= allpayversion) {
+                return true;
+            } else {
+                log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
+                log.info(logPrefix + " A plugin that has loaded before WolfPound has an incompatable version of AllPay!");
+                log.info(logPrefix + " The Following Plugins MAY out of date!");
+                log.info(logPrefix + " This plugin needs AllPay v" + allpayversion + " or higher and another plugin has loaded v" + this.banker.getVersion() + "!");
+                log.info(logPrefix + AllPay.pluginsThatUseUs);
+                return false;
+            }
+        } catch (Throwable t) {
+        }
+        log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
+        log.info(logPrefix + " A plugin that has loaded before WolfPound has an incompatable version of AllPay!");
+        log.info(logPrefix + " Check the logs for [AllPay] - Version ... for PLUGIN NAME to find the culprit! Then Yell at that dev!");
+        log.info(logPrefix + " Or update that plugin :P");
+        log.info(logPrefix + " This plugin needs AllPay v" + allpayversion + " or higher!");
+        return false;
+    }
 
     private void loadConfiguration() {
         getDataFolder().mkdirs();

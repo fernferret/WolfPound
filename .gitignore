@@ -5,3 +5,5 @@
 manifest
 bin/
 target/
+.idea
+*.iml

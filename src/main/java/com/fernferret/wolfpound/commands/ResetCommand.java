@@ -42,6 +42,7 @@ public class ResetCommand extends WolfPoundCommand {
                 sender.sendMessage("WolfPound settings for " + ChatColor.AQUA + args.get(0) + ChatColor.WHITE + " were reset to the defaults");
             } else if (isAKeyword(args.get(0), RESET_KEYWORDS)) {
                 for (World w : this.plugin.getServer().getWorlds()) {
+                    ChatColor.values()
                     this.plugin.getWorldManager().removeWorld(w.getName());
                 }
                 sender.sendMessage("WolfPound settings for " + ChatColor.AQUA + args.get(0) + " worlds" + ChatColor.WHITE + " were reset to the defaults");

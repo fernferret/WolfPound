@@ -303,7 +303,7 @@ public class WolfPound extends JavaPlugin {
     public boolean spawnWolf(Player p, WolfAggro aggro) {
 
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
-        w.setHealth(20);
+        w.setHealth(8);
         if (aggro != null && aggro == WolfAggro.FRIEND) {
             EntityTameEvent event = new EntityTameEvent(w, p);
             this.getServer().getPluginManager().callEvent(event);

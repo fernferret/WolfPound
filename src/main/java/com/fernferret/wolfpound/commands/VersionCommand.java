@@ -10,6 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 import org.bukkit.ChatColor;
@@ -53,7 +54,7 @@ public class VersionCommand extends WolfPoundCommand {
         logAndAddToPasteBinBuffer("  Aggro: " + this.plugin.getConfig().getString("adopt.aggro", "NOT SET"));
         logAndAddToPasteBinBuffer("  Curr: " + this.plugin.getConfig().getString("adopt.type", "NOT SET"));
         logAndAddToPasteBinBuffer("");
-        List<String> keys = this.plugin.getConfig().getKeys("adopt.worlds");
+        Set<String> keys = this.plugin.getConfig().getConfigurationSection("adopt.worlds").getKeys(false);
         if (keys != null && keys.size() > 0) {
             for (String key : keys) {
                 logAndAddToPasteBinBuffer("Values for: " + key);

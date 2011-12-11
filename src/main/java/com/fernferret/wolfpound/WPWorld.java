@@ -1,10 +1,15 @@
 package com.fernferret.wolfpound;
 
-import org.bukkit.util.config.Configuration;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * Represents a world that contains values for WolfPound.
- * 
+ *
  * @author fernferret
  */
 
@@ -13,22 +18,28 @@ public class WPWorld {
     private int currency;
     private WolfAggro aggro;
     private int limit;
-    private Configuration config;
+    private FileConfiguration config;
+    private ConfigurationSection configSection;
     private boolean canSave = false;
     private String worldString = "adopt.worlds.";
+    private WolfPound plugin;
 
-    public WPWorld(String w, Configuration config) {
+    public WPWorld(String w, FileConfiguration config, WolfPound plugin) {
         this.config = config;
+        this.plugin = plugin;
         if (w == null) {
-            worldString = "adopt.";
+            this.configSection = config.getConfigurationSection("adopt");
         } else {
-            worldString += w + ".";
+            this.configSection = config.getConfigurationSection(w);
+            if (this.configSection == null) {
+                this.configSection = config.createSection(w);
+            }
         }
         // Initialize variables
-        this.setPrice(this.config.getDouble(worldString + "price", 0.0));
-        this.setCurrency(this.config.getInt(worldString + "type", -1));
-        this.setAggro(this.config.getString(worldString + "aggro", "neutral"));
-        this.setLimit(this.config.getInt(worldString + "limit", 1));
+        this.setPrice(this.configSection.getDouble("price", 0.0));
+        this.setCurrency(this.configSection.getInt("type", -1));
+        this.setAggro(this.configSection.getString("aggro", "neutral"));
+        this.setLimit(this.configSection.getInt("limit", 1));
         this.canSave = true;
         this.saveConfig();
     }
@@ -38,11 +49,11 @@ public class WPWorld {
     }
 
     public boolean setPrice(double price) {
-        if(price < 0) {
+        if (price < 0) {
             return false;
         }
         this.price = price;
-        this.config.setProperty(worldString + "price", this.price);
+        this.configSection.set(worldString + "price", this.price);
         this.saveConfig();
         return true;
     }
@@ -52,11 +63,11 @@ public class WPWorld {
     }
 
     public boolean setCurrency(int currency) {
-        if(currency < -1) {
+        if (currency < -1) {
             return false;
         }
         this.currency = currency;
-        this.config.setProperty(worldString + "type", this.price);
+        this.configSection.set(worldString + "type", this.price);
         this.saveConfig();
         return true;
     }
@@ -67,7 +78,7 @@ public class WPWorld {
 
     public boolean setAggro(WolfAggro aggro) {
         this.aggro = aggro;
-        this.config.setProperty(worldString + "aggro", this.aggro.toString());
+        this.configSection.set(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
         return true;
     }
@@ -78,7 +89,7 @@ public class WPWorld {
         } catch (Exception e) {
             return false;
         }
-        this.config.setProperty(worldString + "aggro", this.aggro.toString());
+        this.configSection.set(worldString + "aggro", this.aggro.toString());
         this.saveConfig();
         return true;
     }
@@ -92,18 +103,16 @@ public class WPWorld {
             return false;
         }
         this.limit = limit;
-        this.config.setProperty(worldString + "limit", this.limit);
+        this.configSection.set(worldString + "limit", this.limit);
         this.saveConfig();
         return true;
     }
 
     private void saveConfig() {
-        if (this.canSave) {
-            this.config.save();
-        }
+        this.plugin.saveConfig();
     }
 
     public void removeFromConfig() {
-        this.config.removeProperty(worldString);
+        this.config.set(this.worldString, null);
     }
 }

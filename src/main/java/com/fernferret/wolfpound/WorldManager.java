@@ -20,7 +20,7 @@ public class WorldManager {
 
     /**
      * Removes a world from the config and from the ingame cache. True if it was removed.
-     * 
+     *
      * @param name
      * @return
      */
@@ -32,10 +32,10 @@ public class WorldManager {
         }
         return false;
     }
-    
+
     /**
      * Returns the existing wolfPound world that exists, or creates one if the world is a loaded world, but not created, or the global world.
-     * 
+     *
      * @param world The worldname to get.
      * @return A WolfPound World
      */
@@ -43,17 +43,17 @@ public class WorldManager {
         if (this.worlds.containsKey(world)) {
             return this.worlds.get(world);
         } else if (this.plugin.getServer().getWorld(world) != null) {
-            WPWorld w = new WPWorld(world, this.plugin.getConfig());
+            WPWorld w = new WPWorld(world, this.plugin.getWPConfig(), this.plugin);
             this.worlds.put(world, w);
             return this.worlds.get(world);
         }
         return this.globalWorld;
     }
-    
+
     public WPWorld getGlobalWorld() {
         return this.globalWorld;
     }
-    
+
     public void setGlobalWorld(WPWorld world) {
         this.globalWorld = world;
     }

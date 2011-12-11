@@ -1,15 +1,19 @@
 package com.fernferret.wolfpound;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import com.fernferret.allpay.AllPay;
+import com.fernferret.allpay.GenericBank;
+import com.fernferret.allpay.ItemBank;
+import com.fernferret.wolfpound.commands.*;
+import com.fernferret.wolfpound.listeners.WPBlockListener;
+import com.fernferret.wolfpound.listeners.WPPlayerListener;
+import com.fernferret.wolfpound.listeners.WPPluginListener;
+import com.pneumaticraft.commandhandler.CommandHandler;
 import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
@@ -20,21 +24,13 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import com.fernferret.allpay.AllPay;
-import com.fernferret.allpay.GenericBank;
-import com.fernferret.allpay.ItemBank;
-import com.fernferret.wolfpound.commands.AdoptCommand;
-import com.fernferret.wolfpound.commands.DebugCommand;
-import com.fernferret.wolfpound.commands.HelpCommand;
-import com.fernferret.wolfpound.commands.LimitCommand;
-import com.fernferret.wolfpound.commands.PriceCommand;
-import com.fernferret.wolfpound.commands.ResetCommand;
-import com.fernferret.wolfpound.commands.SetPropertyCommand;
-import com.fernferret.wolfpound.commands.VersionCommand;
-import com.fernferret.wolfpound.listeners.WPBlockListener;
-import com.fernferret.wolfpound.listeners.WPPlayerListener;
-import com.fernferret.wolfpound.listeners.WPPluginListener;
-import com.pneumaticraft.commandhandler.CommandHandler;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class WolfPound extends JavaPlugin {
 
@@ -55,7 +51,7 @@ public class WolfPound extends JavaPlugin {
     private WPPlayerListener playerListener;
     private WPBlockListener blockListener;
     private WPPluginListener pluginListener;
-    public Configuration configWP;
+    public FileConfiguration configWP;
 
     public static final Logger log = Logger.getLogger("Minecraft");
     public static final String logPrefix = "[WolfPound]";
@@ -153,25 +149,35 @@ public class WolfPound extends JavaPlugin {
 
     private void loadConfiguration() {
         getDataFolder().mkdirs();
-        this.configWP = new Configuration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
-        this.configWP.load();
-        if (this.configWP.getKeys().size() == 0) {
-            this.configWP.setProperty("adopt.price", 0);
-            this.configWP.setProperty("adopt.type", -1);
-            this.configWP.setProperty("adopt.limit", 1);
-            this.configWP.setProperty("adopt.aggro", "friend");
-            this.configWP.save();
+        this.configWP = YamlConfiguration.loadConfiguration(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
+        if (this.configWP.getConfigurationSection("adopt") == null) {
+            this.configWP.createSection("adopt");
+        }
+        if (this.configWP.getConfigurationSection("adopt").getKeys(false).size() == 0) {
+            this.configWP.set("adopt.price", 0);
+            this.configWP.set("adopt.type", -1);
+            this.configWP.set("adopt.limit", 1);
+            this.configWP.set("adopt.aggro", "friend");
             System.out.print("Createing defaults...");
         }
-        this.worldManager.setGlobalWorld(new WPWorld(null, this.getConfig()));
-        if (configWP.getKeys("adopt.worlds") != null) {
-            for (String s : configWP.getKeys("adopt.worlds")) {
-                this.worldManager.addWorld(s, new WPWorld(s, this.getConfig()));
+        this.worldManager.setGlobalWorld(new WPWorld(null, this.getWPConfig(), this));
+        Set<String> keys = configWP.getConfigurationSection("adopt.worlds").getKeys(false);
+        if (keys != null) {
+            for (String s : keys) {
+                this.worldManager.addWorld(s, new WPWorld(s, this.getWPConfig(), this));
                 this.log(Level.FINE, "Loaded WolfPound Config for: " + s);
             }
         }
-
+        this.saveConfig();
         registerCommands();
+    }
+
+    public void saveConfig() {
+        try {
+            this.configWP.save(new File(this.getDataFolder(), WOLF_POUND_CONFIG));
+        } catch (IOException e) {
+            this.log(Level.SEVERE, "Error saving wolfpound config.");
+        }
     }
 
     private void registerCommands() {
@@ -267,8 +273,8 @@ public class WolfPound extends JavaPlugin {
 
     /**
      * Allows the user to adopt a wolf
-     * 
-     * @param p The player
+     *
+     * @param p      The player
      * @param wolves How many wolves
      */
     public void adoptWolf(Player p, int wolves) {
@@ -357,7 +363,7 @@ public class WolfPound extends JavaPlugin {
         // debugLog.log(level, "[WP-Debug] " + msg);
     }
 
-    public Configuration getConfig() {
+    public FileConfiguration getWPConfig() {
         return this.configWP;
     }
 

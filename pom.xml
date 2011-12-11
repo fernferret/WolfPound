@@ -3,19 +3,45 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.fernferret.wolfpound</groupId>
     <artifactId>WolfPound</artifactId>
-    <version>1.1b1</version>
+    <version>1.2</version>
     <name>WolfPound</name>
     <description>Allow players to buy wolves.</description>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.build.number>UNKNOWN</project.build.number>
     </properties>
 
     <repositories>
         <repository>
-            <id>OnARandomBox</id>
-            <url>http://repo.onarandombox.com/artifactory/repo</url>
+            <id>pneumaticsystem</id>
+            <url>http://pneumaticsystem.com:25578/nexus/content/groups/public</url>
         </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>doodleproject-repo</id>
+            <name>DoodleProject Maven 2 Repository</name>
+            <url>http://doodleproject.sourceforge.net/maven2/release</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <profiles>
+        <profile>
+            <id>jenkins</id>
+            <activation>
+                <property>
+                    <name>env.BUILD_NUMBER</name>
+                </property>
+            </activation>
+            <properties>
+                <project.build.number>${env.BUILD_NUMBER}</project.build.number>
+            </properties>
+        </profile>
+    </profiles>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
@@ -93,7 +119,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>1.0.0-R1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -166,10 +192,9 @@
         </dependency>
         <!-- End of Permissions Dependencies -->
         <dependency>
-            <groupId>org.junit</groupId>
+            <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.2</version>
         </dependency>
-
     </dependencies>
 </project>

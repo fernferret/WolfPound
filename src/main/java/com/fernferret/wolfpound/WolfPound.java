@@ -12,6 +12,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.CreatureType;
@@ -160,7 +161,11 @@ public class WolfPound extends JavaPlugin {
             System.out.print("Createing defaults...");
         }
         this.worldManager.setGlobalWorld(new WPWorld(null, this.getWPConfig(), this));
-        Set<String> keys = configWP.getConfigurationSection("adopt.worlds").getKeys(false);
+        ConfigurationSection worlds = configWP.getConfigurationSection("adopt.worlds");
+        if(worlds == null) {
+            worlds = configWP.createSection("adopt.worlds");
+        }
+        Set<String> keys = worlds.getKeys(false);
         if (keys != null) {
             for (String s : keys) {
                 this.worldManager.addWorld(s, new WPWorld(s, this.getWPConfig(), this));

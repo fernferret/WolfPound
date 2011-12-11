@@ -1,7 +1,7 @@
 name: WolfPound
 main: com.fernferret.wolfpound.WolfPound
 author: FernFerret
-version: 1.1b1
+version: maven-version-number
 commands:
   wp:
     description: Displays the Help

@@ -1,5 +1,6 @@
 package com.fernferret.wolfpound.listeners;
 
+import com.fernferret.wolfpound.AnimalAge;
 import com.fernferret.wolfpound.WolfAggro;
 import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.block.Sign;
@@ -28,7 +29,7 @@ public class WPPlayerListener extends PlayerListener {
                     int item = getType(s, 1, p);
                     WolfAggro aggro = getAggro(s, 2, p);
                     if (plugin.bank.hasEnough(p, price, item)) {
-                        if (plugin.spawnWolf(p, aggro)) {
+                        if (plugin.spawnWolf(p, aggro, AnimalAge.Adult)) {
                             plugin.bank.pay(p, price, item);
                         }
                     }

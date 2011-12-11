@@ -17,10 +17,11 @@ public class WPWorld {
     private FileConfiguration config;
     private ConfigurationSection configSection;
     private boolean canSave = false;
-    private String worldString = "adopt.worlds.";
     private WolfPound plugin;
+    private String worldString;
 
     public WPWorld(String w, FileConfiguration config, WolfPound plugin) {
+        this.worldString = w;
         this.config = config;
         this.plugin = plugin;
         if (w == null) {
@@ -49,7 +50,7 @@ public class WPWorld {
             return false;
         }
         this.price = price;
-        this.configSection.set(worldString + "price", this.price);
+        this.configSection.set("price", this.price);
         this.saveConfig();
         return true;
     }
@@ -63,7 +64,7 @@ public class WPWorld {
             return false;
         }
         this.currency = currency;
-        this.configSection.set(worldString + "type", this.price);
+        this.configSection.set("type", this.price);
         this.saveConfig();
         return true;
     }
@@ -74,7 +75,7 @@ public class WPWorld {
 
     public boolean setAggro(WolfAggro aggro) {
         this.aggro = aggro;
-        this.configSection.set(worldString + "aggro", this.aggro.toString());
+        this.configSection.set("aggro", this.aggro.toString());
         this.saveConfig();
         return true;
     }
@@ -85,7 +86,7 @@ public class WPWorld {
         } catch (Exception e) {
             return false;
         }
-        this.configSection.set(worldString + "aggro", this.aggro.toString());
+        this.configSection.set("aggro", this.aggro.toString());
         this.saveConfig();
         return true;
     }
@@ -99,7 +100,7 @@ public class WPWorld {
             return false;
         }
         this.limit = limit;
-        this.configSection.set(worldString + "limit", this.limit);
+        this.configSection.set("limit", this.limit);
         this.saveConfig();
         return true;
     }

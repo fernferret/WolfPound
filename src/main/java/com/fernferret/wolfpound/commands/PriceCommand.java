@@ -1,16 +1,15 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.List;
-
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.fernferret.wolfpound.WolfPound;
+import java.util.List;
 
 public class PriceCommand extends WolfPoundCommand {
-    private static final String[] PRICE_KEYWORDS = { "all" };
+    private static final String[] PRICE_KEYWORDS = {"all"};
 
     public PriceCommand(WolfPound plugin) {
         super(plugin);

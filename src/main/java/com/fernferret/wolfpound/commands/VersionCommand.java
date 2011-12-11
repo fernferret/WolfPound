@@ -1,5 +1,11 @@
 package com.fernferret.wolfpound.commands;
 
+import com.fernferret.wolfpound.WolfPound;
+import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.permissions.PermissionDefault;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -12,13 +18,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
-
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionDefault;
-
-import com.fernferret.wolfpound.WolfPound;
 
 public class VersionCommand extends WolfPoundCommand {
 

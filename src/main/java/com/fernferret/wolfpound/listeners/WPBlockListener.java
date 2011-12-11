@@ -1,7 +1,6 @@
 package com.fernferret.wolfpound.listeners;
 
-import java.util.ArrayList;
-
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.Material;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -10,7 +9,7 @@ import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 
-import com.fernferret.wolfpound.WolfPound;
+import java.util.ArrayList;
 
 public class WPBlockListener extends BlockListener {
     private final WolfPound plugin;
@@ -112,7 +111,7 @@ public class WPBlockListener extends BlockListener {
         }
         return WolfPound.INVALID_PRICE;
     }
-    
+
     public static int parseMaterialFromString(String materialString) {
         ArrayList<Material> materials = new ArrayList<Material>();
         for (Material mat : Material.values()) {

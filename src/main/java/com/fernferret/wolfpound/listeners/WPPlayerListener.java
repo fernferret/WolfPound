@@ -1,13 +1,12 @@
 package com.fernferret.wolfpound.listeners;
 
+import com.fernferret.wolfpound.WolfAggro;
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
-
-import com.fernferret.wolfpound.WolfAggro;
-import com.fernferret.wolfpound.WolfPound;
 
 public class WPPlayerListener extends PlayerListener {
     private final WolfPound plugin;
@@ -29,7 +28,7 @@ public class WPPlayerListener extends PlayerListener {
                     int item = getType(s, 1, p);
                     WolfAggro aggro = getAggro(s, 2, p);
                     if (plugin.bank.hasEnough(p, price, item)) {
-                        if(plugin.spawnWolf(p, aggro)) {
+                        if (plugin.spawnWolf(p, aggro)) {
                             plugin.bank.pay(p, price, item);
                         }
                     }

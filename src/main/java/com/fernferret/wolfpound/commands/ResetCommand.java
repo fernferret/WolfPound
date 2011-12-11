@@ -1,17 +1,16 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.List;
-
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.fernferret.wolfpound.WolfPound;
+import java.util.List;
 
 public class ResetCommand extends WolfPoundCommand {
-    private static final String[] RESET_KEYWORDS = { "global", "all" };
+    private static final String[] RESET_KEYWORDS = {"global", "all"};
 
     public ResetCommand(WolfPound plugin) {
         super(plugin);
@@ -32,8 +31,8 @@ public class ResetCommand extends WolfPoundCommand {
     public void runCommand(CommandSender sender, List<String> args) {
         if (plugin.getPermissions().hasPermission(sender, "wolfpound.admin", true) && args.size() == 0) {
             if (sender instanceof Player) {
-                this.plugin.getWorldManager().removeWorld(((Player)sender).getWorld().getName());
-                sender.sendMessage("WolfPound settings for " + ChatColor.AQUA + ((Player)sender).getWorld().getName() + ChatColor.WHITE + " were reset to the defaults");
+                this.plugin.getWorldManager().removeWorld(((Player) sender).getWorld().getName());
+                sender.sendMessage("WolfPound settings for " + ChatColor.AQUA + ((Player) sender).getWorld().getName() + ChatColor.WHITE + " were reset to the defaults");
             } else {
                 sender.sendMessage("From the console, a world or all is required.");
             }

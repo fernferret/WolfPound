@@ -1,16 +1,15 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.List;
-
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.fernferret.wolfpound.WolfPound;
+import java.util.List;
 
 public class AdoptCommand extends WolfPoundCommand {
-	public AdoptCommand(WolfPound plugin) {
+    public AdoptCommand(WolfPound plugin) {
         super(plugin);
         this.setName("Adopt Wolf");
         this.setCommandUsage("/wp adopt" + ChatColor.GOLD + " [NUMBER]");
@@ -21,18 +20,19 @@ public class AdoptCommand extends WolfPoundCommand {
         this.setPermission("wolfpound.adopt", "Allows players to adopt wolves.", PermissionDefault.OP);
         this.addCommandExample("/wp adopt " + ChatColor.GOLD + "2");
     }
+
     @Override
     public void runCommand(CommandSender sender, List<String> args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             WolfPound.log.info("Only Players can adopt wolves!");
             return;
         }
-        Player player = (Player)sender;
+        Player player = (Player) sender;
         if (args.size() == 0) {
             // Adopt a wolf with no params
             this.plugin.adoptWolf(player, 1);
-        } else if(args.size() == 1) {
-            try{
+        } else if (args.size() == 1) {
+            try {
                 int wolves = Integer.parseInt(args.get(0));
                 this.plugin.adoptWolf(player, wolves);
                 return;

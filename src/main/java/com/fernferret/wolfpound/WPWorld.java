@@ -3,10 +3,6 @@ package com.fernferret.wolfpound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-
 /**
  * Represents a world that contains values for WolfPound.
  *

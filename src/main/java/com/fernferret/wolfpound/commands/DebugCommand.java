@@ -1,13 +1,12 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.List;
-import java.util.logging.Level;
-
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.fernferret.wolfpound.WolfPound;
+import java.util.List;
+import java.util.logging.Level;
 
 public class DebugCommand extends WolfPoundCommand {
 

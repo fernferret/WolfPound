@@ -1,14 +1,13 @@
 package com.fernferret.wolfpound;
 
-import java.util.List;
-import java.util.logging.Level;
-
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.pneumaticraft.commandhandler.PermissionsInterface;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import java.util.List;
+import java.util.logging.Level;
 
 public class WPPermissions implements PermissionsInterface {
 

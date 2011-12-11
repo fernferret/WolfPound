@@ -1,14 +1,13 @@
 package com.fernferret.wolfpound.commands;
 
-import java.util.List;
-
+import com.fernferret.wolfpound.WPWorld;
+import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionDefault;
 
-import com.fernferret.wolfpound.WPWorld;
-import com.fernferret.wolfpound.WolfPound;
+import java.util.List;
 
 enum SetProperties {
     currency, curr, type, price, limit, aggro, agro
@@ -52,7 +51,7 @@ public class SetPropertyCommand extends WolfPoundCommand {
             }
             sender.sendMessage(ChatColor.GREEN + "SUCCESS! " + ChatColor.WHITE + args.get(0) + " was successfully set to " + args.get(1) + " in " + worldName + "!");
         } else {
-            sender.sendMessage("Sorry you can't set " + ChatColor.AQUA + args.get(0) + ChatColor.WHITE + " to " + ChatColor.GREEN    + args.get(1));
+            sender.sendMessage("Sorry you can't set " + ChatColor.AQUA + args.get(0) + ChatColor.WHITE + " to " + ChatColor.GREEN + args.get(1));
         }
     }
 

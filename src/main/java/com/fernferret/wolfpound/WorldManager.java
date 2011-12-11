@@ -22,6 +22,7 @@ public class WorldManager {
      * Removes a world from the config and from the ingame cache. True if it was removed.
      *
      * @param name
+     *
      * @return
      */
     public boolean removeWorld(String name) {
@@ -34,9 +35,11 @@ public class WorldManager {
     }
 
     /**
-     * Returns the existing wolfPound world that exists, or creates one if the world is a loaded world, but not created, or the global world.
+     * Returns the existing wolfPound world that exists, or creates one if the world is a loaded world, but not created,
+     * or the global world.
      *
      * @param world The worldname to get.
+     *
      * @return A WolfPound World
      */
     public WPWorld getWorld(String world) {

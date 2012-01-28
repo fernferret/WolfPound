@@ -14,7 +14,11 @@
     <repositories>
         <repository>
             <id>onarandombox</id>
-            <url>http://repo.onarandombox.com/content/groups/public/</url>
+            <url>http://repo.onarandombox.com/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>Bukkit Official</id>
+            <url>http://repo.bukkit.org/content/repositories/public</url>
         </repository>
     </repositories>
 
@@ -70,7 +74,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.basedir}/lib/allpay/src</source>
+                                <source>${project.basedir}/lib/allpay/src/main/java/</source>
                                 <source>${project.basedir}/lib/CommandHandler/src</source>
                                 <source>${project.basedir}/lib/CommandHandler/lib/ShellParser/src</source>
                             </sources>
@@ -95,7 +99,7 @@
                     <replacements>
                         <replacement>
                             <token>maven-version-number</token>
-                            <value>${project.version}-${project.build.number}</value>
+                            <value>${project.version}-b${project.build.number}</value>
                         </replacement>
                     </replacements>
                 </configuration>
@@ -119,7 +123,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.0.0-R1-SNAPSHOT</version>
+            <version>1.1-R1</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -177,6 +181,13 @@
             <groupId>me.ashtheking.currency</groupId>
             <artifactId>MultiCurrency</artifactId>
             <version>0.09</version>
+            <type>jar</type>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ca.agnate</groupId>
+            <artifactId>EconXP</artifactId>
+            <version>1.0.0</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

@@ -18,8 +18,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.CreatureType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.event.Event;
-import org.bukkit.event.Event.Priority;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -94,11 +92,9 @@ public class WolfPound extends JavaPlugin {
         log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " Enabled");
 
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Event.Type.SIGN_CHANGE, blockListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_INTERACT, playerListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_BREAK, blockListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.BLOCK_PLACE, blockListener, Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLUGIN_ENABLE, pluginListener, Priority.Monitor, this);
+        pm.registerEvents(this.playerListener, this);
+        pm.registerEvents(this.blockListener, this);
+        pm.registerEvents(this.pluginListener, this);
 
         this.bank = banker.loadEconPlugin();
     }

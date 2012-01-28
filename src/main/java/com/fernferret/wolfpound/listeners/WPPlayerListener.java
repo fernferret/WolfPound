@@ -3,20 +3,23 @@ package com.fernferret.wolfpound.listeners;
 import com.fernferret.wolfpound.AnimalAge;
 import com.fernferret.wolfpound.WolfAggro;
 import com.fernferret.wolfpound.WolfPound;
+import com.fernferret.wolfpound.utils.SignTools;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerListener;
 
-public class WPPlayerListener extends PlayerListener {
+public class WPPlayerListener implements Listener {
     private final WolfPound plugin;
 
     public WPPlayerListener(final WolfPound plugin) {
         this.plugin = plugin;
     }
 
-    @Override
+    @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         if (event.hasBlock() && event.getClickedBlock().getState() instanceof Sign && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -30,7 +33,7 @@ public class WPPlayerListener extends PlayerListener {
                     WolfAggro aggro = getAggro(s, 2, p);
                     if (plugin.bank.hasEnough(p, price, item)) {
                         if (plugin.spawnWolf(p, aggro, AnimalAge.Adult)) {
-                            plugin.bank.pay(p, price, item);
+                            plugin.bank.take(p, price, item);
                         }
                     }
                 }
@@ -58,10 +61,10 @@ public class WPPlayerListener extends PlayerListener {
             return true;
         }
         if (items.length == 1) {
-            return WPBlockListener.checkLeftSide(p, items[0]);
+            return SignTools.checkLeftSide(p, items[0]);
         }
         if (items.length == 2) {
-            return WPBlockListener.checkLeftSide(p, items[0]) && WPBlockListener.checkRightSide(p, items[1]);
+            return SignTools.checkLeftSide(p, items[0]) && SignTools.checkRightSide(p, items[1]);
         }
         return false;
     }
@@ -70,7 +73,7 @@ public class WPPlayerListener extends PlayerListener {
         String line = s.getLine(l);
         String[] items = line.split(":");
         if (items.length > 0) {
-            return WPBlockListener.getLeftSide(items[0]);
+            return SignTools.getLeftSide(items[0]);
         }
         return 0.0;
     }
@@ -80,7 +83,7 @@ public class WPPlayerListener extends PlayerListener {
         String line = s.getLine(l);
         String[] items = line.split(":");
         if (items.length > 1) {
-            return WPBlockListener.getRightSide(items[1]);
+            return SignTools.getRightSide(items[1]);
         }
         return WolfPound.MONEY_ITEM_FOUND;
 

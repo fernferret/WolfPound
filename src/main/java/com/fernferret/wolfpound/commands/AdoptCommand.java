@@ -1,6 +1,7 @@
 package com.fernferret.wolfpound.commands;
 
 import com.fernferret.wolfpound.AnimalAge;
+import com.fernferret.wolfpound.WolfAggro;
 import com.fernferret.wolfpound.WolfPound;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -13,8 +14,8 @@ public class AdoptCommand extends WolfPoundCommand {
     public AdoptCommand(WolfPound plugin) {
         super(plugin);
         this.setName("Adopt Wolf");
-        this.setCommandUsage("/wp adopt" + ChatColor.GOLD + " [NUMBER] [pup]");
-        this.setArgRange(0, 2);
+        this.setCommandUsage("/wp adopt" + ChatColor.GOLD + " [NUMBER] [FRIEND|NEUTRAL|ANGRY] [baby]");
+        this.setArgRange(0, 3);
         this.addKey("wp adopt");
         this.addKey("wpa");
         this.addKey("adopt");
@@ -31,25 +32,25 @@ public class AdoptCommand extends WolfPoundCommand {
         Player player = (Player) sender;
         AnimalAge age = AnimalAge.Adult;
         Integer amount = 1;
-        if (args.size() >= 1) {
-            if (args.get(0).equalsIgnoreCase("pup")) {
+        WolfAggro aggro = plugin.getWorldManager().getWorld(player.getWorld().getName()).getAggro();
+        for (String arg : args) {
+            WolfAggro aggrotmp = aggro;
+            try {
+                aggrotmp = WolfAggro.valueOf(arg.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Catch bad values.
+            }
+            if (arg.equalsIgnoreCase("baby") || arg.equalsIgnoreCase("pup") || arg.equalsIgnoreCase("kitten")) {
                 age = AnimalAge.Baby;
+            } else if (aggrotmp != null) {
+                aggro = aggrotmp;
             } else {
                 try {
-                    amount = Integer.parseInt(args.get(0));
+                    amount = Integer.parseInt(arg);
                 } catch (NumberFormatException e) {
                 }
             }
         }
-        if (args.size() >= 2) {
-            if (args.get(1).equalsIgnoreCase("pup")) {
-                age = AnimalAge.Baby;
-            }
-            try {
-                amount = Integer.parseInt(args.get(0));
-            } catch (NumberFormatException e) {
-            }
-        }
-        this.plugin.adoptWolf(player, amount, age);
+        this.plugin.adoptWolf(player, amount, age, aggro);
     }
 }

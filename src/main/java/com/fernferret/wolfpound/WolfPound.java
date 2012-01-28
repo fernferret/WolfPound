@@ -154,7 +154,7 @@ public class WolfPound extends JavaPlugin {
             this.configWP.set("adopt.type", -1);
             this.configWP.set("adopt.limit", 1);
             this.configWP.set("adopt.aggro", "friend");
-            System.out.print("Createing defaults...");
+            System.out.print("Creating defaults...");
         }
         this.worldManager.setGlobalWorld(new WPWorld(null, this.getWPConfig(), this));
         ConfigurationSection worlds = configWP.getConfigurationSection("adopt.worlds");
@@ -277,7 +277,7 @@ public class WolfPound extends JavaPlugin {
      * @param p      The player
      * @param wolves How many wolves
      */
-    public void adoptWolf(Player p, int wolves, AnimalAge age) {
+    public void adoptWolf(Player p, int wolves, AnimalAge age, WolfAggro aggro) {
         String world = p.getWorld().getName();
         // this will return the world settings the player is in
         // or the global if there are no settings
@@ -287,17 +287,15 @@ public class WolfPound extends JavaPlugin {
             wolves = (wolves > w.getLimit()) ? w.getLimit() : wolves;
         }
         if (this.permissions.hasPermission(p, PERM_ADOPT, true) && bank.hasEnough(p, w.getPrice() * wolves, w.getCurrency())) {
-
             for (int i = 0; i < wolves; i++) {
-                if (spawnWolf(p, w.getAggro(), age)) {
-                    bank.pay(p, w.getPrice(), w.getCurrency());
+                if (spawnWolf(p, aggro, age)) {
+                    bank.take(p, w.getPrice(), w.getCurrency());
                 }
             }
         }
     }
 
     public boolean spawnWolf(Player p, WolfAggro aggro, AnimalAge age) {
-
         Wolf w = (Wolf) p.getWorld().spawnCreature(p.getLocation(), CreatureType.WOLF);
         w.setHealth(8);
         w.setAge(age.getAge());

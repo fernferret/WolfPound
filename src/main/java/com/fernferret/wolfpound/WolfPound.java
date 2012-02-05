@@ -58,27 +58,15 @@ public class WolfPound extends JavaPlugin {
     public static final String chatPrefixError = ChatColor.DARK_RED + logPrefix + ChatColor.WHITE + " ";
     public static final String chatPrefix = ChatColor.DARK_GREEN + logPrefix + ChatColor.WHITE + " ";
 
-    // public WPBankAdapter bank;
     public GenericBank bank;
-    // For Multi-WorldSupport
     private AllPay banker;
 
     private WPPermissions permissions;
     private CommandHandler commandHandler;
     private WorldManager worldManager;
-    private static double allpayversion = 3;
-    private static double chversion = 1;
 
     @Override
     public void onEnable() {
-        if (!this.validateAllpay()) {
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        if (!this.validateCH()) {
-            this.getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
         this.permissions = new WPPermissions(this);
         this.commandHandler = new CommandHandler(this, this.permissions);
         this.worldManager = new WorldManager(this);
@@ -97,50 +85,6 @@ public class WolfPound extends JavaPlugin {
         pm.registerEvents(this.pluginListener, this);
 
         this.bank = banker.loadEconPlugin();
-    }
-
-    private boolean validateAllpay() {
-        try {
-            this.banker = new AllPay(this, "Verify");
-            if (this.banker.getVersion() >= allpayversion) {
-                return true;
-            } else {
-                log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
-                log.info(logPrefix + " A plugin that has loaded before WolfPound has an incompatable version of AllPay (an internal library)!");
-                log.info(logPrefix + " The Following Plugins MAY out of date!");
-                log.info(logPrefix + " This plugin needs AllPay v" + allpayversion + " or higher and another plugin has loaded v" + this.banker.getVersion() + "!");
-                log.info(logPrefix + AllPay.pluginsThatUseUs.toString());
-                return false;
-            }
-        } catch (Throwable t) {
-        }
-        log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
-        log.info(logPrefix + " A plugin that has loaded before WolfPound has an incompatable version of AllPay (an internal library)!");
-        log.info(logPrefix + " Check the logs for [AllPay] - Version ... for PLUGIN NAME to find the culprit! Then Yell at that dev!");
-        log.info(logPrefix + " Or update that plugin :P");
-        log.info(logPrefix + " This plugin needs AllPay v" + allpayversion + " or higher!");
-        return false;
-    }
-
-    private boolean validateCH() {
-        try {
-            this.commandHandler = new CommandHandler(this, null);
-            if (this.commandHandler.getVersion() >= chversion) {
-                return true;
-            } else {
-                log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
-                log.info(logPrefix + " A plugin that has loaded before " + this.getDescription().getName() + " has an incompatable version of CommandHandler (an internal library)!");
-                log.info(logPrefix + " Please contact this plugin author!!!!!!!");
-                log.info(logPrefix + " This plugin needs CommandHandler v" + chversion + " or higher and another plugin has loaded v" + this.commandHandler.getVersion() + "!");
-                return false;
-            }
-        } catch (Throwable t) {
-        }
-        log.info(logPrefix + " - Version " + this.getDescription().getVersion() + " was NOT ENABLED!!!");
-        log.info(logPrefix + " A plugin that has loaded before " + this.getDescription().getName() + " has an incompatable version of CommandHandler (an internal library)!");
-        log.info(logPrefix + " Please contact this plugin author!!!!!!!");
-        log.info(logPrefix + " This plugin needs CommandHandler v" + chversion + " or higher!");
-        return false;
     }
 
     private void loadConfiguration() {
